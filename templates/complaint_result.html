@@ -1,0 +1,97 @@
+{% load static %}
+{% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      
+      <div>
+        <h2>complaint Section</h2>
+        <ul>
+          <li>
+            <a href="{% url 'track_complaint' %}">Track complaint</a>
+          </li>
+          <li>
+            <a href="{% url 'complaint_result' %}">complaint Result</a>
+          </li>
+          <li>
+            <a href="{% url 'map_complaint' %}">Map complaints</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>complaint Submitted</h2>
+        <p>
+          Your complaint has been successfully registered in the LokSetu
+          system. The concerned department will review the issue and
+          take necessary action.
+        </p>
+        <p>
+          Please keep your complaint ID safe so you can track the
+          progress of your complaint anytime.
+        </p>
+      </div>
+
+      <div>
+        <h2>Need Help?</h2>
+        <p>
+          If you face any issue while tracking your complaint, please
+          contact the LokSetu support team for assistance.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <h1>complaint Submitted Successfully</h1>
+
+      <div class="frame2">
+        <div class="box">
+          <img
+            src="{% static 'images/thumb-up.jpg' %}"
+            alt="Success"
+            height="298"
+            width="924"
+          />
+        </div>
+      </div>
+
+      <h2>Thank You for Your Submission</h2>
+
+      <p>
+        Your complaint has been recorded successfully in the LokSetu
+        system. Our team will forward your issue to the appropriate
+        department for review and resolution.
+      </p>
+
+      <h2>Your complaint Details</h2>
+
+      <p>
+        <strong>complaint ID:</strong> {{ complaint.id }}
+      </p>
+
+      <p>
+        <strong>Department:</strong> {{ complaint.department }}
+      </p>
+
+      <p>
+        <strong>Status:</strong> Pending Review
+      </p>
+
+      <h2>Track Your complaint</h2>
+
+      <p>
+        You can track the progress of your complaint anytime using the
+        complaint tracking page.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
+</div>

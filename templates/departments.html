@@ -1,0 +1,143 @@
+{% load static %}
+{% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h2>Village Departments</h2>
+        <p>
+          LokSetu helps citizens report issues directly to the concerned
+          department. Select the department related to your complaint
+          and submit your issue easily.
+        </p>
+        <p>
+          This platform improves transparency and ensures that village
+          problems are resolved quickly by the responsible authorities.
+        </p>
+      </div>
+
+      <div>
+        <h2>Citizen Feedback</h2>
+        <p>
+          &ldquo;LokSetu made it very easy to report street light issues
+          in our village. The problem was resolved within two days.&ldquo;
+          <span>- Local Resident</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main">
+      <h1>Village Departments</h1>
+
+      <!-- Public Services -->
+      <div class="section">
+        <h2>Public Services</h2>
+        <ul>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/water.png' %}" alt="Water" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Water Supply Department</b><br>
+              Report issues related to drinking water supply,
+              pipeline leakage, or water shortages.
+            </p>
+          </li>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/electricity.png' %}" alt="Electricity" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Electricity Department</b><br>
+              Submit complaints about power outages,
+              damaged electricity poles, or street lights.
+            </p>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Infrastructure -->
+      <div class="section">
+        <h2>Infrastructure</h2>
+        <ul>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/road.png' %}" alt="Roads" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Road & Infrastructure</b><br>
+              Report potholes, damaged roads,
+              or construction related issues.
+            </p>
+          </li>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/sanitation.png' %}" alt="Sanitation" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Sanitation Department</b><br>
+              Issues related to garbage collection,
+              drainage problems, or village cleanliness.
+            </p>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Social Services -->
+      <div class="section last-child">
+        <h2>Social Services</h2>
+        <ul>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/health.png' %}" alt="Health" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Health Department</b><br>
+              Report problems related to hospitals,
+              health centers, or medical facilities.
+            </p>
+          </li>
+
+          <li>
+            <div class="frame4">
+              <div class="box">
+                <img src="{% static 'images/education.png' %}" alt="Education" height="94" width="90">
+              </div>
+            </div>
+            <p>
+              <b>Education Department</b><br>
+              Issues related to schools, teachers,
+              or educational facilities in the village.
+            </p>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
+</div>

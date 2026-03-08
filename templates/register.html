@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>LokSetu Citizen Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Open Sans',sans-serif;
+}
+
+body{
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:100vh;
+background:url("{% static 'images/loginbackground.png' %}") center/cover no-repeat;
+}
+
+.container{
+width:450px;
+padding:30px;
+border-radius:10px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,0.4);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin-top:12px;
+font-weight:600;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin-top:5px;
+border-radius:5px;
+border:none;
+background:rgba(255,255,255,0.2);
+}
+
+textarea{
+resize:vertical;
+}
+
+button{
+margin-top:20px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+background:#2c6ed5;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1b4ea0;
+}
+
+.otp-box{
+display:flex;
+gap:10px;
+}
+
+.otp-box input{
+flex:1;
+}
+
+.error{
+color:red;
+margin-top:10px;
+font-size:14px;
+}
+
+.login-link{
+text-align:center;
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h2>LokSetu Citizen Registration</h2>
+
+<form method="post" id="registerForm">
+{% csrf_token %}
+
+<label>Full Name</label>
+<input type="text" name="full_name" required>
+
+<label>Phone Number</label>
+
+<div class="otp-box">
+<input type="tel" id="phone" name="phone_number" pattern="[0-9]{10}" required>
+<button type="button" onclick="sendOTP()">Send OTP</button>
+</div>
+
+<label>Enter OTP</label>
+<input type="text" name="otp" id="otp">
+
+<label>Email</label>
+<input type="email" name="email" required>
+
+<label>Gender</label>
+<select name="gender">
+<option value="">Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+<label>Aadhaar Number (Optional)</label>
+<input type="text" id="aadhaar" name="aadhaar" maxlength="12">
+
+<label>Ward Number</label>
+<input type="text" name="ward">
+
+<label>Pincode</label>
+<input type="number" id="pincode" name="pincode" required>
+
+<label>Village</label>
+<input type="text" id="village" name="village" required>
+
+<label>Address</label>
+<textarea name="address" rows="3" required></textarea>
+
+<label>Password</label>
+<input type="password" id="password" name="password" required>
+
+<label>Confirm Password</label>
+<input type="password" id="confirm_password" required>
+
+<div style="margin-top:10px;">
+<input type="checkbox" onclick="togglePassword()"> Show Password
+</div>
+
+<button type="submit">Register</button>
+
+<div class="error" id="error"></div>
+
+</form>
+
+<div class="login-link">
+Already have an account? <br>
+<a href="{% url 'login' %}">Login</a>
+</div>
+
+</div>
+
+
+<script>
+
+function togglePassword(){
+let p1=document.getElementById("password");
+let p2=document.getElementById("confirm_password");
+
+if(p1.type==="password"){
+p1.type="text";
+p2.type="text";
+}
+else{
+p1.type="password";
+p2.type="password";
+}
+}
+
+
+
+document.getElementById("pincode").addEventListener("blur",function(){
+
+let pin=this.value;
+
+fetch("https://api.postalpincode.in/pincode/"+pin)
+.then(res=>res.json())
+.then(data=>{
+
+if(data[0].Status==="Success"){
+document.getElementById("village").value=data[0].PostOffice[0].District;
+}
+
+});
+
+});
+
+
+
+function sendOTP(){
+
+alert("OTP sent to your phone number (backend integration required)");
+
+}
+
+
+
+document.getElementById("registerForm").addEventListener("submit",function(e){
+
+let pass=document.getElementById("password").value;
+let confirm=document.getElementById("confirm_password").value;
+let aadhaar=document.getElementById("aadhaar").value;
+let error=document.getElementById("error");
+
+error.innerText="";
+
+if(pass!==confirm){
+e.preventDefault();
+error.innerText="Passwords do not match";
+return;
+}
+
+if(aadhaar!="" && !/^[0-9]{12}$/.test(aadhaar)){
+e.preventDefault();
+error.innerText="Invalid Aadhaar Number";
+return;
+}
+
+});
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% load static %}
+{% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <div>
+        <h2>Village Updates</h2>
+        <p>
+          LokSetu keeps citizens informed about important village
+          announcements, development activities, and public service updates.
+        </p>
+
+        <p>
+          Through this platform, villagers can stay updated with
+          infrastructure improvements, government schemes, and
+          community programs.
+        </p>
+      </div>
+
+      <div>
+        <h2>Citizen Feedback</h2>
+        <p>
+          &ldquo;LokSetu has improved communication between the
+          village administration and citizens. It helps us stay
+          informed and report issues easily.&rdquo;
+          <span>- Village Resident</span>
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main">
+
+      <div class="images">
+        <img
+          src="{% static 'images/family.png' %}"
+          alt="Village Update"
+          height="237"
+          width="205"
+        />
+      </div>
+
+      <div class="details">
+
+        <p class="info">
+          {{ post.date }} by
+          <span class="author">Village Administration</span>
+        </p>
+
+        <h2>{{ post.title }}</h2>
+
+        <p>
+          {{ post.content }}
+        </p>
+
+        <p>
+          LokSetu is committed to improving transparency and
+          communication within the village community.
+          Updates like this help citizens stay informed
+          about ongoing development and public services.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% include "footer.html" %}
+

@@ -1,0 +1,246 @@
+{% load static %}
+{% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      
+      <div>
+        <h2>complaint Section</h2>
+        <ul>
+          <li>
+            <a href="{% url 'complaint' %}">New complaint</a>
+          </li>
+          <li>
+            <a href="{% url 'track_complaint' %}">Track complaint</a>
+          </li>
+          <li>
+            <a href="{% url 'complaint_result' %}">complaint Result</a>
+          </li>
+          <li>
+            <a href="{% url 'map_complaint' %}">Complaint Count Map</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Village Services</h2>
+        <p>
+          LokSetu provides a digital platform where citizens can report
+          issues related to village services and track the progress of
+          their complaints.
+        </p>
+
+        <p>
+          The platform helps connect villagers directly with
+          responsible departments, improving transparency and
+          faster problem resolution.
+        </p>
+      </div>
+
+      <div>
+        <h2>Citizen Feedback</h2>
+        <p>
+          &ldquo;LokSetu makes it easy for villagers to report problems
+          like road damage and water supply issues. The response from
+          authorities has become much faster.&rdquo;
+          <span>- Village Resident</span>
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main">
+
+      <h1>Village Services</h1>
+
+      <ul class="news">
+
+        <!-- Water Supply -->
+        <li>
+          <div class="box">
+            <img
+              src="{% static 'images/meeting.jpg' %}"
+              alt="Water Supply"
+              height="245"
+              width="213"
+            />
+          </div>
+
+          <p class="info">
+            Public Service Department
+          </p>
+
+          <h2>Water Supply Management</h2>
+
+          <p>
+            Citizens can report issues related to drinking water,
+            pipeline leakage, and water supply interruptions
+            through the LokSetu complaint system.
+          </p>
+
+        </li>
+
+
+        <!-- Electricity -->
+        <li>
+          <div class="box">
+            <img
+              src="{% static 'images/handshake.jpg' %}"
+              alt="Electricity"
+              height="245"
+              width="213"
+            />
+          </div>
+
+          <p class="info">
+            Public Utility Department
+          </p>
+
+          <h2>Electricity & Street Lights</h2>
+
+          <p>
+            LokSetu allows villagers to report electricity outages,
+            damaged poles, or non-functioning street lights
+            to the responsible department.
+          </p>
+
+        </li>
+
+
+        <!-- Infrastructure -->
+        <li>
+          <div class="box">
+            <img
+              src="{% static 'images/smile.jpg' %}"
+              alt="Roads"
+              height="245"
+              width="213"
+            />
+          </div>
+
+          <p class="info">
+            Infrastructure Department
+          </p>
+
+          <h2>Roads & Infrastructure</h2>
+
+          <p>
+            Citizens can report potholes, damaged roads,
+            drainage problems, and other infrastructure
+            issues through LokSetu.
+          </p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+</div>
+
+  <!-- Features Section -->
+  <div class="featured">
+    <h2>Why Use LokSetu?</h2>
+
+    <ul class="clearfix">
+
+      <li>
+        <div class="frame1">
+          <div class="box">
+            <img
+              src="{% static 'images/meeting.jpg' %}"
+              alt="complaint"
+              height="130"
+              width="197"
+            />
+          </div>
+        </div>
+
+        <p>
+          <b>Submit complaints Easily</b>
+          Citizens can report issues related to public services
+          directly through the online complaint system.
+        </p>
+
+        <a href="/services/" class="more">Submit complaint</a>
+      </li>
+
+
+      <li>
+        <div class="frame1">
+          <div class="box">
+            <img
+              src="{% static 'images/handshake.jpg' %}"
+              alt="Departments"
+              height="130"
+              width="197"
+            />
+          </div>
+        </div>
+
+        <p>
+          <b>Department Based System</b>
+          complaints are automatically forwarded to the
+          appropriate government department.
+        </p>
+
+        <a href="/departments/" class="more">View Departments</a>
+      </li>
+
+
+      <li>
+        <div class="frame1">
+          <div class="box">
+            <img
+              src="{% static 'images/smile.jpg' %}"
+              alt="Tracking"
+              height="130"
+              width="197"
+            />
+          </div>
+        </div>
+
+        <p>
+          <b>Track complaint Status</b>
+          Citizens can track the status of their complaint
+          using the complaint ID provided after submission.
+        </p>
+
+        <a href="/track/" class="more">Track complaint</a>
+      </li>
+
+
+      <li>
+        <div class="frame1">
+          <div class="box">
+            <img
+              src="{% static 'images/family-small.jpg' %}"
+              alt="Support"
+              height="130"
+              width="197"
+            />
+          </div>
+        </div>
+
+        <p>
+          <b>Citizen Support</b>
+          LokSetu improves communication between
+          citizens and local authorities for faster resolution.
+        </p>
+
+        <a href="/contact/" class="more">Contact Support</a>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+
+{% include "footer.html" %}
+</div>

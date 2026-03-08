@@ -1,0 +1,228 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Citizen Profile - LokSetu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:"Open Sans",sans-serif;
+margin:0;
+padding:0;
+
+background:url("{% static 'images/loginbackground.png' %}") no-repeat center center/cover;
+
+animation:moveBg 20s linear infinite;
+}
+
+@keyframes moveBg{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+
+width:100%;
+max-width:650px;
+
+margin:80px auto;
+
+padding:40px 30px;
+
+border-radius:16px;
+
+background:rgba(255,255,255,0.15);
+
+backdrop-filter:blur(10px);
+
+box-shadow:0 8px 32px rgba(0,0,0,0.25);
+
+}
+
+h2{
+
+text-align:center;
+
+margin-bottom:25px;
+
+font-size:2rem;
+
+color:#002855;
+
+}
+
+.profile-info{
+
+font-size:16px;
+
+line-height:1.8;
+
+}
+
+.profile-info p{
+
+margin:10px 0;
+
+padding:12px 15px;
+
+background:rgba(255,255,255,0.85);
+
+border-left:5px solid #ff6600;
+
+border-radius:8px;
+
+}
+
+.profile-info strong{
+
+display:inline-block;
+
+width:170px;
+
+color:#333;
+
+}
+
+.actions{
+
+text-align:center;
+
+margin-top:30px;
+
+}
+
+button{
+
+padding:12px 30px;
+
+background:#ff6600;
+
+border:none;
+
+border-radius:8px;
+
+color:white;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+button:hover{
+background:#e65c00;
+}
+
+.admin-link{
+
+text-align:center;
+
+margin-top:20px;
+
+}
+
+.admin-link a{
+
+font-weight:bold;
+
+color:#003366;
+
+text-decoration:none;
+
+}
+
+.admin-link a:hover{
+
+text-decoration:underline;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h2>👤 Citizen Profile</h2>
+
+<div class="profile-info">
+
+<p><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
+
+<p><strong>Username:</strong> {{ request.user.username }}</p>
+
+<p><strong>Email:</strong> {{ request.user.email }}</p>
+
+{% if request.user.profile %}
+
+<p><strong>Phone Number:</strong> {{ request.user.profile.phone_number|default:"Not Available" }}</p>
+
+<p><strong>Gender:</strong> {{ request.user.profile.gender|default:"Not Specified" }}</p>
+
+<p><strong>Aadhaar:</strong> {{ request.user.profile.aadhaar|default:"Not Provided" }}</p>
+
+<p><strong>Village:</strong> {{ request.user.profile.village|default:"Not Available" }}</p>
+
+<p><strong>Ward Number:</strong> {{ request.user.profile.ward|default:"Not Available" }}</p>
+
+<p><strong>Pincode:</strong> {{ request.user.profile.pincode|default:"Not Available" }}</p>
+
+<p><strong>Address:</strong> {{ request.user.profile.address|default:"Not Available" }}</p>
+
+{% else %}
+
+<p><strong>Phone Number:</strong> Not Available</p>
+<p><strong>Gender:</strong> Not Available</p>
+<p><strong>Aadhaar:</strong> Not Available</p>
+<p><strong>Village:</strong> Not Available</p>
+<p><strong>Ward:</strong> Not Available</p>
+<p><strong>Pincode:</strong> Not Available</p>
+<p><strong>Address:</strong> Not Available</p>
+
+{% endif %}
+
+</div>
+
+
+{% if user.is_authenticated and user.is_superuser %}
+
+<div class="admin-link">
+
+<a href="{% url 'admin:index' %}">
+Admin Dashboard
+</a>
+
+</div>
+
+{% endif %}
+
+
+<div class="actions">
+
+<form action="{% url 'logout' %}" method="post">
+
+{% csrf_token %}
+
+<button type="submit">🚪 Logout</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+{% include "footer.html" %}

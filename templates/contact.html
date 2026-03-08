@@ -1,0 +1,69 @@
+{% load static %} {% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h2>Contact Information</h2>
+        <ul class="contact">
+          <li>
+            <p>
+              <span class="home"></span>
+              <em>LokSetu – Smart complaint System</em><br />
+              Gram Panchayat Office<br />
+              Ranala, Maharashtra – 425411
+            </p>
+          </li>
+
+          <li>
+            <p class="phone">Phone: +91 XXXXX XXXXX</p>
+          </li>
+
+          <li>
+            <p class="fax">Helpline: +91 XXXXX XXXXX</p>
+          </li>
+
+          <li>
+            <p class="mail">Email: support@loksetu.in</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <h1>Contact Us</h1>
+
+      <h2>Send Us a Message</h2>
+
+      <p>
+        If you have any questions, suggestions, or issues related to the LokSetu
+        complaint system, please send us a message. Our team will review your
+        query and respond as soon as possible.
+      </p>
+
+      <form action="#" method="post" class="message">
+        {% csrf_token %}
+
+        <label>First Name</label>
+        <input type="text" name="first_name" required />
+
+        <label>Last Name</label>
+        <input type="text" name="last_name" required />
+
+        <label>Email Address</label>
+        <input type="email" name="email" required />
+
+        <label>Message</label>
+        <textarea name="message" required></textarea>
+
+        <input type="submit" value="Send Message" />
+      </form>
+    </div>
+    
+  </div>
+  
+  {% include "footer.html" %}
+</div>
+</div>

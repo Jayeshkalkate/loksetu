@@ -1,0 +1,72 @@
+{% load static %} {% include "header.html" %}
+
+<div id="contents">
+  <div class="clearfix">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h2>complaint Categories</h2>
+        <ul>
+          <li>
+            <a href="#">Road Issues</a>
+          </li>
+          <li>
+            <a href="#">Water Supply</a>
+          </li>
+          <li>
+            <a href="#">Electricity</a>
+          </li>
+          <li>
+            <a href="#">Sanitation</a>
+          </li>
+          <li>
+            <a href="#">Public Safety</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Citizen Feedback</h2>
+        <p>
+          &ldquo;LokSetu helped us report a damaged road in our ward and the
+          municipal team fixed it within days. It is very helpful for citizens
+          to communicate with authorities easily.&rdquo;
+          <span>- Local Citizen</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Post Title -->
+      <h1>{{ post.title }}</h1>
+
+      <!-- Post Date -->
+      <p><strong>Published on:</strong> {{ post.created_at|date:"F d, Y" }}</p>
+
+      <!-- Post Image -->
+      <div class="frame3">
+        <div class="box">
+          <img
+            src="{{ post.image.url }}"
+            alt="{{ post.title }}"
+            height="199"
+            width="584"
+          />
+        </div>
+      </div>
+
+      <!-- Post Description -->
+      <p>{{ post.description }}</p>
+
+      <br />
+
+      <!-- Back Button -->
+      <p>
+        <a href="{% url 'news' %}">← Back to News & Updates</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
