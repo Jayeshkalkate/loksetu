@@ -1,0 +1,114 @@
+{% load static %} {% include "header.html" %}
+
+<div class="container">
+  <h1>🏛️ Maharashtra State Admin Dashboard</h1>
+
+  <p>Monitor and manage public complaints across Maharashtra.</p>
+
+  <!-- ================= STATISTICS ================= -->
+
+  <div class="stats">
+    <div class="card total">
+      <h2>{{ total_complaints }}</h2>
+      <p>Total Complaints</p>
+    </div>
+
+    <div class="card pending">
+      <h2>{{ pending_complaints }}</h2>
+      <p>Pending</p>
+    </div>
+
+    <div class="card progress">
+      <h2>{{ progress_complaints }}</h2>
+      <p>In Progress</p>
+    </div>
+
+    <div class="card resolved">
+      <h2>{{ resolved_complaints }}</h2>
+      <p>Resolved</p>
+    </div>
+  </div>
+
+  <!-- ================= DISTRICT SUMMARY ================= -->
+
+  <h2>📊 District Complaint Summary</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>District</th>
+        <th>Total Complaints</th>
+        <th>Pending</th>
+        <th>Resolved</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for d in district_data %}
+
+      <tr>
+        <td>{{ d.district }}</td>
+
+        <td>{{ d.total }}</td>
+
+        <td>{{ d.pending }}</td>
+
+        <td>{{ d.resolved }}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ================= Complaint LIST ================= -->
+
+  <h2>📋 Recent Complaints</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>District</th>
+        <th>Department</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for c in complaints %}
+
+      <tr>
+        <td>{{ c.id }}</td>
+
+        <td>{{ c.title }}</td>
+
+        <td>{{ c.district }}</td>
+
+        <td>{{ c.department }}</td>
+
+        <td>
+          {% if c.status == "Pending" %}
+          <span class="status pending">{{ c.status }}</span>
+
+          {% elif c.status == "In Progress" %}
+          <span class="status progress">{{ c.status }}</span>
+
+          {% elif c.status == "Resolved" %}
+          <span class="status resolved">{{ c.status }}</span>
+
+          {% else %}
+          <span class="status rejected">{{ c.status }}</span>
+          {% endif %}
+        </td>
+
+        <td>{{ c.created_at }}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% include "footer.html" %}

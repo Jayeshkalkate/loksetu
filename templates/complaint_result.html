@@ -9,37 +9,37 @@
 
       
       <div>
-        <h2>complaint Section</h2>
+        <h2>Complaint Section</h2>
         <ul>
           <li>
-            <a href="{% url 'track_complaint' %}">Track complaint</a>
+            <a href="{% url 'track_complaint' %}">Track Complaint</a>
           </li>
           <li>
-            <a href="{% url 'complaint_result' %}">complaint Result</a>
+            <a href="{% url 'track_complaint' %}">Complaint Result</a>
           </li>
           <li>
-            <a href="{% url 'map_complaint' %}">Map complaints</a>
+            <a href="{% url 'map_complaint' %}">Map Complaints</a>
           </li>
         </ul>
       </div>
 
       <div>
-        <h2>complaint Submitted</h2>
+        <h2>Complaint Submitted</h2>
         <p>
-          Your complaint has been successfully registered in the LokSetu
+          Your Complaint has been successfully registered in the LokSetu
           system. The concerned department will review the issue and
           take necessary action.
         </p>
         <p>
-          Please keep your complaint ID safe so you can track the
-          progress of your complaint anytime.
+          Please keep your Complaint ID safe so you can track the
+          progress of your Complaint anytime.
         </p>
       </div>
 
       <div>
         <h2>Need Help?</h2>
         <p>
-          If you face any issue while tracking your complaint, please
+          If you face any issue while tracking your Complaint, please
           contact the LokSetu support team for assistance.
         </p>
       </div>
@@ -47,7 +47,7 @@
 
     <!-- Main Content -->
     <div class="main">
-      <h1>complaint Submitted Successfully</h1>
+      <h1>Complaint Submitted Successfully</h1>
 
       <div class="frame2">
         <div class="box">
@@ -63,30 +63,30 @@
       <h2>Thank You for Your Submission</h2>
 
       <p>
-        Your complaint has been recorded successfully in the LokSetu
+        Your Complaint has been recorded successfully in the LokSetu
         system. Our team will forward your issue to the appropriate
         department for review and resolution.
       </p>
 
-      <h2>Your complaint Details</h2>
+      <h2>Your Complaint Details</h2>
 
       <p>
-        <strong>complaint ID:</strong> {{ complaint.id }}
+        <strong>Complaint ID:</strong> {{ Complaint.complaint_id }}
       </p>
 
       <p>
-        <strong>Department:</strong> {{ complaint.department }}
+        <strong>Department:</strong> {{ Complaint.department }}
       </p>
 
       <p>
         <strong>Status:</strong> Pending Review
       </p>
 
-      <h2>Track Your complaint</h2>
+      <h2>Track Your Complaint</h2>
 
       <p>
-        You can track the progress of your complaint anytime using the
-        complaint tracking page.
+        You can track the progress of your Complaint anytime using the
+        Complaint tracking page.
       </p>
 
     </div>

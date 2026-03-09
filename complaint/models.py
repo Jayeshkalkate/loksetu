@@ -1,7 +1,10 @@
 from django.db import models
+import datetime
 
 
 class complaint(models.Model):
+
+    complaint_id = models.CharField(max_length=20, unique=True, blank=True)
 
     # Citizen Info
     full_name = models.CharField(max_length=100)
@@ -34,9 +37,31 @@ class complaint(models.Model):
     longitude = models.FloatField(blank=True, null=True)
 
     # Status
-    status = models.CharField(max_length=20, default="Pending")
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("In Progress", "In Progress"),
+        ("Resolved", "Resolved"),
+        ("Rejected", "Rejected"),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Pending"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+
+        if not self.complaint_id:
+
+            year = datetime.datetime.now().year
+            count = complaint.objects.count() + 1
+
+            self.complaint_id = f"LKS-MH-{year}-{count:06d}"
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.title
+        return self.complaint_id

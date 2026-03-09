@@ -5,15 +5,15 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div>
-        <h2>Track complaint</h2>
+        <h2>Track Complaint</h2>
         <p>
-          Use the complaint ID provided during complaint submission to check the
+          Use the Complaint ID provided during Complaint submission to check the
           current status of your issue.
         </p>
 
         <ul>
-          <li>Enter your complaint ID</li>
-          <li>View complaint status</li>
+          <li>Enter your Complaint ID</li>
+          <li>View Complaint status</li>
           <li>Check department updates</li>
         </ul>
       </div>
@@ -30,49 +30,44 @@
 
     <!-- Main Content -->
     <div class="main">
-      <h1>Track Your complaint</h1>
+      <h1>Track Your Complaint</h1>
 
       <p>
-        After submitting a complaint through LokSetu, you will receive a unique
-        complaint ID. Enter that ID below to check the current status of your
-        complaint.
+        After submitting a Complaint through LokSetu, you will receive a unique
+        Complaint ID. Enter that ID below to check the current status of your
+        Complaint.
       </p>
 
       <!-- Tracking Form -->
       <form action="" method="post" class="message">
         {% csrf_token %}
 
-        <label>Enter complaint ID</label>
-        <input
-          type="text"
-          name="complaint_id"
-          placeholder="Example: 1023"
-          required
-        />
-
-        <input type="submit" value="Track complaint" />
+        <label>Enter Complaint ID</label>
+        <input type="text" name="complaint_id" placeholder="Example: 1023" required>
+        <input type="submit" value="Track Complaint" />
       </form>
 
       <br />
 
-      <!-- complaint Result -->
-      {% if complaint %}
-      <div class="frame2">
+      <!-- Complaint Result -->
+       {% if Complaint %}
+       <div class="frame2">
         <div class="box">
-          <h2>complaint Details</h2>
-
-          <p><strong>complaint ID:</strong> {{ complaint.id }}</p>
-
-          <p><strong>Department:</strong> {{ complaint.department }}</p>
-
-          <p><strong>Description:</strong> {{ complaint.description }}</p>
-
-          <p><strong>Status:</strong> {{ complaint.status }}</p>
-
-          <p><strong>Date Submitted:</strong> {{ complaint.created_at }}</p>
+          <h2>Complaint Details</h2>
+          
+          <p><strong>Complaint ID:</strong> {{ Complaint.complaint_id }}</p>
+          
+          <p><strong>Department:</strong> {{ Complaint.department }}</p>
+          
+          <p><strong>Description:</strong> {{ Complaint.description }}</p>
+          
+          <p><strong>Status:</strong> {{ Complaint.status }}</p>
+          
+          <p><strong>Date Submitted:</strong> {{ Complaint.created_at }}</p>
         </div>
       </div>
       {% endif %}
+      
     </div>
   </div>
 </div>

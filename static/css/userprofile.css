@@ -1,0 +1,121 @@
+
+      body {
+        font-family: "Open Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+
+        background: url("{% static 'images/loginbackground.png' %}") no-repeat
+          center center/cover;
+
+        animation: moveBg 20s linear infinite;
+      }
+
+      @keyframes moveBg {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .container {
+        width: 100%;
+        max-width: 650px;
+
+        margin: 80px auto;
+
+        padding: 40px 30px;
+
+        border-radius: 16px;
+
+        background: rgba(255, 255, 255, 0.15);
+
+        backdrop-filter: blur(10px);
+
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      }
+
+      h2 {
+        text-align: center;
+
+        margin-bottom: 25px;
+
+        font-size: 2rem;
+
+        color: #002855;
+      }
+
+      .profile-info {
+        font-size: 16px;
+
+        line-height: 1.8;
+      }
+
+      .profile-info p {
+        margin: 10px 0;
+
+        padding: 12px 15px;
+
+        background: rgba(255, 255, 255, 0.85);
+
+        border-left: 5px solid #ff6600;
+
+        border-radius: 8px;
+      }
+
+      .profile-info strong {
+        display: inline-block;
+
+        width: 170px;
+
+        color: #333;
+      }
+
+      .actions {
+        text-align: center;
+
+        margin-top: 30px;
+      }
+
+      button {
+        padding: 12px 30px;
+
+        background: #ff6600;
+
+        border: none;
+
+        border-radius: 8px;
+
+        color: white;
+
+        font-size: 16px;
+
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #e65c00;
+      }
+
+      .admin-link {
+        text-align: center;
+
+        margin-top: 20px;
+      }
+
+      .admin-link a {
+        font-weight: bold;
+
+        color: #003366;
+
+        text-decoration: none;
+      }
+
+      .admin-link a:hover {
+        text-decoration: underline;
+      }
+      

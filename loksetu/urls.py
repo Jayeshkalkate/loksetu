@@ -28,7 +28,7 @@ urlpatterns = [
     # POST OR NEWS URL
     path('', include('post.urls')),
 
-    # complaint URL
+    # Complaint URL
     path('', include('complaint.urls')),
 
     path('', views.homepage, name='homepage'),

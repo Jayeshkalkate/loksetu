@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class complaintConfig(AppConfig):
+class ComplaintConfig(AppConfig):
     name = 'complaint'
+    

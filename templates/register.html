@@ -1,246 +1,409 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<title>LokSetu Citizen Registration</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Open Sans',sans-serif;
-}
-
-body{
-display:flex;
-align-items:center;
-justify-content:center;
-min-height:100vh;
-background:url("{% static 'images/loginbackground.png' %}") center/cover no-repeat;
-}
-
-.container{
-width:450px;
-padding:30px;
-border-radius:10px;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(8px);
-border:1px solid rgba(255,255,255,0.4);
-}
-
-h2{
-text-align:center;
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin-top:12px;
-font-weight:600;
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-margin-top:5px;
-border-radius:5px;
-border:none;
-background:rgba(255,255,255,0.2);
-}
-
-textarea{
-resize:vertical;
-}
-
-button{
-margin-top:20px;
-width:100%;
-padding:12px;
-border:none;
-border-radius:6px;
-background:#2c6ed5;
-color:#fff;
-font-size:16px;
-cursor:pointer;
-}
-
-button:hover{
-background:#1b4ea0;
-}
-
-.otp-box{
-display:flex;
-gap:10px;
-}
-
-.otp-box input{
-flex:1;
-}
-
-.error{
-color:red;
-margin-top:10px;
-font-size:14px;
-}
-
-.login-link{
-text-align:center;
-margin-top:15px;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-<div class="container">
-
-<h2>LokSetu Citizen Registration</h2>
-
-<form method="post" id="registerForm">
-{% csrf_token %}
-
-<label>Full Name</label>
-<input type="text" name="full_name" required>
-
-<label>Phone Number</label>
-
-<div class="otp-box">
-<input type="tel" id="phone" name="phone_number" pattern="[0-9]{10}" required>
-<button type="button" onclick="sendOTP()">Send OTP</button>
-</div>
-
-<label>Enter OTP</label>
-<input type="text" name="otp" id="otp">
-
-<label>Email</label>
-<input type="email" name="email" required>
-
-<label>Gender</label>
-<select name="gender">
-<option value="">Select Gender</option>
-<option>Male</option>
-<option>Female</option>
-<option>Other</option>
-</select>
-
-<label>Aadhaar Number (Optional)</label>
-<input type="text" id="aadhaar" name="aadhaar" maxlength="12">
-
-<label>Ward Number</label>
-<input type="text" name="ward">
-
-<label>Pincode</label>
-<input type="number" id="pincode" name="pincode" required>
-
-<label>Village</label>
-<input type="text" id="village" name="village" required>
-
-<label>Address</label>
-<textarea name="address" rows="3" required></textarea>
-
-<label>Password</label>
-<input type="password" id="password" name="password" required>
-
-<label>Confirm Password</label>
-<input type="password" id="confirm_password" required>
-
-<div style="margin-top:10px;">
-<input type="checkbox" onclick="togglePassword()"> Show Password
-</div>
-
-<button type="submit">Register</button>
-
-<div class="error" id="error"></div>
-
-</form>
-
-<div class="login-link">
-Already have an account? <br>
-<a href="{% url 'login' %}">Login</a>
-</div>
-
-</div>
-
-
-<script>
-
-function togglePassword(){
-let p1=document.getElementById("password");
-let p2=document.getElementById("confirm_password");
-
-if(p1.type==="password"){
-p1.type="text";
-p2.type="text";
-}
-else{
-p1.type="password";
-p2.type="password";
-}
-}
-
-
-
-document.getElementById("pincode").addEventListener("blur",function(){
-
-let pin=this.value;
-
-fetch("https://api.postalpincode.in/pincode/"+pin)
-.then(res=>res.json())
-.then(data=>{
-
-if(data[0].Status==="Success"){
-document.getElementById("village").value=data[0].PostOffice[0].District;
-}
-
-});
-
-});
-
-
-
-function sendOTP(){
-
-alert("OTP sent to your phone number (backend integration required)");
-
-}
-
-
-
-document.getElementById("registerForm").addEventListener("submit",function(e){
-
-let pass=document.getElementById("password").value;
-let confirm=document.getElementById("confirm_password").value;
-let aadhaar=document.getElementById("aadhaar").value;
-let error=document.getElementById("error");
-
-error.innerText="";
-
-if(pass!==confirm){
-e.preventDefault();
-error.innerText="Passwords do not match";
-return;
-}
-
-if(aadhaar!="" && !/^[0-9]{12}$/.test(aadhaar)){
-e.preventDefault();
-error.innerText="Invalid Aadhaar Number";
-return;
-}
-
-});
-
-</script>
-
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu Citizen Registration</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/register.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>LokSetu Citizen Registration</h2>
+
+      <!-- Display Django messages (e.g., errors from backend) -->
+      {% if messages %} {% for message in messages %}
+      <p style="color: red">{{ message }}</p>
+      {% endfor %} {% endif %}
+
+      <form method="post" id="registerForm" autocomplete="off">
+        {% csrf_token %}
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="fullName"
+            >Full Name <span style="color: #ffcccc">*</span></label
+          >
+          <input
+            type="text"
+            id="fullName"
+            name="full_name"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email <span style="color: #ffcccc">*</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+          />
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group">
+          <label for="gender"
+            >Gender <span style="color: #ffcccc">*</span></label
+          >
+          <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Aadhaar -->
+        <div class="form-group">
+          <label for="aadhaar">Aadhaar Number (Optional)</label>
+          <input
+            type="text"
+            id="aadhaar"
+            name="aadhaar"
+            pattern="[0-9]{12}"
+            maxlength="12"
+            placeholder="12-digit Aadhaar"
+          />
+        </div>
+
+        <!-- Ward -->
+        <div class="form-group">
+          <label for="ward">Ward Number</label>
+          <input type="number" id="ward" name="ward" placeholder="e.g. 5" />
+        </div>
+
+        <!-- Pincode -->
+        <div class="form-group">
+          <label for="pincode"
+            >Pincode <span style="color: #ffcccc">*</span></label
+          >
+          <input
+            type="text"
+            id="pincode"
+            name="pincode"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            placeholder="6-digit pincode"
+            required
+          />
+          <div id="pincodeStatus" class="error-message"></div>
+        </div>
+
+        <!-- District (formerly Village) -->
+        <div class="form-group">
+          <label for="village"
+            >District <span style="color: #ffcccc">*</span></label
+          >
+          <input
+            type="text"
+            id="village"
+            name="village"
+            placeholder="Auto-filled from pincode"
+            readonly
+            required
+          />
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address"
+            >Address <span style="color: #ffcccc">*</span></label
+          >
+          <textarea
+            id="address"
+            name="address"
+            rows="2"
+            placeholder="Street, landmark, etc."
+            required
+          ></textarea>
+        </div>
+
+        
+        <!-- Phone + OTP -->
+        <div class="form-group">
+          <label for="phone"
+            >Phone Number <span style="color: #ffcccc">*</span></label
+          >
+          <div class="otp-group">
+            <input
+              type="tel"
+              id="phone"
+              name="phone_number"
+              pattern="[0-9]{10}"
+              maxlength="10"
+              placeholder="10-digit mobile"
+              required
+            />
+            <button type="button" class="btn" id="sendOtpBtn">Send OTP</button>
+            <button type="button" class="btn" id="resendOtpBtn">
+              Resend OTP
+            </button>
+          </div>
+        </div>
+
+        <!-- OTP -->
+        <div class="form-group">
+          <label for="otp">Enter OTP</label>
+          <div class="otp-group">
+            <input
+              type="text"
+              id="otp"
+              name="otp"
+              pattern="[0-9]{6}"
+              maxlength="6"
+              placeholder="6-digit OTP"
+            />
+
+            <button type="button" class="btn" id="verifyOtpBtn">
+              Verify OTP
+            </button>
+          </div>
+
+          <div id="otpStatus" style="margin-top: 10px; font-weight: 600"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password"
+            >Password <span style="color: #ffcccc">*</span></label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            pattern=".{8,}"
+            placeholder="Minimum 8 characters"
+            required
+          />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword"
+            >Confirm Password <span style="color: #ffcccc">*</span></label
+          >
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirm_password"
+            placeholder="Re-enter password"
+            required
+          />
+        </div>
+
+        <!-- Show Password -->
+        <div class="checkbox-group">
+          <input type="checkbox" id="showPassword" />
+          <label for="showPassword">Show Password</label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-block">Register</button>
+        <div id="formError" class="error"></div>
+      </form>
+
+      <div class="login-link">
+        Already have an account?<br />
+        <a href="{% url 'login' %}">Login here</a>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const form = document.getElementById("registerForm");
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const showPassword = document.getElementById("showPassword");
+        const aadhaar = document.getElementById("aadhaar");
+        const pincode = document.getElementById("pincode");
+        const village = document.getElementById("village");
+        const statusDiv = document.getElementById("pincodeStatus");
+        const sendOtpBtn = document.getElementById("sendOtpBtn");
+        const otp = document.getElementById("otp");
+        const error = document.getElementById("formError");
+
+        // Show password toggle
+        showPassword.addEventListener("change", function () {
+          const type = this.checked ? "text" : "password";
+          password.type = type;
+          confirmPassword.type = type;
+        });
+
+        // Pincode lookup (unchanged)
+        let timer;
+        pincode.addEventListener("input", function () {
+          clearTimeout(timer);
+          const pin = this.value.trim();
+          if (!/^\d{6}$/.test(pin)) {
+            village.value = "";
+            statusDiv.textContent = "";
+            return;
+          }
+          statusDiv.textContent = "Fetching location...";
+          timer = setTimeout(() => {
+            fetch(`https://api.postalpincode.in/pincode/${pin}`)
+              .then((res) => res.json())
+              .then((data) => {
+                if (data[0].Status === "Success") {
+                  const district = data[0].PostOffice[0].District;
+                  village.value = district;
+                  statusDiv.textContent = `✔ Located: ${district}`;
+                  statusDiv.style.color = "green";
+                } else {
+                  village.value = "";
+                  statusDiv.textContent = "Invalid pincode";
+                  statusDiv.style.color = "red";
+                }
+              })
+              .catch(() => {
+                statusDiv.textContent = "Error fetching location";
+                statusDiv.style.color = "red";
+              });
+          }, 500);
+        });
+
+        // OTP send with button disable and feedback
+        sendOtpBtn.addEventListener("click", function () {
+          const phone = document.getElementById("phone").value;
+          if (!/^\d{10}$/.test(phone)) {
+            alert("Enter valid phone number");
+            return;
+          }
+
+          // Disable button and change text
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "Sending...";
+
+          fetch("/accounts/send-otp/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-CSRFToken": document.querySelector(
+                "[name=csrfmiddlewaretoken]",
+              ).value,
+            },
+            body: `phone=${phone}`,
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              const otpStatus = document.getElementById("otpStatus");
+
+              if (data.status === "success") {
+                sendOtpBtn.innerText = "OTP Sent";
+                otp.focus();
+
+                // show message from backend (OTP if SMS failed)
+                otpStatus.innerHTML = data.message;
+                otpStatus.style.color = "green";
+              } else {
+                otpStatus.innerHTML = data.message;
+                otpStatus.style.color = "red";
+
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerText = "Send OTP";
+              }
+            })
+            .catch(() => {
+              alert("Network error");
+              sendOtpBtn.disabled = false;
+              sendOtpBtn.innerText = "Send OTP";
+            });
+        });
+
+        // Form validation before submit
+        form.addEventListener("submit", function (e) {
+          error.innerText = ""; // Clear previous errors
+
+          // 1. Validate OTP (must be exactly 6 digits)
+          if (!/^\d{6}$/.test(otp.value)) {
+            e.preventDefault();
+            error.innerText = "Enter a valid 6-digit OTP";
+            return;
+          }
+
+          // 2. Password match
+          if (password.value !== confirmPassword.value) {
+            e.preventDefault();
+            error.innerText = "Passwords do not match";
+            return;
+          }
+
+          // 3. Password length (already enforced by pattern, but double‑check)
+          if (password.value.length < 8) {
+            e.preventDefault();
+            error.innerText = "Password must be at least 8 characters";
+            return;
+          }
+
+          // 4. Aadhaar format if provided
+          if (aadhaar.value && !/^\d{12}$/.test(aadhaar.value)) {
+            e.preventDefault();
+            error.innerText = "Invalid Aadhaar number";
+            return;
+          }
+        });
+      })();
+
+      let countdown = 30;
+
+      function startTimer() {
+        const resendBtn = document.getElementById("resendOtpBtn");
+
+        resendBtn.disabled = true;
+
+        let interval = setInterval(function () {
+          countdown--;
+
+          resendBtn.innerText = "Resend OTP (" + countdown + ")";
+
+          if (countdown <= 0) {
+            clearInterval(interval);
+
+            resendBtn.disabled = false;
+
+            resendBtn.innerText = "Resend OTP";
+
+            countdown = 30;
+          }
+        }, 1000);
+      }
+
+      const verifyBtn = document.getElementById("verifyOtpBtn");
+      const otpStatus = document.getElementById("otpStatus");
+
+      verifyBtn.addEventListener("click", function () {
+        const phone = document.getElementById("phone").value;
+        const otp = document.getElementById("otp").value;
+
+        fetch("/accounts/verify-otp/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+              .value,
+          },
+          body: `phone=${phone}&otp=${otp}`,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              otpStatus.innerHTML = "✅ OTP Verified";
+              otpStatus.style.color = "green";
+            } else {
+              otpStatus.innerHTML = "❌ Invalid OTP";
+              otpStatus.style.color = "red";
+            }
+          });
+      });
+    </script>
+  </body>
 </html>

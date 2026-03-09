@@ -8,17 +8,19 @@
     <div class="sidebar">
       
       <div>
-        <h2>complaint Section</h2>
+        <h2>Complaint Section</h2>
         <ul>
           <li>
-            <a href="{% url 'complaint' %}">New complaint</a>
+            <a href="{% url 'complaint' %}">New Complaint</a>
           </li>
           <li>
-            <a href="{% url 'track_complaint' %}">Track complaint</a>
+            <a href="{% url 'track_complaint' %}">Track Complaint</a>
           </li>
+          {% comment %}
           <li>
-            <a href="{% url 'complaint_result' %}">complaint Result</a>
+            <a href="{% url 'complaint_result' %}">Complaint Result</a>
           </li>
+          {% endcomment %}
           <li>
             <a href="{% url 'map_complaint' %}">Complaint Count Map</a>
           </li>
@@ -30,7 +32,7 @@
         <p>
           LokSetu provides a digital platform where citizens can report
           issues related to village services and track the progress of
-          their complaints.
+          their Complaints.
         </p>
 
         <p>
@@ -80,7 +82,7 @@
           <p>
             Citizens can report issues related to drinking water,
             pipeline leakage, and water supply interruptions
-            through the LokSetu complaint system.
+            through the LokSetu Complaint system.
           </p>
 
         </li>
@@ -155,7 +157,7 @@
           <div class="box">
             <img
               src="{% static 'images/meeting.jpg' %}"
-              alt="complaint"
+              alt="Complaint"
               height="130"
               width="197"
             />
@@ -163,12 +165,12 @@
         </div>
 
         <p>
-          <b>Submit complaints Easily</b>
+          <b>Submit Complaints Easily</b>
           Citizens can report issues related to public services
-          directly through the online complaint system.
+          directly through the online Complaint system.
         </p>
 
-        <a href="/services/" class="more">Submit complaint</a>
+        <a href="{% url 'complaint' %}" class="more">Submit Complaint</a>
       </li>
 
 
@@ -186,7 +188,7 @@
 
         <p>
           <b>Department Based System</b>
-          complaints are automatically forwarded to the
+          Complaints are automatically forwarded to the
           appropriate government department.
         </p>
 
@@ -207,12 +209,12 @@
         </div>
 
         <p>
-          <b>Track complaint Status</b>
-          Citizens can track the status of their complaint
-          using the complaint ID provided after submission.
+          <b>Track Complaint Status</b>
+          Citizens can track the status of their Complaint
+          using the Complaint ID provided after submission.
         </p>
 
-        <a href="/track/" class="more">Track complaint</a>
+        <a href="{% url 'track_complaint' %}" class="more">Track Complaint</a>
       </li>
 
 

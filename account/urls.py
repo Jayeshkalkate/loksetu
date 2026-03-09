@@ -6,5 +6,20 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register, name='register'),
     path('logout/', views.logout_view, name='logout'),
+    
+    path('send-otp/', views.send_otp, name='send_otp'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    
+    path('password_reset_form/', views.password_reset_form, name='password_reset_form'),
+    path('password_reset_confirm/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('password_reset_done/', views.password_reset_done, name='password_reset_done'),
+    path('password_reset_complete/', views.password_reset_complete, name='password_reset_complete'),
+    
+    
+    path('state_admin_dashboard/', views.state_admin_dashboard, name='state_admin_dashboard'),
+    path('super_admin_dashboard/', views.super_admin_dashboard, name='super_admin_dashboard'),
+    path('taluka_admin_dashboard/', views.taluka_admin_dashboard, name='taluka_admin_dashboard'),
+    path('village_admin_dashboard/', views.village_admin_dashboard, name='village_admin_dashboard'),
+    path('district_admin_dashboard/', views.district_admin_dashboard, name='district_admin_dashboard'),
 
 ]

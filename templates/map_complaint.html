@@ -1,0 +1,81 @@
+{% load static %} {% include "header.html" %}
+
+<div class="container">
+  <h2>📍 Village Complaints Map</h2>
+
+  <div id="map"></div>
+
+  <div class="legend">
+    <p>Click on a marker to view Complaint details.</p>
+  </div>
+</div>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+  // Default location (example village)
+
+  var map = L.map('map').setView([21.3465, 74.2410], 13);
+
+
+  // OpenStreetMap tiles
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+
+  maxZoom:19,
+  attribution:'© OpenStreetMap'
+
+  }).addTo(map);
+
+
+  // Complaint data from Django
+
+var Complaints = {{ complaint_json|safe }};
+
+
+  // store markers for auto zoom
+
+  var markers = [];
+
+
+  // Add markers
+
+  Complaints.forEach(function(c){
+
+  if(c.latitude && c.longitude){
+
+  var marker = L.marker([c.latitude, c.longitude]).addTo(map);
+
+  markers.push(marker);
+
+  marker.bindPopup(
+
+  "<b>Complaint ID:</b> "+c.id+
+  "<br><b>Department:</b> "+c.department+
+  "<br><b>Status:</b> "+c.status+
+  "<br><b>Description:</b> "+c.description
+
+  );
+
+  }
+
+  });
+
+
+  // Auto zoom to Complaints
+
+  if(markers.length > 0){
+
+  var group = new L.featureGroup(markers);
+  map.fitBounds(group.getBounds());
+
+  }
+</script>
+
+{% include "footer.html" %}

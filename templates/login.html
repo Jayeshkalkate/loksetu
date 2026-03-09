@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Login - LokSetu complaint Portal</title>
+    <title>Login - LokSetu Complaint Portal</title>
 
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
@@ -16,278 +16,20 @@
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"
     ></script>
+    
+    <link
+      rel="stylesheet"
+      href="{% static 'css/login.css' %}"
+      type="text/css"
+    />
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Open Sans", sans-serif;
-      }
-
-      body {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-
-        background: url("{% static 'images/loginbackground.png' %}") no-repeat
-          center center/cover;
-
-        animation: moveBg 20s linear infinite;
-      }
-
-      @keyframes moveBg {
-        0% {
-          background-position: 0% 50%;
-        }
-
-        50% {
-          background-position: 100% 50%;
-        }
-
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-
-      .wrapper {
-        width: 100%;
-        max-width: 400px;
-
-        padding: 40px 30px;
-
-        background: rgba(255, 255, 255, 0.15);
-
-        backdrop-filter: blur(10px);
-
-        border-radius: 16px;
-
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-
-        color: #000;
-      }
-
-      h2 {
-        font-size: 2rem;
-
-        margin-bottom: 20px;
-
-        font-weight: 600;
-
-        color: #222;
-
-        text-align: center;
-      }
-
-      .portal-title {
-        text-align: center;
-
-        font-size: 14px;
-
-        margin-bottom: 15px;
-
-        color: #333;
-      }
-
-      .input-field {
-        position: relative;
-
-        margin: 20px 0;
-      }
-
-      .input-field input {
-        width: 100%;
-
-        padding: 12px 40px 12px 35px;
-
-        border: none;
-
-        border-radius: 8px;
-
-        background: rgba(255, 255, 255, 0.2);
-
-        color: #222;
-
-        font-size: 15px;
-
-        outline: none;
-      }
-
-      .input-field i {
-        position: absolute;
-
-        top: 50%;
-
-        left: 10px;
-
-        transform: translateY(-50%);
-
-        color: #444;
-      }
-
-      .input-field label {
-        position: absolute;
-
-        top: 50%;
-
-        left: 35px;
-
-        transform: translateY(-50%);
-
-        color: #666;
-
-        font-size: 14px;
-
-        pointer-events: none;
-
-        transition: 0.3s ease;
-      }
-
-      .input-field input:focus ~ label,
-      .input-field input:valid ~ label {
-        top: 5px;
-
-        font-size: 12px;
-
-        color: #000;
-      }
-
-      .show-password {
-        margin-top: -10px;
-
-        font-size: 14px;
-
-        color: #000;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 5px;
-      }
-
-      button {
-        width: 100%;
-
-        padding: 12px;
-
-        border: none;
-
-        border-radius: 8px;
-
-        background-color: #2c6ed5;
-
-        color: white;
-
-        font-size: 16px;
-
-        font-weight: 600;
-
-        cursor: pointer;
-
-        position: relative;
-
-        transition: background 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #1b4ea0;
-      }
-
-      .spinner {
-        display: none;
-
-        width: 18px;
-
-        height: 18px;
-
-        border: 3px solid #fff;
-
-        border-top-color: transparent;
-
-        border-radius: 50%;
-
-        animation: spin 0.8s linear infinite;
-
-        position: absolute;
-
-        right: 20px;
-
-        top: 50%;
-
-        transform: translateY(-50%);
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .error-message,
-      .validation-error {
-        background-color: rgba(255, 0, 0, 0.1);
-
-        color: #b30000;
-
-        padding: 10px 15px;
-
-        border-radius: 6px;
-
-        font-size: 14px;
-
-        margin-bottom: 15px;
-      }
-
-      .link-group {
-        margin-top: 15px;
-
-        display: flex;
-
-        justify-content: space-between;
-
-        font-size: 14px;
-      }
-
-      .link-group a {
-        color: #003366;
-
-        text-decoration: none;
-      }
-
-      .link-group a:hover {
-        text-decoration: underline;
-      }
-
-      .register {
-        margin-top: 25px;
-
-        text-align: center;
-
-        font-size: 14px;
-      }
-
-      .register a {
-        color: #003366;
-
-        text-decoration: none;
-
-        font-weight: 600;
-      }
-
-      .register a:hover {
-        text-decoration: underline;
-      }
-    </style>
   </head>
 
   <body>
     <div class="wrapper">
       <h2>LokSetu Login</h2>
 
-      <div class="portal-title">Smart Public complaint Tracker</div>
+      <div class="portal-title">Smart Public Complaint Tracker</div>
 
       {% if messages %} {% for message in messages %}
       <div class="error-message">{{ message }}</div>
@@ -331,7 +73,7 @@
         </button>
 
         <div class="link-group">
-          <a href="{% url 'password_reset' %}">Forgot Password?</a>
+          <a href="{% url 'password_reset_form' %}">Forgot Password?</a>
         </div>
       </form>
 

@@ -1,228 +1,135 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Citizen Profile - LokSetu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <link
+      rel="stylesheet"
+      href="{% static 'css/userprofile.css' %}"
+      type="text/css"
+    />
+  </head>
 
-<meta charset="UTF-8">
-<title>Citizen Profile - LokSetu</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <body>
+    <div class="container">
+      <h2>👤 Citizen Profile</h2>
 
-<style>
+      <div class="profile-info">
+        <p><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
 
-body{
-font-family:"Open Sans",sans-serif;
-margin:0;
-padding:0;
+        <p><strong>Username:</strong> {{ request.user.username }}</p>
 
-background:url("{% static 'images/loginbackground.png' %}") no-repeat center center/cover;
+        <p><strong>Email:</strong> {{ request.user.email }}</p>
 
-animation:moveBg 20s linear infinite;
-}
+        {% if request.user.citizen %}
 
-@keyframes moveBg{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
+        <p>
+          <strong>Phone Number:</strong> {{
+          request.user.citizen.phone_number|default:"Not Available" }}
+        </p>
 
-.container{
+        <p>
+          <strong>Gender:</strong> {{ request.user.citizen.gender|default:"Not
+          Specified" }}
+        </p>
 
-width:100%;
-max-width:650px;
+        <p>
+          <strong>Aadhaar:</strong> {{ request.user.citizen.aadhaar|default:"Not
+          Provided" }}
+        </p>
 
-margin:80px auto;
+        <p>
+          <strong>Village:</strong> {{ request.user.citizen.village|default:"Not
+          Available" }}
+        </p>
 
-padding:40px 30px;
+        <p>
+          <strong>Ward Number:</strong> {{
+          request.user.citizen.ward|default:"Not Available" }}
+        </p>
 
-border-radius:16px;
+        <p>
+          <strong>Pincode:</strong> {{ request.user.citizen.pincode|default:"Not
+          Available" }}
+        </p>
 
-background:rgba(255,255,255,0.15);
+        <p>
+          <strong>Address:</strong> {{ request.user.citizen.address|default:"Not
+          Available" }}
+        </p>
 
-backdrop-filter:blur(10px);
+        {% else %}
 
-box-shadow:0 8px 32px rgba(0,0,0,0.25);
+        <p><strong>Phone Number:</strong> Not Available</p>
+        <p><strong>Gender:</strong> Not Available</p>
+        <p><strong>Aadhaar:</strong> Not Available</p>
+        <p><strong>Village:</strong> Not Available</p>
+        <p><strong>Ward:</strong> Not Available</p>
+        <p><strong>Pincode:</strong> Not Available</p>
+        <p><strong>Address:</strong> Not Available</p>
 
-}
+        {% endif %}
+      </div>
 
-h2{
+      <div class="admin-link">
+        {% if request.user.userprofile.role == "super_admin" %}
 
-text-align:center;
+        <a href="{% url 'super_admin_dashboard' %}">
+          ⚙️ Go to Super Admin Dashboard
+        </a>
 
-margin-bottom:25px;
+        {% elif request.user.userprofile.role == "state_admin" %}
 
-font-size:2rem;
+        <a href="{% url 'state_admin_dashboard' %}">
+          🏛️ Go to State Admin Dashboard
+        </a>
 
-color:#002855;
+        {% elif request.user.userprofile.role == "district_admin" %}
 
-}
+        <a href="{% url 'district_admin_dashboard' %}">
+          🏢 Go to District Admin Dashboard
+        </a>
 
-.profile-info{
+        {% elif request.user.userprofile.role == "taluka_admin" %}
 
-font-size:16px;
+        <a href="{% url 'taluka_admin_dashboard' %}">
+          📍 Go to Taluka Admin Dashboard
+        </a>
 
-line-height:1.8;
+        {% elif request.user.userprofile.role == "village_admin" %}
 
-}
+        <a href="{% url 'village_admin_dashboard' %}">
+          🏡 Go to Village Admin Dashboard
+        </a>
 
-.profile-info p{
+        {% else %}
 
-margin:10px 0;
+        <a href="/"> 🏠 Go to Homepage </a>
 
-padding:12px 15px;
+        {% endif %}
+      </div>
 
-background:rgba(255,255,255,0.85);
+      {% if user.is_authenticated and user.is_superuser %}
 
-border-left:5px solid #ff6600;
+      <div class="admin-link">
+        <a href="{% url 'admin:index' %}"> Admin Dashboard </a>
+      </div>
 
-border-radius:8px;
+      {% endif %}
 
-}
+      <div class="actions">
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
 
-.profile-info strong{
-
-display:inline-block;
-
-width:170px;
-
-color:#333;
-
-}
-
-.actions{
-
-text-align:center;
-
-margin-top:30px;
-
-}
-
-button{
-
-padding:12px 30px;
-
-background:#ff6600;
-
-border:none;
-
-border-radius:8px;
-
-color:white;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-button:hover{
-background:#e65c00;
-}
-
-.admin-link{
-
-text-align:center;
-
-margin-top:20px;
-
-}
-
-.admin-link a{
-
-font-weight:bold;
-
-color:#003366;
-
-text-decoration:none;
-
-}
-
-.admin-link a:hover{
-
-text-decoration:underline;
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-<div class="container">
-
-<h2>👤 Citizen Profile</h2>
-
-<div class="profile-info">
-
-<p><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
-
-<p><strong>Username:</strong> {{ request.user.username }}</p>
-
-<p><strong>Email:</strong> {{ request.user.email }}</p>
-
-{% if request.user.profile %}
-
-<p><strong>Phone Number:</strong> {{ request.user.profile.phone_number|default:"Not Available" }}</p>
-
-<p><strong>Gender:</strong> {{ request.user.profile.gender|default:"Not Specified" }}</p>
-
-<p><strong>Aadhaar:</strong> {{ request.user.profile.aadhaar|default:"Not Provided" }}</p>
-
-<p><strong>Village:</strong> {{ request.user.profile.village|default:"Not Available" }}</p>
-
-<p><strong>Ward Number:</strong> {{ request.user.profile.ward|default:"Not Available" }}</p>
-
-<p><strong>Pincode:</strong> {{ request.user.profile.pincode|default:"Not Available" }}</p>
-
-<p><strong>Address:</strong> {{ request.user.profile.address|default:"Not Available" }}</p>
-
-{% else %}
-
-<p><strong>Phone Number:</strong> Not Available</p>
-<p><strong>Gender:</strong> Not Available</p>
-<p><strong>Aadhaar:</strong> Not Available</p>
-<p><strong>Village:</strong> Not Available</p>
-<p><strong>Ward:</strong> Not Available</p>
-<p><strong>Pincode:</strong> Not Available</p>
-<p><strong>Address:</strong> Not Available</p>
-
-{% endif %}
-
-</div>
-
-
-{% if user.is_authenticated and user.is_superuser %}
-
-<div class="admin-link">
-
-<a href="{% url 'admin:index' %}">
-Admin Dashboard
-</a>
-
-</div>
-
-{% endif %}
-
-
-<div class="actions">
-
-<form action="{% url 'logout' %}" method="post">
-
-{% csrf_token %}
-
-<button type="submit">🚪 Logout</button>
-
-</form>
-
-</div>
-
-</div>
-
-</body>
-
+          <button type="submit">🚪 Logout</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
 
 {% include "footer.html" %}
