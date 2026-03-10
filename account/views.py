@@ -9,7 +9,8 @@ import random
 from django.http import JsonResponse
 import time
 import requests
-        
+from .models import Village
+
 def send_otp(request):
 
     if request.method == "POST":
@@ -176,7 +177,8 @@ def register(request):
         aadhaar = request.POST.get('aadhaar')
         ward = request.POST.get('ward')
         pincode = request.POST.get('pincode')
-        village = request.POST.get('village')
+        village_name = request.POST.get('village')
+        village = Village.objects.filter(name=village_name).first()
         address = request.POST.get('address')
 
         username = phone
@@ -210,7 +212,7 @@ def register(request):
             village=village,
             pincode=pincode,
             address=address
-        )
+            )
 
         # Clear OTP session after successful registration
         request.session.pop("otp", None)

@@ -11,7 +11,14 @@ class Citizen(models.Model):
     gender = models.CharField(max_length=10)
 
     ward = models.CharField(max_length=20)
-    village = models.CharField(max_length=100)
+
+    village = models.ForeignKey(
+        "Village",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+        )
+
     pincode = models.CharField(max_length=6)
 
     address = models.TextField()
@@ -21,7 +28,7 @@ class Citizen(models.Model):
 
 
 class State(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
