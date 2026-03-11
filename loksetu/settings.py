@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'account',
     'post',
     'complaint',
+    'schemes',
 ]
 
 MIDDLEWARE = [

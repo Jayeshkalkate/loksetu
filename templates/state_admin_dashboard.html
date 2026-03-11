@@ -60,6 +60,49 @@
     </tbody>
   </table>
 
+  <hr />
+
+  <!-- ================= Schemes Verification ================= -->
+
+  <h2>📜 Schemes Waiting for Verification</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Level</th>
+        <th>District</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for s in pending_schemes %}
+
+      <tr>
+        <td>{{ s.title }}</td>
+
+        <td>{{ s.scheme_level }}</td>
+
+        <td>{{ s.district }}</td>
+
+        <td>
+          <a href="{% url 'verify_scheme' s.id %}" style="color: green">
+            ✔ Verify
+          </a>
+        </td>
+      </tr>
+
+      {% empty %}
+
+      <tr>
+        <td colspan="4">No pending schemes</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
   <!-- ================= Complaint LIST ================= -->
 
   <h2>📋 Recent Complaints</h2>
@@ -72,6 +115,7 @@
         <th>District</th>
         <th>Department</th>
         <th>Status</th>
+        <th>Action</th>
         <th>Date</th>
       </tr>
     </thead>
@@ -80,7 +124,7 @@
       {% for c in complaints %}
 
       <tr>
-        <td>{{ c.id }}</td>
+        <td>{{ c.complaint_id }}</td>
 
         <td>{{ c.title }}</td>
 
@@ -100,6 +144,29 @@
 
           {% else %}
           <span class="status rejected">{{ c.status }}</span>
+          {% endif %}
+        </td>
+
+        <td>
+          {% if not c.is_read %}
+
+          <a href="{% url 'mark_complaint_read' c.complaint_id %}">
+            📖 Mark Read
+          </a>
+
+          {% elif c.status != "Resolved" %}
+
+          <a
+            href="{% url 'resolve_complaint' c.complaint_id %}"
+            style="color: green"
+          >
+            ✅ Resolve
+          </a>
+
+          {% else %}
+
+          <span style="color: gray">✔ Completed</span>
+
           {% endif %}
         </td>
 

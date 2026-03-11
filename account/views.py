@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .models import Citizen
 from django.db.models import Count
 from complaint.models import complaint
+from schemes.models import Scheme
 import random
 from django.http import JsonResponse
 import time
 import requests
-from .models import Village
+from django.shortcuts import get_object_or_404
 
 def send_otp(request):
 
@@ -102,7 +104,7 @@ def verify_otp(request):
 def login_view(request):
 
     if request.method == "POST":
-        
+
         username = request.POST['username']
         password = request.POST['password']
 
@@ -119,15 +121,6 @@ def login_view(request):
 
             elif profile.role == "state_admin":
                 return redirect('state_admin_dashboard')
-
-            elif profile.role == "district_admin":
-                return redirect('district_admin_dashboard')
-
-            elif profile.role == "taluka_admin":
-                return redirect('taluka_admin_dashboard')
-
-            elif profile.role == "village_admin":
-                return redirect('village_admin_dashboard')
 
             else:
                 return redirect('homepage')
@@ -171,6 +164,7 @@ def register(request):
                 })
 
         # Get form data
+        # first_name = request.POST.get("full_name")
         email = request.POST.get('email')
         password = request.POST.get('password')
         gender = request.POST.get('gender')
@@ -178,8 +172,11 @@ def register(request):
         ward = request.POST.get('ward')
         pincode = request.POST.get('pincode')
         village_name = request.POST.get('village')
-        village = Village.objects.filter(name=village_name).first()
+        # village = Village.objects.filter(name=village_name).first()
         address = request.POST.get('address')
+        district = request.POST.get("district")
+        taluka = request.POST.get("taluka")
+        village = request.POST.get("village")
 
         username = phone
 
@@ -189,12 +186,19 @@ def register(request):
                 "error": "User already registered with this phone number"
             })
 
+        # Get full name from form
+        
+        first_name = request.POST.get("full_name")
         # Create user
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password
-        )
+            )
+        
+        # Save full name
+        user.first_name = first_name
+        user.save()
 
         # Create user profile
         UserProfile.objects.create(
@@ -208,8 +212,10 @@ def register(request):
             phone=phone,
             gender=gender,
             aadhaar=aadhaar,
-            ward=ward,
+            district=district,
+            taluka=taluka,
             village=village,
+            ward=ward,
             pincode=pincode,
             address=address
             )
@@ -285,6 +291,9 @@ def super_admin_dashboard(request):
             "resolved": complaint.objects.filter(department=dep, status="Resolved").count(),
         })
 
+    # 👇 NEW: pending schemes
+    pending_schemes = Scheme.objects.filter(is_verified=False)
+
     context = {
         "complaints": complaints,
         "total_complaints": total,
@@ -292,22 +301,24 @@ def super_admin_dashboard(request):
         "progress_complaints": progress,
         "resolved_complaints": resolved,
         "district_data": district_data,
-        "department_data": department_data
+        "department_data": department_data,
+        "pending_schemes": pending_schemes
     }
 
     return render(request,"super_admin_dashboard.html",context)
-
 
 def state_admin_dashboard(request):
 
     complaints = complaint.objects.all().order_by("-created_at")[:20]
 
     total = complaint.objects.count()
+
     pending = complaint.objects.filter(status="Pending").count()
+
     progress = complaint.objects.filter(status="In Progress").count()
+
     resolved = complaint.objects.filter(status="Resolved").count()
 
-    # district summary
     districts = complaint.objects.values("district").annotate(total=Count("id"))
 
     district_data = []
@@ -322,85 +333,100 @@ def state_admin_dashboard(request):
             "resolved": complaint.objects.filter(district=district, status="Resolved").count(),
         })
 
+    # 👇 NEW: pending schemes
+    pending_schemes = Scheme.objects.filter(is_verified=False)
+
     context = {
         "complaints": complaints,
         "total_complaints": total,
         "pending_complaints": pending,
         "progress_complaints": progress,
         "resolved_complaints": resolved,
-        "district_data": district_data
+        "district_data": district_data,
+        "pending_schemes": pending_schemes
     }
 
-    return render(request,"state_admin_dashboard.html",context)
+    return render(request, "state_admin_dashboard.html", context)
 
-def district_admin_dashboard(request):
+def create_state_admin(request):
 
-    # profile = UserProfile.objects.get(user=request.user)
-    profile = UserProfile.objects.filter(user=request.user).first()
+    if request.method == "POST":
 
-    complaints = complaint.objects.filter(
-        district=profile.district
-    )
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-    total = complaints.count()
-    pending = complaints.filter(status="Pending").count()
-    progress = complaints.filter(status="In Progress").count()
-    resolved = complaints.filter(status="Resolved").count()
+        if User.objects.filter(username=username).exists():
+            return render(request, "create_state_admin.html", {
+                "error": "Username already exists"
+            })
 
-    context = {
-        "complaints": complaints,
-        "total_complaints": total,
-        "pending_complaints": pending,
-        "progress_complaints": progress,
-        "resolved_complaints": resolved
-    }
+        # create user
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
 
-    return render(request,"district_admin_dashboard.html",context)
+        # assign state admin role
+        UserProfile.objects.create(
+            user=user,
+            role="state_admin"
+        )
 
+        return redirect("super_admin_dashboard")
 
-def taluka_admin_dashboard(request):
+    return render(request, "create_state_admin.html")
 
-    profile = UserProfile.objects.get(user=request.user)
-
-    complaints = complaint.objects.filter(
-        taluka=profile.taluka
-    )
-
-    total = complaints.count()
-    pending = complaints.filter(status="Pending").count()
-    progress = complaints.filter(status="In Progress").count()
-    resolved = complaints.filter(status="Resolved").count()
-
-    context = {
-        "complaints": complaints,
-        "total_complaints": total,
-        "pending_complaints": pending,
-        "progress_complaints": progress,
-        "resolved_complaints": resolved
-    }
-
-    return render(request,"taluka_admin_dashboard.html",context)
+from django.contrib.auth.decorators import login_required
 
 
-def village_admin_dashboard(request):
+@login_required
+def edit_profile(request):
 
-    profile = UserProfile.objects.get(user=request.user)
+    # citizen = Citizen.objects.get(user=request.user)
+    citizen, created = Citizen.objects.get_or_create(user=request.user)
 
-    complaints = complaint.objects.filter(
-        village=profile.village
-    )
+    if request.method == "POST":
 
-    total = complaints.count()
-    pending = complaints.filter(status="Pending").count()
-    progress = complaints.filter(status="In Progress").count()
-    resolved = complaints.filter(status="Resolved").count()
+        # Update User fields
+        request.user.first_name = request.POST.get("full_name")
+        request.user.email = request.POST.get("email")
+        request.user.save()
 
-    context = {
-        "complaints": complaints,
-        "total_complaints": total,
-        "pending_complaints": pending,
-        "progress_complaints": progress,
-        "resolved_complaints": resolved
-    }
+        # Update Citizen fields
+        citizen.phone = request.POST.get("phone")
+        citizen.gender = request.POST.get("gender")
+        citizen.aadhaar = request.POST.get("aadhaar")
+        citizen.ward = request.POST.get("ward")
 
-    return render(request,"village_admin_dashboard.html",context)
+        village_name = request.POST.get("village")
+        # village = Village.objects.filter(name=village_name).first()
+
+        # citizen.village = village
+        citizen.pincode = request.POST.get("pincode")
+        citizen.address = request.POST.get("address")
+        
+        district = request.POST.get("district")
+        taluka = request.POST.get("taluka")
+        village = request.POST.get("village")
+
+        citizen.save()
+
+        return redirect("profile")
+
+    return render(request, "edit_profile.html", {"citizen": citizen})
+
+@login_required
+def profile(request):
+    return render(request, "userprofile.html")
+
+@login_required
+def verify_scheme(request, scheme_id):
+
+    scheme = get_object_or_404(Scheme, id=scheme_id)
+
+    scheme.is_verified = True
+    scheme.save()
+
+    return redirect(request.META.get('HTTP_REFERER'))

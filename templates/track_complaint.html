@@ -43,31 +43,52 @@
         {% csrf_token %}
 
         <label>Enter Complaint ID</label>
-        <input type="text" name="complaint_id" placeholder="Example: 1023" required>
+        <input
+          type="text"
+          name="complaint_id"
+          placeholder="Example: 1023"
+          required
+        />
         <input type="submit" value="Track Complaint" />
       </form>
 
       <br />
-
       <!-- Complaint Result -->
-       {% if Complaint %}
-       <div class="frame2">
+      {% if Complaint %}
+
+      <div class="frame2">
         <div class="box">
           <h2>Complaint Details</h2>
-          
+
           <p><strong>Complaint ID:</strong> {{ Complaint.complaint_id }}</p>
-          
+
           <p><strong>Department:</strong> {{ Complaint.department }}</p>
-          
+
           <p><strong>Description:</strong> {{ Complaint.description }}</p>
-          
-          <p><strong>Status:</strong> {{ Complaint.status }}</p>
-          
+
+          <p>
+            <strong>Status:</strong>
+
+            {% if Complaint.status == "Pending" %}
+            <span style="color: orange">⏳ Pending Review</span>
+
+            {% elif Complaint.status == "In Progress" %}
+            <span style="color: blue">🔧 In Progress</span>
+
+            {% elif Complaint.status == "Resolved" %}
+            <span style="color: green">✔ Resolved</span>
+
+            {% else %}
+            <span style="color: red">❌ Rejected</span>
+
+            {% endif %}
+          </p>
+
           <p><strong>Date Submitted:</strong> {{ Complaint.created_at }}</p>
         </div>
       </div>
+
       {% endif %}
-      
     </div>
   </div>
 </div>

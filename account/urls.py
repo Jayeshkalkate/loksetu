@@ -18,8 +18,12 @@ urlpatterns = [
     
     path('state_admin_dashboard/', views.state_admin_dashboard, name='state_admin_dashboard'),
     path('super_admin_dashboard/', views.super_admin_dashboard, name='super_admin_dashboard'),
-    path('taluka_admin_dashboard/', views.taluka_admin_dashboard, name='taluka_admin_dashboard'),
-    path('village_admin_dashboard/', views.village_admin_dashboard, name='village_admin_dashboard'),
-    path('district_admin_dashboard/', views.district_admin_dashboard, name='district_admin_dashboard'),
-
+    
+    path('create-state-admin/', views.create_state_admin, name='create_state_admin'),
+    
+    path("verify-scheme/<int:scheme_id>/", views.verify_scheme, name="verify_scheme"),
+    
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
+    path("profile/", views.profile, name="profile"),
+   
 ]

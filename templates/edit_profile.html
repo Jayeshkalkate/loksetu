@@ -1,0 +1,45 @@
+{% load static %}
+{% include "header.html" %}
+
+<div class="container">
+
+<h2>Edit Profile</h2>
+
+<form method="post">
+
+{% csrf_token %}
+
+<label>Full Name</label>
+<input type="text" name="full_name" value="{{ request.user.first_name }}" required>
+
+<label>Email</label>
+<input type="email" name="email" value="{{ request.user.email }}">
+
+<label>Phone</label>
+<input type="text" name="phone" value="{{ citizen.phone }}">
+
+<label>Gender</label>
+<input type="text" name="gender" value="{{ citizen.gender }}">
+
+<label>Aadhaar</label>
+<input type="text" name="aadhaar" value="{{ citizen.aadhaar }}">
+
+<label>Ward</label>
+<input type="text" name="ward" value="{{ citizen.ward }}">
+
+<!-- <label>Village</label>
+<input type="text" name="village" value="{{ citizen.village }}"> -->
+
+<label>Pincode</label>
+<input type="text" name="pincode" value="{{ citizen.pincode }}">
+
+<label>Address</label>
+<textarea name="address">{{ citizen.address }}</textarea>
+
+<button type="submit">Update Profile</button>
+
+</form>
+
+</div>
+
+{% include "footer.html" %}

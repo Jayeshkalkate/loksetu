@@ -49,6 +49,9 @@ class complaint(models.Model):
         choices=STATUS_CHOICES,
         default="Pending"
     )
+    
+    # NEW FIELD
+    is_read = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

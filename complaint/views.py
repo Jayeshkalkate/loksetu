@@ -2,6 +2,27 @@ from django.shortcuts import render, redirect
 import json
 from django.contrib import messages
 from complaint.models import complaint
+from django.shortcuts import get_object_or_404
+
+def resolve_complaint(request, complaint_id):
+
+    c = get_object_or_404(complaint, complaint_id=complaint_id)
+
+    c.status = "Resolved"
+    c.save()
+
+    return redirect("state_admin_dashboard")
+
+def mark_complaint_read(request, complaint_id):
+
+    c = get_object_or_404(complaint, complaint_id=complaint_id)
+
+    c.is_read = True
+    c.status = "In Progress"
+
+    c.save()
+
+    return redirect("state_admin_dashboard")
 
 def complaint_view(request):
 

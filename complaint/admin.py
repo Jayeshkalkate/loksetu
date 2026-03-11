@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import complaint
 
-
 class complaintAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -10,8 +9,9 @@ class complaintAdmin(admin.ModelAdmin):
         "department",
         "district",
         "status",
+        "is_read",
         "created_at"
-    )
+        )
 
     list_filter = (
         "status",

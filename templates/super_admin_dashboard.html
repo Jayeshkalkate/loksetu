@@ -3,6 +3,10 @@
 <div class="container">
   <h1>⚙️ LokSetu Super Admin Dashboard</h1>
 
+  <a href="{% url 'create_state_admin' %}" class="btn">
+    ➕ Create State Admin
+  </a>
+
   <p>Central control panel for Maharashtra Public Complaint System.</p>
 
   <!-- ================= STATISTICS ================= -->
@@ -79,6 +83,49 @@
         <td>{{ d.total }}</td>
         <td>{{ d.pending }}</td>
         <td>{{ d.resolved }}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <hr />
+
+  <!-- ================= Schemes Verification ================= -->
+
+  <h2>📜 Schemes Waiting for Verification</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Level</th>
+        <th>District</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for s in pending_schemes %}
+
+      <tr>
+        <td>{{ s.title }}</td>
+
+        <td>{{ s.scheme_level }}</td>
+
+        <td>{{ s.district }}</td>
+
+        <td>
+          <a href="{% url 'verify_scheme' s.id %}" style="color: green">
+            ✔ Verify
+          </a>
+        </td>
+      </tr>
+
+      {% empty %}
+
+      <tr>
+        <td colspan="4">No pending schemes</td>
       </tr>
 
       {% endfor %}

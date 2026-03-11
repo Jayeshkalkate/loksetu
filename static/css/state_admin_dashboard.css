@@ -79,3 +79,29 @@
     background: #dc3545;
     color: white;
   }
+
+  .status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.status.pending {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.status.progress {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.status.resolved {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status.rejected {
+  color: #991b1b;
+  background: #fee2e2;
+}

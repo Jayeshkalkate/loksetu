@@ -11,5 +11,9 @@ urlpatterns = [
     path('complaint-result/<str:complaint_id>/', views.complaint_result, name='complaint_result'),
 
     path('map-complaint/', views.map_complaint, name='map_complaint'),
+    
+    path('mark-read/<str:complaint_id>/', views.mark_complaint_read, name='mark_complaint_read'),
+    
+    path("resolve/<str:complaint_id>/", views.resolve_complaint, name="resolve_complaint"),
 
 ]
