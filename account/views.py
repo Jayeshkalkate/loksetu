@@ -12,6 +12,7 @@ from django.http import JsonResponse
 import time
 import requests
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 def send_otp(request):
 
@@ -251,7 +252,7 @@ def password_reset_done(request):
 def password_reset_complete(request):
     return render(request, "password_reset_complete.html")
 
-
+@login_required
 def super_admin_dashboard(request):
 
     complaints = complaint.objects.all().order_by("-created_at")[:20]
@@ -304,9 +305,13 @@ def super_admin_dashboard(request):
         "department_data": department_data,
         "pending_schemes": pending_schemes
     }
+    
+    if request.user.userprofile.role != "super_admin":
+        return redirect("homepage")
 
     return render(request,"super_admin_dashboard.html",context)
 
+@login_required
 def state_admin_dashboard(request):
 
     complaints = complaint.objects.all().order_by("-created_at")[:20]
@@ -378,9 +383,6 @@ def create_state_admin(request):
 
     return render(request, "create_state_admin.html")
 
-from django.contrib.auth.decorators import login_required
-
-
 @login_required
 def edit_profile(request):
 
@@ -407,9 +409,9 @@ def edit_profile(request):
         citizen.pincode = request.POST.get("pincode")
         citizen.address = request.POST.get("address")
         
-        district = request.POST.get("district")
-        taluka = request.POST.get("taluka")
-        village = request.POST.get("village")
+        citizen.district = request.POST.get("district")
+        citizen.taluka = request.POST.get("taluka")
+        citizen.village = request.POST.get("village")
 
         citizen.save()
 

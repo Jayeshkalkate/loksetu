@@ -1,3 +1,6 @@
+{% load static %}
+{% include "header.html" %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -12,6 +15,11 @@
     <link
       rel="stylesheet"
       href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/complaint.css' %}"
       type="text/css"
     />
   </head>
@@ -851,3 +859,5 @@
     </script>
   </body>
 </html>
+
+{% include "footer.html" %}

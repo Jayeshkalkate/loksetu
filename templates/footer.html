@@ -1,4 +1,33 @@
 
+<style>
+/* Footer Navigation Fix */
+
+.footer-nav {
+    margin-top: 15px;
+}
+
+.footer-nav .navigation {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav .navigation li {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.footer-nav .navigation li a {
+    text-decoration: none;
+    color: #1e1e1e;
+    font-size: 13px;
+}
+
+.footer-nav .navigation li a:hover {
+    color: #0066ff;
+    text-decoration: underline;
+}
+</style>
 <div id="footer">
   <div class="clearfix">
 
@@ -9,13 +38,36 @@
         a transparent Complaint tracking system for
         village development and public services.
       </p>
+
+      <br><br><hr>
+
+      <nav class="footer-nav">
+        <ul class="navigation">
+          <li><a href="{% url 'complaint' %}">Submit Complaint</a></li>
+          <li><a href="{% url 'track_complaint' %}">Track Complaint</a></li>
+          <li><a href="{% url 'map_complaint' %}">Complaint Map</a></li>
+        </ul>
+      </nav>
+
     </div>
 
     <div class="section contact">
       <h4>Contact Us</h4>
-      <p><span>Address:</span> Gram Panchayat Office, Ranala</p>
+
+      <p><span>Address:</span> Gram Panchayat Office, Ranala, Maharashtra, India</p>
       <p><span>Phone:</span> +91 XXXXX XXXXX</p>
       <p><span>Email:</span> support@loksetu.in</p>
+
+      <br><br><hr>
+
+      <nav class="footer-nav">
+        <ul class="navigation">
+          <li><a href="{% url 'how_it_works' %}">How It Works</a></li>
+          <li><a href="{% url 'faq' %}">FAQ</a></li>
+          <li><a href="{% url 'emergency_contacts' %}">Emergency Contacts</a></li>
+        </ul>
+      </nav>
+
     </div>
 
     <div class="section">
@@ -28,6 +80,16 @@
       <a href="/contact/" class="subscribe">
         Contact Support
       </a>
+
+      <br><br><hr>
+
+      <nav class="footer-nav">
+        <ul class="navigation">
+          <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+          <li><a href="{% url 'terms_conditions' %}">Terms & Conditions</a></li>
+          <li><a href="{% url 'disclaimer' %}">Disclaimer</a></li>
+        </ul>
+      </nav>
     </div>
 
   </div>

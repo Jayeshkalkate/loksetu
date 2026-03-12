@@ -1,0 +1,12 @@
+.event-card{
+    transition:0.3s;
+}
+
+.event-card:hover{
+    transform: translateY(-5px);
+}
+
+.event-img{
+    height:200px;
+    object-fit:cover;
+}

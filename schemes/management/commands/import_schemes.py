@@ -3,7 +3,6 @@ from schemes.models import Scheme
 import requests
 from bs4 import BeautifulSoup
 
-
 class Command(BaseCommand):
 
     help = "Import government schemes from india.gov.in"

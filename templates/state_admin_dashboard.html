@@ -7,6 +7,16 @@
 
   <!-- ================= STATISTICS ================= -->
 
+  <h2>🏏 Sports Management</h2>
+
+  <a href="{% url 'add_tournament' %}" class="btn btn-primary">
+    ➕ Add Tournament
+  </a>
+
+  <a href="{% url 'sport_events' %}" class="btn btn-success">
+    📋 View Tournaments
+  </a>
+
   <div class="stats">
     <div class="card total">
       <h2>{{ total_complaints }}</h2>

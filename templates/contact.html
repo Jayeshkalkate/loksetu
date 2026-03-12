@@ -1,12 +1,16 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
 <div id="contents">
   <div class="clearfix">
+
     <!-- Sidebar -->
     <div class="sidebar">
       <div>
         <h2>Contact Information</h2>
+
         <ul class="contact">
+
           <li>
             <p>
               <span class="home"></span>
@@ -24,26 +28,37 @@
             <p class="fax">Helpline: +91 XXXXX XXXXX</p>
           </li>
 
+          <!-- Email Added -->
           <li>
-            <p class="mail">Email: support@loksetu.in</p>
+            <p class="mail">
+              Email:
+              <a href="mailto:support@loksetu.in">
+                support@loksetu.in
+              </a>
+            </p>
           </li>
+
         </ul>
       </div>
     </div>
 
+
     <!-- Main Content -->
     <div class="main">
+
       <h1>Contact Us</h1>
 
       <h2>Send Us a Message</h2>
 
       <p>
         If you have any questions, suggestions, or issues related to the LokSetu
-        Complaint system, please send us a message. Our team will review your
+        Complaint System, please send us a message. Our team will review your
         query and respond as soon as possible.
       </p>
 
+
       <form action="#" method="post" class="message">
+
         {% csrf_token %}
 
         <label>First Name</label>
@@ -59,11 +74,25 @@
         <textarea name="message" required></textarea>
 
         <input type="submit" value="Send Message" />
+
       </form>
+
+
+      <!-- Google Map Added -->
+      <h2 style="margin-top:40px;">Our Location</h2>
+
+      <iframe
+        src="https://maps.google.com/maps?q=ranala%20maharashtra&t=&z=13&ie=UTF8&iwloc=&output=embed"
+        width="100%"
+        height="300"
+        style="border:0; margin-top:10px;"
+        loading="lazy">
+      </iframe>
+
     </div>
-    
+
   </div>
-  
+
   {% include "footer.html" %}
-</div>
+
 </div>
