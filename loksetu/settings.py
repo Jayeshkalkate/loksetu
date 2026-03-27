@@ -15,6 +15,10 @@ import os
 from pathlib import Path
 import os
 from decouple import config
+import logging
+
+# APScheduler fix
+logging.basicConfig(level=logging.INFO)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'funds.CustomUser'
 
 # Application definition
 
@@ -46,7 +51,7 @@ INSTALLED_APPS = [
     'post',
     'complaint',
     'schemes',
-    'sport',
+    'funds',
 ]
 
 MIDDLEWARE = [

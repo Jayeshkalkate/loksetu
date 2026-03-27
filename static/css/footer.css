@@ -1,0 +1,254 @@
+/* ----- modern footer reset / base (scoped inside footer) ----- */
+.footer-rewrite * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.footer-rewrite {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+  /* background: #f8fafc; */
+  color: #1e293b;
+  border-top: 1px solid #e2e8f0;
+  line-height: 1.5;
+}
+
+.footer-rewrite .container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 2rem 1.5rem;
+}
+
+/* ----- grid layout for main columns ----- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ----- column styling ----- */
+.footer-col h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #0f172a;
+  margin-bottom: 1.2rem;
+  border-left: 4px solid #3b82f6;
+  padding-left: 0.75rem;
+}
+
+.footer-col p {
+  font-size: 0.95rem;
+  color: #334155;
+  margin-bottom: 1rem;
+  max-width: 280px;
+}
+
+.footer-col .small-text {
+  font-size: 0.875rem;
+  color: #475569;
+  /* background: #f1f5f9; */
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0 1.2rem;
+  border-left: 3px solid #3b82f6;
+}
+
+/* address / contact spacing */
+.footer-col address {
+  font-style: normal;
+  margin-bottom: 1.2rem;
+}
+
+.footer-col address p {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-col address p span {
+  font-weight: 600;
+  color: #0f172a;
+  min-width: 60px;
+}
+
+.footer-col address a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.footer-col address a:hover {
+  text-decoration: underline;
+}
+
+/* link list styling */
+.footer-links {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.footer-links li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links li a {
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 0.9rem;
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s;
+  display: inline-block;
+}
+
+.footer-links li a:hover {
+  color: #2563eb;
+  padding-left: 5px;
+  text-decoration: underline;
+}
+
+/* support button */
+.btn-support {
+  display: inline-block;
+  background: #2563eb;
+  color: white !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 40px;
+  text-decoration: none;
+  margin: 0.5rem 0 1.2rem;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-support:hover {
+  background: #1d4ed8;
+  transform: scale(1.02);
+  text-decoration: none !important;
+  padding-left: 1.4rem; /* keep consistent */
+}
+
+/* ----- social section ----- */
+.footer-social {
+  text-align: center;
+  padding: 2rem 0 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.footer-social h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  justify-content: center;
+}
+
+.social-link i {
+  font-size: 1.2rem;
+}
+
+/* brand colors (as provided) */
+.social-link.linkedin {
+  background: #0077b5;
+}
+.social-link.portfolio {
+  background: #28a745;
+}
+.social-link.github {
+  background: #24292e;
+}
+.social-link.instagram {
+  background: linear-gradient(
+    45deg,
+    #f09433,
+    #e6683c,
+    #dc2743,
+    #cc2366,
+    #bc1888
+  );
+}
+
+.social-link:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 480px) {
+  .social-links {
+    gap: 0.8rem;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 1rem;
+  }
+  .social-link {
+    width: 100%;
+  }
+}
+
+/* ----- bottom copyright ----- */
+.footer-bottom {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  padding-top: 1rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+/* small extra tweaks */
+.footer-col .fa-globe,
+.footer-col .fab {
+  margin-right: 4px;
+}
+
+hr {
+  display: none; /* hiding old hr, we use borders */
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Road Development 2026",
+    "department": "PWD",
+    "total_amount": 1000000,
+    "released_amount": 800000,
+    "location": "Jalgaon",
+    "year": 2026
+  },
+  {
+    "title": "Water Supply Scheme",
+    "department": "Water Dept",
+    "total_amount": 500000,
+    "released_amount": 300000,
+    "location": "Bhusawal",
+    "year": 2026
+  },
+  {
+    "title": "Road Development Scheme",
+    "department": "Public Works Department",
+    "total_amount": 5000000,
+    "released_amount": 3000000,
+    "location": "Jalgaon",
+    "year": 2024
+  },
+  {
+    "title": "Water Supply Project",
+    "department": "Water Resources Department",
+    "total_amount": 8000000,
+    "released_amount": 5000000,
+    "location": "Nandurbar",
+    "year": 2023
+  },
+  {
+    "title": "Smart Village Initiative",
+    "department": "Rural Development",
+    "total_amount": 3000000,
+    "released_amount": 2000000,
+    "location": "Dhule",
+    "year": 2024
+  },
+  {
+    "title": "School Infrastructure Upgrade",
+    "department": "Education Department",
+    "total_amount": 6000000,
+    "released_amount": 4500000,
+    "location": "Nashik",
+    "year": 2022
+  },
+  {
+    "title": "Healthcare Improvement Program",
+    "department": "Health Department",
+    "total_amount": 7000000,
+    "released_amount": 3500000,
+    "location": "Pune",
+    "year": 2024
+  }
+]

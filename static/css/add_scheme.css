@@ -1,0 +1,222 @@
+/* ========================
+   add_scheme.css
+   LOKSETU Add Scheme Form Styles
+   ======================== */
+
+:root {
+  --primary-color: #2c3e66;
+  --primary-dark: #1e2a4a;
+  --secondary-color: #e67e22;
+  --accent-color: #3498db;
+  --success-color: #27ae60;
+  --danger-color: #e74c3c;
+  --light-bg: #f8f9fa;
+  --dark-text: #2c3e50;
+  --light-text: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --transition: all 0.3s ease;
+}
+
+/* Container spacing */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Main Card */
+.card {
+  background: white;
+  border-radius: 1.5rem;
+  border: none;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: var(--transition);
+  margin-bottom: 2rem;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card .p-4 {
+  padding: 2rem !important;
+}
+
+/* Title */
+.card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Form Styling */
+form {
+  margin-top: 1rem;
+}
+
+/* Labels */
+form label {
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 0.9rem;
+}
+
+/* Input, Textarea, Select Styling */
+form input:not([type="file"]),
+form textarea,
+form select {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  background: white;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* File input styling */
+form input[type="file"] {
+  padding: 0.4rem;
+  border: 1px dashed var(--border-color);
+  background: var(--light-bg);
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+form input[type="file"]:hover {
+  border-color: var(--accent-color);
+  background: #f1f8ff;
+}
+
+/* Textarea specific */
+form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Error styling (optional, if Django form errors appear) */
+.errorlist {
+  color: var(--danger-color);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Buttons */
+.btn-success {
+  background: var(--success-color);
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: var(--transition);
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #219653;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: white;
+}
+
+.btn-outline-dark {
+  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  background: white;
+  color: var(--dark-text);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.btn-outline-dark:hover {
+  background: var(--light-bg);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
+  transform: translateX(-3px);
+}
+
+/* Alert messages */
+.alert {
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  background: #d4edda;
+  color: #155724;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .card .p-4 {
+    padding: 1.25rem !important;
+  }
+
+  .card h2 {
+    font-size: 1.4rem;
+  }
+
+  form label {
+    font-size: 0.85rem;
+  }
+
+  form input:not([type="file"]),
+  form textarea,
+  form select {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .btn-success {
+    padding: 0.6rem 1.5rem;
+    width: 100%;
+  }
+}
+
+/* Print styles */
+@media print {
+  .btn-success,
+  .btn-outline-dark {
+    display: none;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .card .p-4 {
+    padding: 0.5rem !important;
+  }
+}

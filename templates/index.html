@@ -1,20 +1,71 @@
 {% load static %}
 {% include "header.html" %}
 
+<style>
+  /* Hero Section */
+#adbox{
+    width:100%;
+    padding:40px 0;
+    background:#f5f5f5;
+}
+
+.hero-container{
+    width:90%;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:40px;
+}
+
+/* Map Image */
+.hero-image img{
+    width:100%;
+    max-width:650px;
+    height:auto;
+    border-radius:8px;
+}
+
+/* Text */
+.hero-text{
+    max-width:500px;
+}
+
+.hero-text h1{
+    font-size:32px;
+    line-height:1.4;
+    color:#333;
+}
+
+/* Mobile Responsive */
+@media (max-width:768px){
+    .hero-container{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .hero-text h1{
+        font-size:24px;
+    }
+}
+</style>
 <div id="contents">
+<!-- Hero Section -->
+<div id="adbox">
+  <div class="hero-container">
 
-  <!-- Hero Section -->
-  <div id="adbox">
-    <div class="clearfix">
-      <img src="{% static 'images/family-large.jpg' %}" alt="LokSetu Portal" />
-
-      <div class="detail">
-        <h1>
-          LokSetu – Smart Governance Platform for the Citizens of Maharashtra
-        </h1>
-      </div>
+    <div class="hero-image">
+      <img src="{% static 'images/maharashtra_map_16x9.jpg' %}" alt="LokSetu Portal" />
     </div>
+
+    <div class="hero-text">
+      <h1>
+        LokSetu : <br><hr> Smart Governance Platform for the Citizens of Maharashtra
+      </h1>
+    </div>
+
   </div>
+</div>
 
   <!-- Highlight Section -->
   <div class="highlight">

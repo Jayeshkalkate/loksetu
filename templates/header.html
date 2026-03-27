@@ -1,48 +1,133 @@
 {% load static %}
 
 <!doctype html>
+
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>LOK-SETU</title>
 
-    <link
-      rel="stylesheet"
-      href="{% static 'css/style.css' %}"
-      type="text/css"
-    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link
       rel="stylesheet"
       href="{% static 'css/state_admin_dashboard.css' %}"
-      type="text/css"
     />
     <link
       rel="stylesheet"
       href="{% static 'css/super_admin_dashboard.css' %}"
-      type="text/css"
     />
+        <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    
+    <link
+      rel="stylesheet"
+      href="{% static 'css/footer.css' %}"
+    />
+
+    <style>
+      /* ===== HEADER ===== */
+
+      #header {
+        background: #5c6651;
+        padding: 14px 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      /* container */
+      .header-container {
+        width: 1200px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* ===== LOGO ===== */
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .maharashtra-seal {
+        width: 55px;
+        height: auto;
+      }
+
+      .logo-text {
+        font-size: 28px;
+        font-weight: bold;
+        color: #fff200;
+        text-decoration: none;
+        letter-spacing: 2px;
+      }
+
+      .logo-text:hover {
+        color: #ff4d00;
+      }
+
+      /* ===== NAVIGATION ===== */
+
+      .main-nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 30px;
+      }
+
+      .main-nav ul li {
+        display: inline-block;
+      }
+
+      .main-nav ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: 0.3s;
+      }
+
+      .main-nav ul li a:hover {
+        color: #ffd700;
+      }
+    </style>
   </head>
 
   <body>
     <div id="header">
-      <div class="clearfix">
+      <div class="header-container">
+        <!-- Logo -->
         <div class="logo">
-          <a href="{% url 'homepage' %}">
-            <img src="{% static 'images/logo.png' %}" alt="LokSetu Logo" />
-          </a>
+          <img
+            src="{% static 'images/Seal_of_Maharashtra.svg.png' %}"
+            alt="Maharashtra Seal"
+            class="maharashtra-seal"
+          />
+
+          <a href="{% url 'homepage' %}" class="logo-text"> LOKSETU </a>
         </div>
 
-        <nav>
-          <ul class="navigation">
-            <li><a href="{% url 'homepage' %}">Home</a></li>
-            <li><a href="{% url 'aboutus' %}">About</a></li>
-            <li><a href="{% url 'services' %}">Services</a></li>
-            <li><a href="{% url 'schemes' %}">Schemes</a></li>
-            <li><a href="{% url 'sport_events' %}">sport</a></li>
-            <li><a href="{% url 'departments' %}">Departments</a></li>
-            <li><a href="{% url 'post' %}">News</a></li>
-            <!-- <li><a href="{% url 'contactus' %}">Contact</a></li> -->
-            <li><a href="{% url 'userprofile' %}">Profile</a></li>
+        <!-- Navigation -->
+        <nav class="main-nav">
+          <ul>
+            <li><a href="{% url 'homepage' %}">HOME</a></li>
+
+            <li><a href="{% url 'aboutus' %}">ABOUT</a></li>
+
+            <li><a href="{% url 'services' %}">SERVICES</a></li>
+
+            <li><a href="{% url 'schemes' %}">SCHEMES</a></li>
+
+            <li><a href="{% url 'departments' %}">DEPARTMENTS</a></li>
+
+            <li><a href="{% url 'post' %}">NEWS</a></li>
+
+            <li><a href="{% url 'userprofile' %}">PROFILE</a></li>
           </ul>
         </nav>
       </div>

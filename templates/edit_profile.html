@@ -1,45 +1,48 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
+
+<link
+  rel="stylesheet"
+  href="{% static 'css/edit_profile.css' %}"
+  type="text/css"
+/>
 
 <div class="container">
+  <h2>Edit Profile</h2>
 
-<h2>Edit Profile</h2>
+  <form method="post">
+    {% csrf_token %}
 
-<form method="post">
+    <label>Full Name</label>
+    <input
+      type="text"
+      name="full_name"
+      value="{{ request.user.first_name }}"
+      required
+    />
 
-{% csrf_token %}
+    <label>Email</label>
+    <input type="email" name="email" value="{{ request.user.email }}" />
 
-<label>Full Name</label>
-<input type="text" name="full_name" value="{{ request.user.first_name }}" required>
+    <label>Phone</label>
+    <input type="text" name="phone" value="{{ citizen.phone }}" />
 
-<label>Email</label>
-<input type="email" name="email" value="{{ request.user.email }}">
+    <label>Gender</label>
+    <input type="text" name="gender" value="{{ citizen.gender }}" />
 
-<label>Phone</label>
-<input type="text" name="phone" value="{{ citizen.phone }}">
+    <label>Aadhaar</label>
+    <input type="text" name="aadhaar" value="{{ citizen.aadhaar }}" />
 
-<label>Gender</label>
-<input type="text" name="gender" value="{{ citizen.gender }}">
+    <label>Ward</label>
+    <input type="text" name="ward" value="{{ citizen.ward }}" />
 
-<label>Aadhaar</label>
-<input type="text" name="aadhaar" value="{{ citizen.aadhaar }}">
+    <label>Pincode</label>
+    <input type="text" name="pincode" value="{{ citizen.pincode }}" />
 
-<label>Ward</label>
-<input type="text" name="ward" value="{{ citizen.ward }}">
+    <label>Address</label>
+    <textarea name="address">{{ citizen.address }}</textarea>
 
-<!-- <label>Village</label>
-<input type="text" name="village" value="{{ citizen.village }}"> -->
-
-<label>Pincode</label>
-<input type="text" name="pincode" value="{{ citizen.pincode }}">
-
-<label>Address</label>
-<textarea name="address">{{ citizen.address }}</textarea>
-
-<button type="submit">Update Profile</button>
-
-</form>
-
+    <button type="submit">Update Profile</button>
+  </form>
 </div>
 
 {% include "footer.html" %}

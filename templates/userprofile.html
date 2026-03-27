@@ -2,14 +2,12 @@
 
 <!doctype html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <title>Citizen Profile - LokSetu</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="{% static 'css/userprofile.css' %}">
-
 </head>
 
 <body>
@@ -18,30 +16,59 @@
 
 <div class="container">
 
+{% if user.is_authenticated %}
+
 <h2>👤 Citizen Profile</h2>
 
 <div class="profile-info">
 
-<p><strong>Full Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+<p>
+<strong>Full Name:</strong>
+{{ user.get_full_name|default:user.username }}
+</p>
 
-<p><strong>Username:</strong> {{ user.username }}</p>
+<p>
+<strong>Username:</strong>
+{{ user.username|default:"Not Available" }}
+</p>
 
-<p><strong>Email:</strong> {{ user.email|default:"Not Available" }}</p>
+<p>
+<strong>Email:</strong>
+{{ user.email|default:"Not Available" }}
+</p>
 
 
 {% if user.citizen %}
 
-<p><strong>Phone Number:</strong> {{ user.citizen.phone|default:"Not Available" }}</p>
+<p>
+<strong>Phone Number:</strong>
+{{ user.citizen.phone|default:"Not Available" }}
+</p>
 
-<p><strong>Gender:</strong> {{ user.citizen.gender|default:"Not Specified" }}</p>
+<p>
+<strong>Gender:</strong>
+{{ user.citizen.gender|default:"Not Specified" }}
+</p>
 
-<p><strong>Aadhaar:</strong> {{ user.citizen.aadhaar|default:"Not Provided" }}</p>
+<p>
+<strong>Aadhaar:</strong>
+{{ user.citizen.aadhaar|default:"Not Provided" }}
+</p>
 
-<p><strong>Ward Number:</strong> {{ user.citizen.ward|default:"Not Available" }}</p>
+<p>
+<strong>Ward Number:</strong>
+{{ user.citizen.ward|default:"Not Available" }}
+</p>
 
-<p><strong>Pincode:</strong> {{ user.citizen.pincode|default:"Not Available" }}</p>
+<p>
+<strong>Pincode:</strong>
+{{ user.citizen.pincode|default:"Not Available" }}
+</p>
 
-<p><strong>Address:</strong> {{ user.citizen.address|default:"Not Available" }}</p>
+<p>
+<strong>Address:</strong>
+{{ user.citizen.address|default:"Not Available" }}
+</p>
 
 {% else %}
 
@@ -57,37 +84,55 @@
 </div>
 
 
+<!-- Dashboard Links -->
+
 <div class="admin-link">
 
-{% if user.userprofile.role == "super_admin" %}
+{% if user.userprofile and user.userprofile.role == "super_admin" %}
 
-<a href="{% url 'super_admin_dashboard' %}">🛠 Super Admin Dashboard</a>
+<a href="{% url 'super_admin_dashboard' %}">
+🛠 Super Admin Dashboard
+</a>
 
-{% elif user.userprofile.role == "state_admin" %}
+{% elif user.userprofile and user.userprofile.role == "state_admin" %}
 
-<a href="{% url 'state_admin_dashboard' %}">🏛 State Admin Dashboard</a>
+<a href="{% url 'state_admin_dashboard' %}">
+🏛 State Admin Dashboard
+</a>
 
 {% else %}
 
-<a href="/">🏠 Home</a>
+<a href="/">
+🏠 Home
+</a>
 
 {% endif %}
 
 </div>
 
 
-{% if user.is_authenticated and user.is_superuser %}
+<!-- Django Admin Access -->
+
+{% if user.is_superuser %}
 
 <div class="admin-link">
-<a href="{% url 'admin:index' %}">⚙ Django Admin</a>
+
+<a href="{% url 'admin:index' %}">
+⚙ Django Admin Panel
+</a>
+
 </div>
 
 {% endif %}
 
+
+<!-- Actions -->
 
 <div class="actions">
 
-<a href="{% url 'edit_profile' %}">✏️ Edit Profile</a>
+<a href="{% url 'edit_profile' %}">
+✏️ Edit Profile
+</a>
 
 <form action="{% url 'logout' %}" method="post">
 {% csrf_token %}
@@ -95,6 +140,20 @@
 </form>
 
 </div>
+
+{% else %}
+
+<h2>⚠ You are not logged in</h2>
+
+<p>
+Please login to view your profile.
+</p>
+
+<a href="{% url 'login' %}">
+🔑 Login
+</a>
+
+{% endif %}
 
 </div>
 

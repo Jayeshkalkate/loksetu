@@ -1,0 +1,229 @@
+/* ========================
+   bulk_upload.css
+   LOKSETU Bulk Upload Page Styles
+   ======================== */
+
+:root {
+  --primary-color: #2c3e66;
+  --primary-dark: #1e2a4a;
+  --secondary-color: #e67e22;
+  --accent-color: #3498db;
+  --success-color: #27ae60;
+  --danger-color: #e74c3c;
+  --light-bg: #f8f9fa;
+  --dark-text: #2c3e50;
+  --light-text: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --transition: all 0.3s ease;
+}
+
+/* Container spacing */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Main Card */
+.card {
+  background: white;
+  border-radius: 1.5rem;
+  border: none;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: var(--transition);
+  margin-bottom: 2rem;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card.p-4 {
+  padding: 2rem !important;
+}
+
+/* Headings */
+.card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.card .text-muted {
+  font-size: 0.9rem;
+  color: var(--light-text);
+  margin-bottom: 1rem;
+}
+
+/* Alert messages */
+.alert {
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Form Styling */
+form {
+  margin-top: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  background: white;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* File input specific styling */
+input[type="file"].form-control {
+  padding: 0.4rem;
+  border: 1px dashed var(--border-color);
+  background: var(--light-bg);
+  cursor: pointer;
+}
+
+input[type="file"].form-control:hover {
+  border-color: var(--accent-color);
+  background: #f1f8ff;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--primary-color);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  transition: var(--transition);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: white;
+}
+
+.btn-outline-secondary {
+  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  background: white;
+  color: var(--dark-text);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.btn-outline-secondary:hover {
+  background: var(--light-bg);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn-outline-dark {
+  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  background: white;
+  color: var(--dark-text);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.btn-outline-dark:hover {
+  background: var(--light-bg);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
+  transform: translateX(-3px);
+}
+
+/* Instructions Section */
+.mt-4 h6 {
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 0.5rem;
+}
+
+.mt-4 ul {
+  list-style-type: disc;
+  padding-left: 1.2rem;
+}
+
+.mt-4 li {
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .card.p-4 {
+    padding: 1.25rem !important;
+  }
+
+  .card h2 {
+    font-size: 1.4rem;
+  }
+
+  .btn-primary {
+    width: 100%;
+    text-align: center;
+    padding: 0.6rem;
+  }
+
+  .btn-outline-secondary,
+  .btn-outline-dark {
+    width: 100%;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  hr {
+    margin: 1rem 0;
+  }
+}
+
+/* Print styles */
+@media print {
+  .btn-primary,
+  .btn-outline-secondary,
+  .btn-outline-dark {
+    display: none;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .card.p-4 {
+    padding: 0.5rem !important;
+  }
+}

@@ -1,0 +1,94 @@
+{% load static %} {% include "header.html" %}
+
+<link rel="stylesheet" href="{% static 'css/add_scheme.css' %}" />
+
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="mb-3 text-center">➕ Add New Scheme</h2>
+
+    <!-- ✅ MESSAGES -->
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endfor %} {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Title</label>
+          {{ form.title }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Category</label>
+          {{ form.category }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Level</label>
+          {{ form.level }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>State</label>
+          {{ form.state }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>District</label>
+          {{ form.district }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Taluka</label>
+          {{ form.taluka }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Village</label>
+          {{ form.village }}
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label>Description</label>
+          {{ form.description }}
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label>Eligibility</label>
+          {{ form.eligibility }}
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label>Benefits</label>
+          {{ form.benefits }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Official Link</label>
+          {{ form.official_link }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label>Upload Image</label>
+          {{ form.image }}
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-success px-4">
+          ➕ Add Scheme
+        </button>
+      </div>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="{% url 'schemes' %}" class="btn btn-outline-dark btn-sm">
+        ⬅ Back
+      </a>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}

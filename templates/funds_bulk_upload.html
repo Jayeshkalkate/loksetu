@@ -1,0 +1,10 @@
+<!-- bulk_upload.html -->
+<div class="container mt-5">
+  <h2>📂 Bulk Upload Funds</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file" class="form-control mb-3">
+    <button class="btn btn-primary">Upload</button>
+  </form>
+</div>

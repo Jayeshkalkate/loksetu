@@ -1,0 +1,292 @@
+[
+  {
+    "title": "PM Kisan Samman Nidhi",
+    "description": "Provides ₹6000 per year to eligible farmers in 3 installments.",
+    "eligibility": "Small and marginal farmers with land ownership.",
+    "benefits": "Direct income support ₹6000/year.",
+    "category": "Agriculture",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmkisan.gov.in"
+  },
+  {
+    "title": "Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana (PM-JAY)",
+    "description": "Provides free health insurance up to ₹5 lakh per family per year for secondary and tertiary care.",
+    "eligibility": "Families identified as deprived/rural and urban workers as per SECC data.",
+    "benefits": "Cashless treatment in empaneled hospitals.",
+    "category": "Health",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmjay.gov.in"
+  },
+  {
+    "title": "Pradhan Mantri Awas Yojana - Gramin (PMAY-G)",
+    "description": "Provides financial assistance for construction of pucca houses to rural households.",
+    "eligibility": "Households without pucca house, as per SECC data.",
+    "benefits": "₹1.20 lakh assistance per unit (in plain areas).",
+    "category": "Housing",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmayg.nic.in"
+  },
+  {
+    "title": "Pradhan Mantri Awas Yojana - Urban (PMAY-U)",
+    "description": "Housing scheme for urban poor through credit-linked subsidy, in-situ slum redevelopment, etc.",
+    "eligibility": "EWS/LIG categories; women, SC/ST, minorities priority.",
+    "benefits": "Subsidy on home loans up to ₹2.67 lakh; affordable houses.",
+    "category": "Housing",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmay-urban.gov.in"
+  },
+  {
+    "title": "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)",
+    "description": "Guarantees 100 days of wage employment per year to rural households.",
+    "eligibility": "Adult members of rural households willing to do unskilled manual work.",
+    "benefits": "100 days of assured wage employment; unemployment allowance.",
+    "category": "Rural Development",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://nrega.nic.in"
+  },
+  {
+    "title": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "description": "Crop insurance scheme to protect farmers against crop loss due to natural calamities.",
+    "eligibility": "All farmers growing notified crops, including sharecroppers and tenants.",
+    "benefits": "Low premium (1.5-2% of sum insured) with high coverage.",
+    "category": "Agriculture",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmfby.gov.in"
+  },
+  {
+    "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+    "description": "Provides free LPG connections to women from Below Poverty Line (BPL) households.",
+    "eligibility": "BPL women, SC/ST, forest dwellers, etc.",
+    "benefits": "Free LPG connection with financial assistance.",
+    "category": "Energy",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://pmuy.gov.in"
+  },
+  {
+    "title": "Swachh Bharat Mission - Gramin (SBM-G)",
+    "description": "Aims to make rural India open defecation free and improve solid waste management.",
+    "eligibility": "All rural households for toilet construction.",
+    "benefits": "Financial assistance for toilet construction; behavioral change.",
+    "category": "Sanitation",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://swachhbharatmission.gov.in"
+  },
+  {
+    "title": "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+    "description": "Maternity benefit scheme providing cash support to pregnant and lactating mothers.",
+    "eligibility": "Pregnant women and lactating mothers (first live child).",
+    "benefits": "₹5,000 in installments; conditional cash transfer.",
+    "category": "Women & Child",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://wcd.nic.in/pmmvy"
+  },
+  {
+    "title": "Beti Bachao Beti Padhao (BBBP)",
+    "description": "National initiative to address gender imbalance and promote education of girls.",
+    "eligibility": "Girl children and their families.",
+    "benefits": "Awareness campaigns, Sukanya Samriddhi Yojana, etc.",
+    "category": "Women & Child",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://wcd.nic.in/bbbp-schemes"
+  },
+  {
+    "title": "Mahatma Jyotiba Phule Jan Arogya Yojana (MJPJAY)",
+    "description": "Maharashtra state health insurance scheme providing cashless treatment up to ₹1.5 lakh per family.",
+    "eligibility": "Families with annual income up to ₹1 lakh (rural) or ₹1.5 lakh (urban).",
+    "benefits": "Cashless treatment in empaneled hospitals; covers 971 procedures.",
+    "category": "Health",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://mjpjay.maharashtra.gov.in"
+  },
+  {
+    "title": "Mukhyamantri Majhi Ladki Bahin Yojana",
+    "description": "Financial assistance scheme for eligible women in Maharashtra.",
+    "eligibility": "Women aged 21-60 years with family income ≤ ₹2.5 lakh per annum.",
+    "benefits": "₹1,500 per month as financial aid.",
+    "category": "Women & Child",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://maharashtra.gov.in"
+  },
+  {
+    "title": "Chhatrapati Shivaji Maharaj Shetkari Sanman Yojana",
+    "description": "State scheme to provide financial assistance to farmers to supplement PM-Kisan.",
+    "eligibility": "Small and marginal farmers with land up to 2 hectares.",
+    "benefits": "Additional ₹6,000 per year in two installments.",
+    "category": "Agriculture",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://maharashtra.gov.in"
+  },
+  {
+    "title": "Jalyukt Shivar Abhiyan",
+    "description": "State flagship water conservation scheme to make villages water-sufficient.",
+    "eligibility": "All villages in Maharashtra with water scarcity.",
+    "benefits": "Construction of check dams, farm ponds, and recharge structures.",
+    "category": "Water Resources",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://jalyuktshivar.maharashtra.gov.in"
+  },
+  {
+    "title": "Shiv Bhojan Thali",
+    "description": "Provides subsidized nutritious meals at low cost to the needy.",
+    "eligibility": "All citizens, particularly economically weaker sections.",
+    "benefits": "Meal at ₹10 per plate (originally ₹5, later revised).",
+    "category": "Food Security",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://mahafood.gov.in"
+  },
+  {
+    "title": "Maharashtra State Rural Livelihoods Mission (UMED)",
+    "description": "Aims to reduce poverty by strengthening self-help groups and livelihood opportunities.",
+    "eligibility": "Rural poor women, SHGs, and vulnerable communities.",
+    "benefits": "Capacity building, credit linkages, skill training, and employment.",
+    "category": "Rural Development",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://umed.in"
+  },
+  {
+    "title": "District Mineral Foundation (DMF) - Nagpur District Welfare Scheme",
+    "description": "District-level schemes funded by mining royalties for development and welfare in mining-affected areas.",
+    "eligibility": "Residents of villages/talukas affected by mining activities.",
+    "benefits": "Infrastructure, health, education, drinking water projects.",
+    "category": "Infrastructure",
+    "level": "district",
+    "state": "Maharashtra",
+    "official_link": "https://dmf.gov.in"
+  },
+  {
+    "title": "District Skill Development Mission (DSDM) - Pune",
+    "description": "District-level skill training and placement scheme for youth.",
+    "eligibility": "Youth (18-35 years) with minimum 8th pass; preference to BPL families.",
+    "benefits": "Free skill training, certification, and job placement support.",
+    "category": "Skill Development",
+    "level": "district",
+    "state": "Maharashtra",
+    "official_link": "https://pune.gov.in"
+  },
+  {
+    "title": "Taluka Krishi Vikas Yojana (TKVV)",
+    "description": "Taluka-level scheme to promote modern farming techniques and input subsidies.",
+    "eligibility": "Small and marginal farmers in the respective taluka.",
+    "benefits": "Subsidy on seeds, fertilizers, farm machinery; demonstration plots.",
+    "category": "Agriculture",
+    "level": "taluka",
+    "state": "Maharashtra",
+    "official_link": "https://agriculture.maharashtra.gov.in"
+  },
+  {
+    "title": "Taluka Sports Development Scheme",
+    "description": "Promotes sports infrastructure and talent at taluka level.",
+    "eligibility": "Students and youth in the taluka area.",
+    "benefits": "Grants for sports equipment, coaching, and organizing competitions.",
+    "category": "Sports",
+    "level": "taluka",
+    "state": "Maharashtra",
+    "official_link": "https://mahasports.gov.in"
+  },
+  {
+    "title": "Gram Panchayat Development Plan (GPDP) Scheme",
+    "description": "Village-level participatory planning for local development using 14th Finance Commission funds.",
+    "eligibility": "All gram panchayats and residents.",
+    "benefits": "Funds for local infrastructure, sanitation, streetlights, water supply.",
+    "category": "Rural Development",
+    "level": "village",
+    "state": "Maharashtra",
+    "official_link": "https://rdd.maharashtra.gov.in"
+  },
+  {
+    "title": "Village Water Supply and Sanitation Scheme (VWSS)",
+    "description": "Village-level scheme to provide piped water supply and improve sanitation facilities.",
+    "eligibility": "All households in the village; priority to SC/ST colonies.",
+    "benefits": "Piped water connections, community toilets, soak pits.",
+    "category": "Water & Sanitation",
+    "level": "village",
+    "state": "Maharashtra",
+    "official_link": "https://mahajeevan.maharashtra.gov.in"
+  },
+  {
+    "title": "Village Solar Street Light Initiative",
+    "description": "Installation of solar street lights in villages to improve safety and reduce carbon footprint.",
+    "eligibility": "Villages with no existing street lighting infrastructure.",
+    "benefits": "Free installation and maintenance for 5 years.",
+    "category": "Energy",
+    "level": "village",
+    "state": "Maharashtra",
+    "official_link": "https://mahasolar.maharashtra.gov.in"
+  },
+  {
+    "title": "Pradhan Mantri Kisan Sampada Yojana (PMKSY)",
+    "description": "Central scheme for food processing and agro infrastructure development.",
+    "eligibility": "Food processing units, cooperatives, FPOs, entrepreneurs.",
+    "benefits": "Financial assistance for infrastructure, cold chains, and mega food parks.",
+    "category": "Agriculture",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://mofpi.nic.in"
+  },
+  {
+    "title": "Deendayal Antyodaya Yojana - National Rural Livelihoods Mission (DAY-NRLM)",
+    "description": "Central scheme to promote self-employment and organization of rural poor women.",
+    "eligibility": "Rural poor women, SHGs.",
+    "benefits": "Interest subsidy, revolving fund, community investment fund.",
+    "category": "Rural Development",
+    "level": "central",
+    "state": "Maharashtra",
+    "official_link": "https://aajeevika.gov.in"
+  },
+  {
+    "title": "Mukhyamantri Gramin Awas Yojana (MGAY)",
+    "description": "Maharashtra state scheme to provide housing for rural poor not covered under PMAY-G.",
+    "eligibility": "Rural households without pucca house and not availing central scheme.",
+    "benefits": "Financial assistance up to ₹1.20 lakh for house construction.",
+    "category": "Housing",
+    "level": "state",
+    "state": "Maharashtra",
+    "official_link": "https://rdd.maharashtra.gov.in"
+  },
+  {
+    "title": "District Innovation Fund (DIF) - Aurangabad",
+    "description": "District-level fund to support innovative projects in education, health, and infrastructure.",
+    "eligibility": "Schools, colleges, NGOs, and local bodies in the district.",
+    "benefits": "Grants up to ₹10 lakh for innovative pilot projects.",
+    "category": "Innovation",
+    "level": "district",
+    "state": "Maharashtra",
+    "official_link": "https://aurangabad.gov.in"
+  },
+  {
+    "title": "Taluka Library Development Scheme",
+    "description": "Taluka-level initiative to upgrade public libraries and promote reading.",
+    "eligibility": "Public libraries and reading rooms in the taluka.",
+    "benefits": "Financial assistance for books, furniture, and digital resources.",
+    "category": "Education",
+    "level": "taluka",
+    "state": "Maharashtra",
+    "official_link": "https://mahalib.maharashtra.gov.in"
+  },
+  {
+    "title": "Village Entrepreneurship Development Program (VEDP)",
+    "description": "Village-level scheme to support small businesses and self-employment.",
+    "eligibility": "Village residents with a business idea; SHG members preferred.",
+    "benefits": "Seed capital, training, and mentorship for micro-enterprises.",
+    "category": "Entrepreneurship",
+    "level": "village",
+    "state": "Maharashtra",
+    "official_link": "https://umed.in"
+  }
+]

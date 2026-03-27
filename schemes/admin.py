@@ -1,20 +1,9 @@
 from django.contrib import admin
 from .models import Scheme
 
+@admin.register(Scheme)
 class SchemeAdmin(admin.ModelAdmin):
-
-    list_display = (
-        "title",
-        "scheme_level",
-        "state",
-        "district",
-        "taluka",
-        "village",
-        "created_at"
-    )
-
-    list_filter = ("scheme_level", "district", "taluka", "category")
-
-    search_fields = ("title", "description")
-
-admin.site.register(Scheme, SchemeAdmin)
+    list_display = ('title', 'level', 'category', 'created_at')
+    search_fields = ('title', 'description')
+    list_filter = ('level', 'category')
+    prepopulated_fields = {'slug': ('title',)}

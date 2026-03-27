@@ -1,109 +1,125 @@
+{% load static %}
 
-<style>
-/* Footer Navigation Fix */
+<body>
+  <!-- This is the rewritten footer (class footer-rewrite for isolation) -->
+  <footer class="footer-rewrite">
+    <div class="container">
+      <!-- main 3-column grid -->
+      <div class="footer-grid">
+        <!-- Column 1: Village Development + extra description from image -->
+        <div class="footer-col">
+          <h4>VILLAGE DEVELOPMENT</h4>
+          <p>
+            LokSetu supports digital governance by providing a transparent
+            Complaint tracking system for village development and public
+            services.
+          </p>
+          <!-- integrated the top descriptive line: sanitation, healthcare, progress tracking etc. -->
+          <p class="small-text">
+            <i
+              class="fas fa-seedling"
+              style="color: #3b82f6; margin-right: 6px"
+            ></i>
+            Sanitation, healthcare, education — real‑time progress & resolution
+            status. Faster issue resolution through direct involvement of
+            government authorities.
+          </p>
+          <ul class="footer-links">
+            <li><a href="{% url 'complaint' %}">SUBMIT COMPLAINT</a></li>
+            <li><a href="{% url 'track_complaint' %}">TRACK COMPLAINT</a></li>
+            <li><a href="{% url 'map_complaint' %}">COMPLAINT MAP</a></li>
+          </ul>
+        </div>
 
-.footer-nav {
-    margin-top: 15px;
-}
+        <!-- Column 2: Contact Us + secondary links -->
+        <div class="footer-col">
+          <h4>CONTACT US</h4>
+          <address>
+            <p>
+              <span>Address:</span> Gram Panchayat Office, Ranala, Maharashtra,
+              India
+            </p>
+            <p><span>Phone:</span> +91 XXXXX XXXXX</p>
+            <p>
+              <span>Email:</span>
+              <a href="mailto:support@loksetu.in">support@loksetu.in</a>
+            </p>
+          </address>
+          <ul class="footer-links">
+            <li><a href="{% url 'how_it_works' %}">HOW IT WORKS</a></li>
+            <li><a href="{% url 'faq' %}">FAQ</a></li>
+            <li>
+              <a href="{% url 'emergency_contacts' %}">EMERGENCY CONTACTS</a>
+            </li>
+          </ul>
+        </div>
 
-.footer-nav .navigation {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        <!-- Column 3: Need Help? + policies -->
+        <div class="footer-col">
+          <h4>NEED HELP?</h4>
+          <p>
+            If you face issues while submitting or tracking Complaints, please
+            contact the LokSetu support team.
+          </p>
+          <a href="/contact/" class="btn-support">📞 CONTACT SUPPORT</a>
+          <ul class="footer-links">
+            <li><a href="{% url 'privacy_policy' %}">PRIVACY POLICY</a></li>
+            <li>
+              <a href="{% url 'terms_conditions' %}">TERMS & CONDITIONS</a>
+            </li>
+            <li><a href="{% url 'disclaimer' %}">DISCLAIMER</a></li>
+          </ul>
+        </div>
+      </div>
 
-.footer-nav .navigation li {
-    display: block;
-    margin-bottom: 5px;
-}
+      <!-- social section (CONNECT WITH ME) -->
+      <div class="footer-social">
+        <h3>CONNECT WITH ME</h3>
+        <div class="social-links">
+          <a
+            href="https://www.linkedin.com/in/jayesh-kalkate-31a250242/"
+            target="_blank"
+            class="social-link linkedin"
+          >
+            <i class="fab fa-linkedin"></i> <span>LinkedIn</span>
+          </a>
+          <a
+            href="https://devjayesh-portfolio.netlify.app/"
+            target="_blank"
+            class="social-link portfolio"
+          >
+            <i class="fas fa-globe"></i> <span>Portfolio</span>
+          </a>
+          <a
+            href="https://github.com/Jayeshkalkate"
+            target="_blank"
+            class="social-link github"
+          >
+            <i class="fab fa-github"></i> <span>GitHub</span>
+          </a>
+          <a
+            href="https://www.instagram.com/jayesh.kalkate"
+            target="_blank"
+            class="social-link instagram"
+          >
+            <i class="fab fa-instagram"></i> <span>Instagram</span>
+          </a>
+        </div>
+      </div>
 
-.footer-nav .navigation li a {
-    text-decoration: none;
-    color: #1e1e1e;
-    font-size: 13px;
-}
-
-.footer-nav .navigation li a:hover {
-    color: #0066ff;
-    text-decoration: underline;
-}
-</style>
-<div id="footer">
-  <div class="clearfix">
-
-    <div class="section">
-      <h4>Village Development</h4>
-      <p>
-        LokSetu supports digital governance by providing
-        a transparent Complaint tracking system for
-        village development and public services.
-      </p>
-
-      <br><br><hr>
-
-      <nav class="footer-nav">
-        <ul class="navigation">
-          <li><a href="{% url 'complaint' %}">Submit Complaint</a></li>
-          <li><a href="{% url 'track_complaint' %}">Track Complaint</a></li>
-          <li><a href="{% url 'map_complaint' %}">Complaint Map</a></li>
-        </ul>
-      </nav>
-
+      <!-- copyright note -->
+      <div class="footer-bottom">
+        <p>
+          © Copyright 2023 Manes Winchester. All Rights Reserved. — LokSetu
+          initiative
+        </p>
+      </div>
     </div>
+  </footer>
 
-    <div class="section contact">
-      <h4>Contact Us</h4>
+  <script src="{% static 'js/charts.js' %}"></script>
+  <script src="{% static 'js/search.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
 
-      <p><span>Address:</span> Gram Panchayat Office, Ranala, Maharashtra, India</p>
-      <p><span>Phone:</span> +91 XXXXX XXXXX</p>
-      <p><span>Email:</span> support@loksetu.in</p>
-
-      <br><br><hr>
-
-      <nav class="footer-nav">
-        <ul class="navigation">
-          <li><a href="{% url 'how_it_works' %}">How It Works</a></li>
-          <li><a href="{% url 'faq' %}">FAQ</a></li>
-          <li><a href="{% url 'emergency_contacts' %}">Emergency Contacts</a></li>
-        </ul>
-      </nav>
-
-    </div>
-
-    <div class="section">
-      <h4>Need Help?</h4>
-      <p>
-        If you face issues while submitting or tracking
-        Complaints, please contact the LokSetu support team.
-      </p>
-
-      <a href="/contact/" class="subscribe">
-        Contact Support
-      </a>
-
-      <br><br><hr>
-
-      <nav class="footer-nav">
-        <ul class="navigation">
-          <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-          <li><a href="{% url 'terms_conditions' %}">Terms & Conditions</a></li>
-          <li><a href="{% url 'disclaimer' %}">Disclaimer</a></li>
-        </ul>
-      </nav>
-    </div>
-
-  </div>
-  
-<div id="footnote">
-			<div class="clearfix">
-				<div class="connect">
-					<a href="http://freewebsitetemplates.com/go/facebook/" class="facebook"></a><a href="http://freewebsitetemplates.com/go/twitter/" class="twitter"></a><a href="http://freewebsitetemplates.com/go/googleplus/" class="googleplus"></a><a href="http://pinterest.com/fwtemplates/" class="pinterest"></a>
-				</div>
-				<p>
-					© Copyright 2023 Manes Winchester. All Rights Reserved.
-				</p>
-			</div>
-		</div>
-	</div>
+  <!-- (the rest of the page would continue, but this is the complete rewritten footer) -->
 </body>
-</html>
