@@ -1,8 +1,8 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 
-
-class complaint(models.Model):
+class Complaint(models.Model):
 
     complaint_id = models.CharField(max_length=20, unique=True, blank=True)
 
@@ -68,3 +68,24 @@ class complaint(models.Model):
 
     def __str__(self):
         return self.complaint_id
+    
+
+class ComplaintHistory(models.Model):
+
+    complaint = models.ForeignKey(
+        complaint,
+        on_delete=models.CASCADE,
+        related_name="history"
+    )
+
+    status = models.CharField(max_length=50)
+
+    updated_by = models.CharField(
+        max_length=100,
+        default="System"
+    )
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.complaint.complaint_id} - {self.status}"

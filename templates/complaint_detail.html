@@ -1,0 +1,76 @@
+{% load static %}
+{% include "header.html" %}
+
+<div class="container" style="max-width: 900px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+  <h2 style="color: #1d6e4a;">📋 Complaint Details</h2>
+  <hr />
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f9fbfa; padding: 20px; border-radius: 8px;">
+    <div><strong>Complaint ID:</strong> {{ complaint.complaint_id }}</div>
+    <div><strong>Status:</strong> <span style="background: #e6f7ee; padding: 2px 12px; border-radius: 20px;">{{ complaint.status }}</span></div>
+    <div><strong>Department:</strong> {{ complaint.department|default:"—" }}</div>
+    <div><strong>Title:</strong> {{ complaint.title }}</div>
+    <div><strong>Filed by:</strong> {{ complaint.full_name }}</div>
+    <div><strong>Phone:</strong> {{ complaint.phone }}</div>
+    <div><strong>Email:</strong> {{ complaint.email|default:"—" }}</div>
+    <div><strong>District:</strong> {{ complaint.district }}</div>
+    <div><strong>Taluka:</strong> {{ complaint.taluka }}</div>
+    <div><strong>Village/Area:</strong> {{ complaint.village }}</div>
+    <div><strong>Pincode:</strong> {{ complaint.pincode }}</div>
+    <div><strong>Issue Date:</strong> {{ complaint.issue_date|date:"d M Y"|default:"—" }}</div>
+  </div>
+
+  <h3 style="margin-top: 25px;">📝 Description</h3>
+  <p style="background: #f3f6f5; padding: 15px; border-radius: 6px;">{{ complaint.description }}</p>
+
+  <!-- MAP (conditional) -->
+  {% if complaint.latitude and complaint.longitude %}
+    <h3 style="margin-top: 25px;">📍 Location</h3>
+    <div id="map" style="height: 50vh; min-height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+  {% else %}
+    <div style="background: #fef3f3; padding: 12px; border-radius: 6px; margin-top: 20px; color: #a33;">
+      ⚠️ No location coordinates available for this complaint.
+    </div>
+  {% endif %}
+
+  <!-- Timeline -->
+  <h3 style="margin-top: 30px;">⏳ Complaint Timeline</h3>
+  <ul style="list-style: none; padding: 0;">
+    {% for item in history %}
+      <li style="border-left: 3px solid #1d6e4a; padding-left: 18px; margin-bottom: 16px;">
+        <strong>{{ item.status }}</strong><br />
+        <span style="color: #444;">by {{ item.updated_by }}</span><br />
+        <small style="color: #777;">{{ item.timestamp|date:"d M Y, H:i" }}</small>
+      </li>
+    {% empty %}
+      <li>No history yet.</li>
+    {% endfor %}
+  </ul>
+
+  <hr />
+  <div style="text-align: center; color: #517a67; font-size: 0.9rem; padding: 10px 0;">
+    © 2025 महाराष्ट्र शासन तक्रार प्रणाली
+  </div>
+</div>
+
+<!-- Leaflet (only if coordinates exist) -->
+{% if complaint.latitude and complaint.longitude %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    (function() {
+      const lat = {{ complaint.latitude|floatformat:6 }};
+      const lng = {{ complaint.longitude|floatformat:6 }};
+      const map = L.map('map').setView([lat, lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup('<b>{{ complaint.title|escapejs }}</b><br />{{ complaint.village|escapejs }}')
+        .openPopup();
+    })();
+  </script>
+{% endif %}
+
+{% include "footer.html" %}

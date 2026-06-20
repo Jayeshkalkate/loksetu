@@ -31,6 +31,12 @@
       <h2>{{ resolved_complaints }}</h2>
       <p>Resolved</p>
     </div>
+
+  </div>
+  
+  <div class="card-body">
+    <h4>Complaint Analytics</h4>
+    <canvas id="statusChart"></canvas>
   </div>
 
   <!-- ================= DISTRICT SUMMARY ================= -->
@@ -180,5 +186,16 @@
     </tbody>
   </table>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const statusData =
+JSON.parse('{{ status_chart|escapejs }}');
+
+</script>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
 
 {% include "footer.html" %}

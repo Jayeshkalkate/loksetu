@@ -1,0 +1,95 @@
+/* dashboard.css */
+
+/* Global tweaks */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card styling */
+.card {
+    border: none;
+    border-radius: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Summary cards */
+.bg-primary, .bg-success, .bg-warning, .bg-danger {
+    border-radius: 1rem;
+    color: white;
+}
+.bg-warning {
+    color: #212529 !important;
+}
+
+/* Progress bar */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+.progress-bar {
+    border-radius: 4px;
+    background-color: #28a745;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+}
+.btn-dark:hover {
+    background-color: #23272b;
+    border-color: #1d2124;
+}
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Chart container */
+canvas {
+    max-height: 300px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+    .row.g-4 {
+        --bs-gutter-y: 1rem;
+    }
+    h2 {
+        font-size: 1.75rem;
+    }
+}

@@ -4,10 +4,16 @@ from django.conf import settings
 
 class Citizen(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10, unique=True)
     aadhaar = models.CharField(max_length=12, null=True, blank=True)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['district']),
+            models.Index(fields=['taluka']),
+            ]
 
     gender = models.CharField(max_length=10)
     
@@ -24,18 +30,19 @@ class Citizen(models.Model):
     def __str__(self):
         return self.user.username
 
-    
+
 class UserProfile(models.Model):
-    
-    ROLE_CHOICES = (
-        ('super_admin', 'Super Admin'),
-        ('state_admin', 'State Admin'),
+    ROLE_CHOICES = [
         ('citizen', 'Citizen'),
-        )
+        ('village_officer', 'Village Officer'),
+        ('taluka_officer', 'Taluka Officer'),
+        ('district_officer', 'District Officer'),
+        ('state_officer', 'State Officer'),
+        ('super_admin', 'Super Admin'),
+    ]
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='citizen')
 
     def __str__(self):
-        return f"{self.user.username} - {self.role}"
+        return f"{self.user.username} ({self.role})"

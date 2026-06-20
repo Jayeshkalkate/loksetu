@@ -12,7 +12,11 @@ from django.http import JsonResponse
 import time
 import requests
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from funds.models import Fund
+import json
+from .permissions import role_required
+
 
 def send_otp(request):
 
@@ -79,6 +83,7 @@ def send_otp(request):
 
     return JsonResponse({"status": "error"})
 
+
 def verify_otp(request):
 
     if request.method == "POST":
@@ -101,7 +106,8 @@ def verify_otp(request):
             return JsonResponse({"status": "success"})
 
         return JsonResponse({"status": "error", "message": "Invalid OTP"})
-    
+
+
 def login_view(request):
 
     if request.method == "POST":
@@ -112,19 +118,31 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-
             login(request, user)
 
-            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile = UserProfile.objects.get(user=user)
 
             if profile.role == "super_admin":
-                return redirect('super_admin_dashboard')
+                return redirect("super_admin_dashboard")
 
-            elif profile.role == "state_admin":
-                return redirect('state_admin_dashboard')
+            elif profile.role == "state_officer":
+                return redirect("state_dashboard")
+
+            elif profile.role == "district_officer":
+                return redirect("district_dashboard")
+
+            elif profile.role == "taluka_officer":
+                return redirect("taluka_dashboard")
+
+            elif profile.role == "village_officer":
+                return redirect("village_dashboard")
+
+            # return redirect("homepage")
 
             else:
                 return redirect('homepage')
+
+        return render(request, "login.html", {"error": "Invalid credentials"})
 
     return render(request, "login.html")
 
@@ -157,7 +175,7 @@ def register(request):
             return render(request, "register.html", {
                 "error": "Invalid OTP"
             })
-            
+
         # Check if OTP was verified using Verify OTP button
         if not request.session.get("otp_verified"):
             return render(request, "register.html", {
@@ -188,7 +206,7 @@ def register(request):
             })
 
         # Get full name from form
-        
+
         first_name = request.POST.get("full_name")
         # Create user
         user = User.objects.create_user(
@@ -196,16 +214,19 @@ def register(request):
             email=email,
             password=password
             )
-        
+
         # Save full name
         user.first_name = first_name
         user.save()
 
         # Create user profile
-        UserProfile.objects.create(
-            user=user,
-            role="citizen"
-        )
+        profile = UserProfile.objects.get(user=user)
+        profile.role = "citizen"
+        profile.save()
+        # UserProfile.objects.create(
+        #     user=user,
+        #     role="citizen"
+        # )
 
         # Create citizen profile
         Citizen.objects.create(
@@ -231,6 +252,7 @@ def register(request):
 
     return render(request, "register.html")
 
+
 def logout_view(request):
 
     logout(request)
@@ -252,15 +274,24 @@ def password_reset_done(request):
 def password_reset_complete(request):
     return render(request, "password_reset_complete.html")
 
+
 @login_required
+@role_required(["super_admin"])
 def super_admin_dashboard(request):
 
-    complaints = complaint.objects.all().order_by("-created_at")[:20]
+    complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
     total = complaint.objects.count()
     pending = complaint.objects.filter(status="Pending").count()
     progress = complaint.objects.filter(status="In Progress").count()
     resolved = complaint.objects.filter(status="Resolved").count()
+
+    # ✅ Added status_chart as per instructions
+    status_chart = {
+        "Pending": pending,
+        "In Progress": progress,
+        "Resolved": resolved,
+    }
 
     # district summary
     districts = complaint.objects.values("district").annotate(total=Count("id"))
@@ -292,7 +323,7 @@ def super_admin_dashboard(request):
             "resolved": complaint.objects.filter(department=dep, status="Resolved").count(),
         })
 
-    # 👇 NEW: pending schemes
+    # pending schemes
     pending_schemes = Scheme.objects.filter(is_verified=False)
 
     context = {
@@ -303,18 +334,29 @@ def super_admin_dashboard(request):
         "resolved_complaints": resolved,
         "district_data": district_data,
         "department_data": department_data,
-        "pending_schemes": pending_schemes
+        "pending_schemes": pending_schemes,
+        # ✅ Added status_chart to context
+        "status_chart": json.dumps(status_chart),
     }
-    
-    if request.user.userprofile.role != "super_admin":
+
+    profile = UserProfile.objects.get(user=request.user)
+
+    if profile.role != "super_admin":
         return redirect("homepage")
 
-    return render(request,"super_admin_dashboard.html",context)
+    return render(request, "super_admin_dashboard.html", context)
+
 
 @login_required
-def state_admin_dashboard(request):
+@role_required(["state_officer"])
+def state_dashboard(request):
 
-    complaints = complaint.objects.all().order_by("-created_at")[:20]
+    profile = UserProfile.objects.get(user=request.user)
+
+    if profile.role != "state_officer":
+        return redirect("homepage")
+
+    complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
     total = complaint.objects.count()
 
@@ -338,7 +380,7 @@ def state_admin_dashboard(request):
             "resolved": complaint.objects.filter(district=district, status="Resolved").count(),
         })
 
-    # 👇 NEW: pending schemes
+    # pending schemes
     pending_schemes = Scheme.objects.filter(is_verified=False)
 
     context = {
@@ -351,8 +393,11 @@ def state_admin_dashboard(request):
         "pending_schemes": pending_schemes
     }
 
-    return render(request, "state_admin_dashboard.html", context)
+    return render(request, "dashboard/state_admin_dashboard.html", context)
 
+
+@login_required
+@role_required(["super_admin"])
 def create_state_admin(request):
 
     if request.method == "POST":
@@ -374,14 +419,14 @@ def create_state_admin(request):
         )
 
         # assign state admin role
-        UserProfile.objects.create(
-            user=user,
-            role="state_admin"
-        )
-
+        profile = UserProfile.objects.get(user=user)
+        profile.role = "state_officer"
+        profile.save()
+        
         return redirect("super_admin_dashboard")
 
     return render(request, "create_state_admin.html")
+
 
 @login_required
 def edit_profile(request):
@@ -408,7 +453,7 @@ def edit_profile(request):
         # citizen.village = village
         citizen.pincode = request.POST.get("pincode")
         citizen.address = request.POST.get("address")
-        
+
         citizen.district = request.POST.get("district")
         citizen.taluka = request.POST.get("taluka")
         citizen.village = request.POST.get("village")
@@ -419,9 +464,11 @@ def edit_profile(request):
 
     return render(request, "edit_profile.html", {"citizen": citizen})
 
+
 @login_required
 def profile(request):
     return render(request, "userprofile.html")
+
 
 @login_required
 def verify_scheme(request, scheme_id):
@@ -432,3 +479,28 @@ def verify_scheme(request, scheme_id):
     scheme.save()
 
     return redirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+@role_required(["village_officer"])
+def village_dashboard(request):
+    return render(
+        request,
+        "dashboard/village_dashboard.html"
+    )
+    
+@login_required
+@role_required(["taluka_officer"])
+def taluka_dashboard(request):
+    return render(
+        request,
+        "dashboard/taluka_dashboard.html"
+    )
+    
+@login_required
+@role_required(["district_officer"])
+def district_dashboard(request):
+    return render(
+        request,
+        "dashboard/district_dashboard.html"
+    )
+    

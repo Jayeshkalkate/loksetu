@@ -14,6 +14,7 @@ urlpatterns = [
     path('', include('schemes.urls')),
     path('', include('funds.urls')),
     path('accounts/', include('account.urls')),
+    path('api/', include('loksetu.api.urls')), 
 
     # pages
     path('', views.homepage, name='homepage'),
@@ -33,7 +34,13 @@ urlpatterns = [
 
     path('post/', views.post, name='post'),
     path('singlepost/', views.singlepost, name='singlepost'),
+    
+    path('documents/', include('documents.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
+    

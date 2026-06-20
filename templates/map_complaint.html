@@ -1,87 +1,69 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
-<div class="container">
-  <h2>📍 Village Complaints Map</h2>
+<div class="container" style="max-width: 1200px; margin: 20px auto; padding: 0 15px;">
+  <h2 style="color: #1d6e4a;">📍 Village Complaints Map</h2>
+  <p style="color: #555;">Click on a marker to view complaint details.</p>
 
-  <div id="map"></div>
+  <div id="map" style="height: 70vh; min-height: 400px; width: 100%; border-radius: 10px; border: 1px solid #ddd;"></div>
 
-  <div class="legend">
-    <p>Click on a marker to view Complaint details.</p>
+  <div style="margin-top: 15px; color: #666; font-size: 0.9rem; text-align: center;">
+    Total complaints shown: <strong>{{ complaints|length }}</strong>
   </div>
 </div>
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{% static 'css/map_complaint.css' %}" type="text/css" />
 
-<link
-  rel="stylesheet"
-  href="{% static 'css/map_complaint.css' %}"
-  type="text/css"
-/>
-
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+<!-- SAFE JSON embedding using Django's json_script (no |safe needed) -->
+{{ complaint_json|json_script:"complaint-data" }}
+
 <script>
+  (function() {
+    // Parse JSON safely from the script tag
+    const complaints = JSON.parse(document.getElementById('complaint-data').textContent);
 
-    // Default location (example village)
-
-    var map = L.map('map').setView([21.3465, 74.2410], 13);
-
-
-    // OpenStreetMap tiles
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-
-    maxZoom:19,
-    attribution:'© OpenStreetMap'
-
+    // Initial view (fallback: Maharashtra centre)
+    const map = L.map('map').setView([19.7515, 75.7139], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
     }).addTo(map);
 
+    const markers = [];
 
-    // Complaint data from Django
+    complaints.forEach(function(c) {
+      if (c.latitude && c.longitude) {
+        const lat = parseFloat(c.latitude);
+        const lng = parseFloat(c.longitude);
+        const marker = L.marker([lat, lng]).addTo(map);
+        markers.push(marker);
 
-  var Complaints = {{ complaint_json|safe }};
-
-
-    // store markers for auto zoom
-
-    var markers = [];
-
-
-    // Add markers
-
-    Complaints.forEach(function(c){
-
-    if(c.latitude && c.longitude){
-
-    var marker = L.marker([c.latitude, c.longitude]).addTo(map);
-
-    markers.push(marker);
-
-    marker.bindPopup(
-
-    "<b>Complaint ID:</b> "+c.complaint_id+
-    "<br><b>Department:</b> "+c.department+
-    "<br><b>Status:</b> "+c.status+
-    "<br><b>Description:</b> "+c.description
-
-    );
-
-    }
-
+        // Popup content
+        const popupContent = `
+          <b>Complaint ID:</b> ${c.complaint_id}<br>
+          <b>Department:</b> ${c.department || '—'}<br>
+          <b>Status:</b> ${c.status}<br>
+          <b>Description:</b> ${c.description.substring(0, 80)}${c.description.length > 80 ? '…' : ''}<br>
+          <a href="/complaint/detail/${c.complaint_id}/">🔍 View details</a>
+        `;
+        marker.bindPopup(popupContent);
+      }
     });
 
-
-    // Auto zoom to Complaints
-
-    if(markers.length > 0){
-
-    var group = new L.featureGroup(markers);
-    map.fitBounds(group.getBounds());
-
+    // Auto-zoom to fit all markers
+    if (markers.length > 0) {
+      const group = new L.featureGroup(markers);
+      map.fitBounds(group.getBounds(), { padding: [30, 30] });
+    } else {
+      // Show a message on the map if no markers
+      map.setView([19.7515, 75.7139], 6);
     }
+  })();
 </script>
 
 {% include "footer.html" %}

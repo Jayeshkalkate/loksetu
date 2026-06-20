@@ -1,107 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Fund Transparency Dashboard</title>
+    <!-- Bootstrap 5 + Icons + Chart.js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Custom Dashboard CSS (inline below or external, but we'll embed the rewritten CSS) -->
+</head>
+<body>
 {% load static %}
 {% include "header.html" %}
 
-<head>
-    <title>Fund Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-
-<div class="container mt-4">
-
-    <h2 class="mb-4">📊 Fund Transparency Dashboard</h2>
-
-    <!-- Filters -->
-    <form method="GET" class="row g-3 mb-4">
-        <div class="col-md-3">
-            <select name="location" class="form-control">
-                <option value="">All Locations</option>
-                {% for loc in locations %}
-                    <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>
-                        {{ loc.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <select name="year" class="form-control">
-                <option value="">All Years</option>
-                {% for y in years %}
-                    <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>
-                        {{ y }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <select name="status" class="form-control">
-                <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <button class="btn btn-primary w-100">Apply Filters</button>
-        </div>
-    </form>
-
-    {% if request.user.is_superuser %}
-    <a href="{% url 'funds_bulk_upload' %}" class="btn btn-primary">
-        📂 Bulk Upload
-    </a>
-    {% endif %}
-
-    <!-- Summary Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white p-3">
-                <h5>Total Funds</h5>
-                <h4>₹{{ total_funds }}</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-success text-white p-3">
-                <h5>Used Funds</h5>
-                <h4>₹{{ total_used }}</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark p-3">
-                <h5>Remaining</h5>
-                <h4>₹{{ remaining }}</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-info text-white p-3">
-                <h5>Released</h5>
-                <h4>₹{{ total_released }}</h4>
-            </div>
+<div class="container-custom">
+    <!-- Dashboard Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold" style="color: #1e2a3a;"><i class="bi bi-graph-up"></i> Fund Transparency Dashboard</h2>
+        <div class="mt-2 mt-sm-0">
+            {% if request.user.role == 'admin' %}
+            <a href="?view=dashboard" class="btn btn-dark btn-modern me-2"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="?view=upload" class="btn btn-outline-primary btn-modern me-2"><i class="bi bi-cloud-upload"></i> Bulk Upload</a>
+            <a href="{% url 'create_fund' %}" class="btn btn-success btn-modern"><i class="bi bi-plus-circle"></i> Add Fund</a>
+            {% else %}
+            <a href="?view=dashboard" class="btn btn-dark btn-modern"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            {% endif %}
         </div>
     </div>
 
-    <!-- Projects -->
-    <h4>🏗️ Projects</h4>
-    <div class="row">
-        {% for project in projects %}
-        <div class="col-md-4 mb-3">
-            <div class="card p-3">
-                <h5>{{ project.name }}</h5>
-                <p>Status: {{ project.status }}</p>
-                <p>Used: ₹{{ project.used_amount }}</p>
-                <a href="{% url 'project_detail' project.id %}" class="btn btn-sm btn-dark">View</a>
-            </div>
+    <!-- Display messages (django messages) -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
-    </div>
+    {% endif %}
 
+    <!-- MAIN VIEW LOGIC: dashboard, create, edit, upload, fund detail, location detail -->
+    {% if view_type == 'dashboard' %}
+        <!-- ==================== DASHBOARD VIEW ==================== -->
+        <!-- FILTER + SEARCH SECTION -->
+        <div class="filter-bar mb-4">
+            <form method="GET" class="row g-3 align-items-end">
+                <input type="hidden" name="view" value="dashboard">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-search"></i> Search Fund/Project</label>
+                    <input type="text" name="search" value="{{ request.GET.search|default:'' }}" class="form-control form-modern" placeholder="Title, department, project name...">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Year</label>
+                    <input type="number" name="year" value="{{ request.GET.year|default:'' }}" class="form-control form-modern" placeholder="2025">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Location</label>
+                    <select name="location" class="form-select form-modern">
+                        <option value="">All Locations</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc.id }}" {% if request.GET.location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary-custom btn-modern w-100"><i class="bi bi-funnel"></i> Apply</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern w-100"><i class="bi bi-arrow-repeat"></i> Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card bg-primary-gradient">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div><i class="bi bi-wallet2 stat-icon"></i></div>
+                        <div class="stat-value">₹{{ total_funds|floatformat:0|default:"0" }}</div>
+                    </div>
+                    <div class="mt-2 fw-semibold">Total Allocated</div>
+                    <small class="opacity-75">Overall budget</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card bg-success-gradient">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div><i class="bi bi-cash-stack stat-icon"></i></div>
+                        <div class="stat-value">₹{{ total_released|floatformat:0|default:"0" }}</div>
+                    </div>
+                    <div class="mt-2 fw-semibold">Released Funds</div>
+                    <small class="opacity-75">Disbursed amount</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card bg-warning-gradient">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div><i class="bi bi-pie-chart stat-icon"></i></div>
+                        <div class="stat-value">₹{{ total_used|floatformat:0|default:"0" }}</div>
+                    </div>
+                    <div class="mt-2 fw-semibold">Utilized</div>
+                    <small class="opacity-75">Expenditure</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card bg-danger-gradient">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div><i class="bi bi-arrow-return-left stat-icon"></i></div>
+                        <div class="stat-value">₹{{ remaining|floatformat:0|default:"0" }}</div>
+                    </div>
+                    <div class="mt-2 fw-semibold">Remaining Balance</div>
+                    <small class="opacity-75">Unused funds</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW (fund analytics) -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5 class="fw-semibold mb-3"><i class="bi bi-pie-chart-fill"></i> Funds by Location</h5>
+                    <canvas id="locationChart" width="400" height="250" style="max-height: 260px; width:100%"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5 class="fw-semibold mb-3"><i class="bi bi-bar-chart-steps"></i> Yearly Allocation Trend</h5>
+                    <canvas id="yearlyChart" width="400" height="250" style="max-height: 260px; width:100%"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- FUNDS SECTION -->
+        <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+            <h4 class="fw-bold"><i class="bi bi-bank2"></i> Funds</h4>
+            {% if request.user.role == 'admin' %}
+            <a href="{% url 'create_fund' %}" class="btn btn-sm btn-success rounded-pill"><i class="bi bi-plus-lg"></i> New Fund</a>
+            {% endif %}
+        </div>
+        <div class="row g-4 mb-5">
+            {% if funds %}
+                {% for fund in funds %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="dashboard-card grid-card p-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="fw-bold mb-1">{{ fund.title|truncatechars:35 }}</h5>
+                            <span class="badge bg-secondary bg-opacity-25 text-dark rounded-pill">{{ fund.year }}</span>
+                        </div>
+                        <p class="text-muted small mb-2"><i class="bi bi-building"></i> {{ fund.department|default:"General" }} • {{ fund.location.name|default:"Unknown" }}</p>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between small">
+                                <span>Total: <strong>₹{{ fund.total_amount|floatformat:0 }}</strong></span>
+                                <span>Released: ₹{{ fund.released_amount|floatformat:0|default:"0" }}</span>
+                                <span>Used: ₹{{ fund.used_amount|floatformat:0|default:"0" }}</span>
+                            </div>
+                            <div class="progress progress-custom mt-1 mb-2">
+                                <div class="progress-bar bg-primary" style="width: {% widthratio fund.released_amount fund.total_amount 100 %}%"></div>
+                            </div>
+                            <div class="small text-secondary">Release progress: {% widthratio fund.released_amount fund.total_amount 100 %}%</div>
+                        </div>
+                        {% if request.user.role == 'admin' %}
+                        <div class="mt-3 d-flex gap-2">
+                            <a href="{% url 'edit_fund' fund.id %}" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill flex-grow-1" data-bs-toggle="modal" data-bs-target="#deleteModal" data-fund-id="{{ fund.id }}" data-fund-title="{{ fund.title }}"><i class="bi bi-trash3"></i> Delete</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-inbox fs-1"></i>
+                        <p class="mt-2 mb-0">No funds found 😔</p>
+                        <small>Adjust filters or create a new fund.</small>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- PROJECTS SECTION -->
+        <h4 class="fw-bold mb-3"><i class="bi bi-kanban"></i> Projects</h4>
+        <div class="row g-4">
+            {% if projects %}
+                {% for project in projects %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="dashboard-card grid-card p-3">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-semibold">{{ project.name|truncatechars:40 }}</h5>
+                            <span class="badge-status bg-{% if project.status == 'completed' %}success{% elif project.status == 'ongoing' %}warning{% else %}secondary{% endif %} text-white">{{ project.status|title }}</span>
+                        </div>
+                        <p class="small text-secondary mt-1">Fund: <strong>{{ project.fund.title|default:"—" }}</strong></p>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between small">
+                                <span>Progress</span>
+                                <span class="fw-bold">{{ project.progress_percentage|default:0 }}%</span>
+                            </div>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-success" style="width: {{ project.progress_percentage|default:0 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-3 d-flex gap-2">
+                            <a href="?view=fund&id={{ project.fund.id }}" class="btn btn-sm btn-dark rounded-pill w-50"><i class="bi bi-cash"></i> Fund</a>
+                            <a href="?view=location&id={{ project.fund.location.id }}" class="btn btn-sm btn-outline-secondary rounded-pill w-50"><i class="bi bi-geo-alt"></i> Location</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-folder2-open fs-1"></i>
+                        <p class="mt-2">No projects available</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    {% elif view_type == 'create_fund' %}
+        <!-- CREATE FUND FORM -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="dashboard-card p-4 p-lg-5">
+                    <h3 class="fw-bold mb-4"><i class="bi bi-plus-circle-fill text-success"></i> Create New Fund</h3>
+                    <form method="POST" action="{% url 'create_fund' %}">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Fund Title *</label>
+                                <input type="text" name="title" class="form-control form-modern" placeholder="e.g., Rural Development Scheme" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Department *</label>
+                                <input type="text" name="department" class="form-control form-modern" placeholder="Finance / Health" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Total Amount (₹) *</label>
+                                <input type="number" step="0.01" name="total_amount" class="form-control form-modern" placeholder="1000000" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Released Amount (₹) *</label>
+                                <input type="number" step="0.01" name="released_amount" class="form-control form-modern" placeholder="500000" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Year *</label>
+                                <input type="number" name="year" class="form-control form-modern" placeholder="2025" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Location *</label>
+                                <select name="location" class="form-select form-modern" required>
+                                    <option value="">Select location</option>
+                                    {% for loc in locations %}
+                                    <option value="{{ loc.id }}">{{ loc.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-success btn-modern px-5"><i class="bi bi-save"></i> Save Fund</button>
+                                <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    {% elif view_type == 'edit_fund' %}
+        <!-- EDIT FUND -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="dashboard-card p-4 p-lg-5">
+                    <h3 class="fw-bold mb-4"><i class="bi bi-pencil-square text-warning"></i> Edit Fund</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label>Title</label>
+                                <input type="text" name="title" value="{{ fund.title }}" class="form-control form-modern" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Department</label>
+                                <input type="text" name="department" value="{{ fund.department }}" class="form-control form-modern" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Total Amount</label>
+                                <input type="number" step="0.01" name="total_amount" value="{{ fund.total_amount }}" class="form-control form-modern" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Released Amount</label>
+                                <input type="number" step="0.01" name="released_amount" value="{{ fund.released_amount }}" class="form-control form-modern" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Year</label>
+                                <input type="number" name="year" value="{{ fund.year }}" class="form-control form-modern" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Location</label>
+                                <select name="location" class="form-select form-modern">
+                                    {% for loc in locations %}
+                                    <option value="{{ loc.id }}" {% if fund.location.id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-warning btn-modern px-5"><i class="bi bi-pencil"></i> Update Fund</button>
+                                <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Back to Dashboard</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    {% elif view_type == 'upload' %}
+        <!-- BULK UPLOAD JSON -->
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="dashboard-card p-5 text-center">
+                    <i class="bi bi-filetype-json fs-1 text-primary"></i>
+                    <h3 class="fw-bold mt-2">Bulk Upload Funds (JSON)</h3>
+                    <p class="text-secondary">Upload a JSON file with an array of funds. Ensure fields: title, department, total_amount, released_amount, year, location_id</p>
+                    <form method="POST" action="{% url 'funds_bulk_upload' %}" enctype="multipart/form-data" class="mt-4">
+                        {% csrf_token %}
+                        <input type="file" name="file" accept=".json" class="form-control form-modern mb-3" required>
+                        <button class="btn btn-primary btn-modern px-5"><i class="bi bi-cloud-upload"></i> Upload & Process</button>
+                        <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    {% elif view_type == 'fund' and selected_fund %}
+        <!-- SINGLE FUND DETAIL VIEW -->
+        <div class="dashboard-card p-4 mb-4">
+            <div class="d-flex justify-content-between flex-wrap">
+                <h3 class="fw-bold">{{ selected_fund.title }}</h3>
+                <a href="?view=dashboard" class="btn btn-sm btn-outline-dark rounded-pill"><i class="bi bi-arrow-left"></i> Back</a>
+            </div>
+            <p><i class="bi bi-building"></i> {{ selected_fund.department }} | Year {{ selected_fund.year }} | Location: {{ selected_fund.location.name }}</p>
+            <div class="row g-3 mt-2">
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Total</strong><br>₹{{ selected_fund.total_amount }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Released</strong><br>₹{{ selected_fund.released_amount }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Utilized</strong><br>₹{{ selected_fund.used_amount|default:"0" }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Remaining</strong><br>₹{{ selected_fund.released_amount|add:"-"|add:selected_fund.used_amount|default:selected_fund.released_amount }}</div>
+            </div>
+            <hr>
+            <h5>Associated Projects</h5>
+            <div class="row mt-3">
+                {% for proj in fund_projects %}
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 mb-2">
+                        <strong>{{ proj.name }}</strong> <span class="badge bg-info">{{ proj.status }}</span>
+                        <div class="progress progress-custom mt-2"><div class="progress-bar" style="width:{{ proj.progress_percentage }}%"></div></div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-muted">No projects linked to this fund.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% elif view_type == 'location' and selected_location %}
+        <!-- LOCATION DETAIL VIEW -->
+        <div class="dashboard-card p-4">
+            <h3><i class="bi bi-geo-alt-fill text-info"></i> {{ selected_location.name }} Region</h3>
+            <p>Funds & projects under this location</p>
+            <div class="row mt-3">
+                {% for fund in location_funds %}
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 mb-3">
+                        <h6>{{ fund.title }}</h6>
+                        <small>₹{{ fund.total_amount }} allocated • Released ₹{{ fund.released_amount }}</small>
+                        <a href="?view=fund&id={{ fund.id }}" class="btn btn-sm btn-link">View details</a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-muted">No funds in this location.</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- fallback: redirect to dashboard -->
+        <div class="alert alert-warning">View not recognized. <a href="?view=dashboard">Go to Dashboard</a></div>
+    {% endif %}
 </div>
 
+<!-- Delete Confirmation Modal (for admin delete) -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete fund "<span id="deleteFundTitle"></span>"? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <form method="POST" id="deleteForm" action="">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% include "footer.html" %}

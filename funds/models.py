@@ -1,18 +1,6 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
 
-class CustomUser(AbstractUser):
-    ROLE_CHOICES = (
-        ('admin', 'Admin'),
-        ('state', 'State User'),
-    )
-
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='state')
-    state = models.CharField(max_length=100, blank=True, null=True)
-
-    def __str__(self):
-        return self.username
-    
 # ==============================
 # Location Model
 # ==============================
@@ -39,12 +27,6 @@ class Location(models.Model):
         related_name='children'
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = "Locations"
-
     def __str__(self):
         return f"{self.name} ({self.type})"
 
@@ -59,21 +41,25 @@ class Fund(models.Model):
     total_amount = models.DecimalField(max_digits=15, decimal_places=2)
     released_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.CASCADE,
-        related_name='funds'
-    )
-
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='funds')
     year = models.IntegerField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    def clean(self):
+        if self.released_amount > self.total_amount:
+            raise ValidationError("Released > Total not allowed")
 
-    # 🔥 Auto Calculations
+        if self.total_amount < 0 or self.released_amount < 0:
+            raise ValidationError("Negative values not allowed")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['year']),
+            models.Index(fields=['location']),
+        ]
+
     @property
     def used_amount(self):
-        return sum(project.used_amount for project in self.projects.all())
+        return sum(p.used_amount for p in self.projects.all())
 
     @property
     def remaining_amount(self):
@@ -81,7 +67,6 @@ class Fund(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.year}"
-
 
 # ==============================
 # Project Model
@@ -167,3 +152,4 @@ class Complaint(models.Model):
 
     def __str__(self):
         return f"Complaint - {self.project.name} ({self.status})"
+    

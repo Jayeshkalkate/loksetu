@@ -16,7 +16,7 @@ urlpatterns = [
     path('password_reset_complete/', views.password_reset_complete, name='password_reset_complete'),
     
     
-    path('state_admin_dashboard/', views.state_admin_dashboard, name='state_admin_dashboard'),
+    path('state-dashboard/', views.state_dashboard, name='state_dashboard'),
     path('super_admin_dashboard/', views.super_admin_dashboard, name='super_admin_dashboard'),
     
     path('create-state-admin/', views.create_state_admin, name='create_state_admin'),
@@ -25,5 +25,12 @@ urlpatterns = [
     
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path("profile/", views.profile, name="profile"),
+    
+    
+    
+    path('village-dashboard/', views.village_dashboard, name='village_dashboard'),
+    path('taluka-dashboard/', views.taluka_dashboard, name='taluka_dashboard'),
+    path('district-dashboard/', views.district_dashboard, name='district_dashboard'),
+    path('state-dashboard/', views.state_dashboard, name='state_dashboard'),
    
 ]

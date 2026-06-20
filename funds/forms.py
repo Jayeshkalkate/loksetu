@@ -1,5 +1,7 @@
-# forms.py
 from django import forms
+from .models import Fund
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+class FundForm(forms.ModelForm):
+    class Meta:
+        model = Fund
+        fields = '__all__'

@@ -3,861 +3,271 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>महाराष्ट्र तक्रार फॉर्म · Public Complaint · Maharashtra</title>
-    <!-- Leaflet CSS (map) -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'css/style.css' %}"
-      type="text/css"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'css/complaint.css' %}"
-      type="text/css"
-    />
-  </head>
-  <body>
-    <!-- ========== MAIN CONTAINER ========== -->
-    <div class="container">
-      <!-- header -->
-      <div style="text-align: center; margin-bottom: 10px">
-        <span
-          style="
-            background: #1d6e4a;
-            color: white;
-            padding: 6px 22px;
-            border-radius: 40px;
-            font-weight: 500;
-          "
-          >⚖️ जनसेतू | महाराष्ट्र शासन तक्रार व्यवस्था</span
-        >
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>महाराष्ट्र तक्रार फॉर्म · Public Complaint · Maharashtra</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/complaint.css' %}" type="text/css" />
+</head>
+<body>
+<div class="container">
 
-      <h2>📋 Maharashtra Public Complaint Form</h2>
-      <div class="subhead">
-        कृपया आपली तक्रार नोंदविण्यासाठी सर्व तपशील भरा (महाराष्ट्र राज्य)
-      </div>
+  <!-- Header Badge -->
+  <div style="text-align: center; margin-bottom: 10px">
+    <span style="background: #1d6e4a; color: white; padding: 6px 22px; border-radius: 40px; font-weight: 500;">
+      ⚖️ जनसेतू | महाराष्ट्र शासन तक्रार व्यवस्था
+    </span>
+  </div>
 
-      <!-- (messages block remains as-is for Django integration) -->
-      {% if messages %} {% for message in messages %}
-      <div
-        style="
-          background: #e6f7ee;
-          border: 1px solid #2f8f5b;
-          color: #1d6e4a;
-          padding: 12px;
-          margin-bottom: 15px;
-          border-radius: 6px;
-          text-align: center;
-          font-weight: 500;
-        "
-      >
+  <h2>📋 Maharashtra Public Complaint Form</h2>
+  <div class="subhead">कृपया आपली तक्रार नोंदविण्यासाठी सर्व तपशील भरा (महाराष्ट्र राज्य)</div>
+
+  <!-- Django Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div style="background: #e6f7ee; border: 1px solid #2f8f5b; color: #1d6e4a; padding: 12px; margin-bottom: 15px; border-radius: 6px; text-align: center; font-weight: 500;">
         {{ message }}
       </div>
-      {% endfor %} {% endif %}
+    {% endfor %}
+  {% endif %}
 
-      <!-- FORM STARTS HERE -->
-      <form
-        method="POST"
-        action="{% url 'complaint' %}"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %}
+  <form method="POST" action="{% url 'complaint' %}" enctype="multipart/form-data">
+    {% csrf_token %}
 
-        <!-- 1. PERSONAL DETAILS (same) -->
-        <h3>🔹 1. Personal Details</h3>
-        <label>Full Name <span style="color: #b33">*</span></label>
-        <input
-          type="text"
-          name="full_name"
-          placeholder="e.g. Rajesh Kumar"
-          required
-        />
+    <!-- 1. PERSONAL DETAILS -->
+    <h3>🔹 1. Personal Details</h3>
+    <label>Full Name <span style="color: #b33">*</span></label>
+    <input type="text" name="full_name" placeholder="e.g. Rajesh Kumar" required />
 
-        <label
-          >Mobile Number <span style="color: #b33">*</span> (10 digits)</label
-        >
-        <input
-          type="tel"
-          name="phone"
-          maxlength="10"
-          pattern="[0-9]{10}"
-          placeholder="9876543210"
-          required
-        />
+    <label>Mobile Number <span style="color: #b33">*</span> (10 digits)</label>
+    <input type="tel" name="phone" maxlength="10" pattern="[0-9]{10}" placeholder="9876543210" required />
 
-        <label>Email Address</label>
-        <input type="email" name="email" placeholder="you@example.com" />
+    <label>Email Address</label>
+    <input type="email" name="email" placeholder="you@example.com" />
 
-        <label>Gender</label>
-        <select name="gender">
-          <option value="">-- Select Gender --</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
+    <label>Gender</label>
+    <select name="gender">
+      <option value="">-- Select Gender --</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
 
-        <label>Aadhaar Number (Optional, 12 digits)</label>
-        <input
-          type="text"
-          name="aadhaar"
-          maxlength="12"
-          placeholder="1234 5678 9012"
-        />
+    <label>Aadhaar Number (Optional, 12 digits)</label>
+    <input type="text" name="aadhaar" maxlength="12" placeholder="1234 5678 9012" />
 
-        <!-- 2. ADDRESS DETAILS - Maharashtra only -->
-        <h3>📍 2. Address Details (महाराष्ट्र)</h3>
+    <!-- 2. ADDRESS (Maharashtra only) -->
+    <h3>📍 2. Address Details (महाराष्ट्र)</h3>
+    <label>State <span style="color: #b33">*</span></label>
+    <input type="hidden" name="state" value="Maharashtra" />
+    <div class="static-state">🏔️ Maharashtra (महाराष्ट्र)</div>
 
-        <!-- State: fixed to Maharashtra (hidden input + visual display) -->
-        <label>State <span style="color: #b33">*</span></label>
-        <input type="hidden" name="state" value="Maharashtra" />
-        <div class="static-state">🏔️ Maharashtra (महाराष्ट्र)</div>
+    <label>District <span style="color: #b33">*</span></label>
+    <select id="district" name="district" required>
+      <option value="">-- निवडा जिल्हा / Select District --</option>
+    </select>
 
-        <!-- District dropdown (populated via JS) -->
-        <label>District <span style="color: #b33">*</span></label>
-        <select id="district" name="district" required>
-          <option value="">-- निवडा जिल्हा / Select District --</option>
-        </select>
+    <label>Taluka / City <span style="color: #b33">*</span></label>
+    <select id="taluka" name="taluka" required>
+      <option value="">-- निवडा तालुका / Select Taluka --</option>
+    </select>
 
-        <!-- Taluka dropdown (populated via JS) -->
-        <label>Taluka / City <span style="color: #b33">*</span></label>
-        <select id="taluka" name="taluka" required>
-          <option value="">-- निवडा तालुका / Select Taluka --</option>
-        </select>
+    <label>Village / Area <span style="color: #b33">*</span></label>
+    <input type="text" name="village" placeholder="e.g. Andheri East, or village name" required />
 
-        <label>Village / Area <span style="color: #b33">*</span></label>
-        <input
-          type="text"
-          name="village"
-          placeholder="e.g. Andheri East, or village name"
-          required
-        />
+    <label>Ward Number</label>
+    <input type="text" name="ward" placeholder="e.g. 12 / C" />
 
-        <label>Ward Number</label>
-        <input type="text" name="ward" placeholder="e.g. 12 / C" />
+    <label>Pincode <span style="color: #b33">*</span></label>
+    <input type="text" name="pincode" maxlength="6" pattern="[0-9]{6}" placeholder="400001" required />
 
-        <label>Pincode <span style="color: #b33">*</span></label>
-        <input
-          type="text"
-          name="pincode"
-          maxlength="6"
-          pattern="[0-9]{6}"
-          placeholder="400001"
-          required
-        />
+    <!-- 3. COMPLAINT DETAILS -->
+    <h3>⚠️ 3. Complaint Details</h3>
+    <label>Department</label>
+    <select name="department">
+      <option value="">-- Select Department --</option>
+      <option>Water Supply</option>
+      <option>Electricity</option>
+      <option>Road / Infrastructure</option>
+      <option>Sanitation</option>
+      <option>Health Services</option>
+      <option>Public Transport</option>
+      <option>Other</option>
+    </select>
 
-        <!-- 3. Complaint DETAILS -->
-        <h3>⚠️ 3. Complaint Details</h3>
+    <label>Complaint Title <span style="color: #b33">*</span></label>
+    <input type="text" name="title" placeholder="e.g. Broken water pipeline" required />
 
-        <label>Department</label>
-        <select name="department">
-          <option value="">-- Select Department --</option>
-          <option>Water Supply</option>
-          <option>Electricity</option>
-          <option>Road / Infrastructure</option>
-          <option>Sanitation</option>
-          <option>Health Services</option>
-          <option>Public Transport</option>
-          <option>Other</option>
-        </select>
+    <label>Complaint Description <span style="color: #b33">*</span></label>
+    <textarea name="description" rows="4" placeholder="तक्रारीचे तपशीलवार वर्णन करा..." required></textarea>
 
-        <label>Complaint Title <span style="color: #b33">*</span></label>
-        <input
-          type="text"
-          name="title"
-          placeholder="e.g. Broken water pipeline"
-          required
-        />
+    <label>Location of Issue (landmark / street)</label>
+    <input type="text" name="issue_location" placeholder="e.g. Near bus stand, opposite post office" />
 
-        <label>Complaint Description <span style="color: #b33">*</span></label>
-        <textarea
-          name="description"
-          rows="4"
-          placeholder="तक्रारीचे तपशीलवार वर्णन करा..."
-          required
-        ></textarea>
+    <label>Date of Issue</label>
+    <input type="date" name="issue_date" id="issue_date" />
 
-        <label>Location of Issue (landmark / street)</label>
-        <input
-          type="text"
-          name="issue_location"
-          placeholder="e.g. Near bus stand, opposite post office"
-        />
+    <!-- 4. MAP PICKER -->
+    <label>📌 Select exact location on map (click on map)</label>
+    <div class="map-hint">🗺️ नकाशावर क्लिक करा / Click map to drop a marker — latitude & longitude auto-fill</div>
+    <div id="map" style="height: 50vh; min-height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
 
-        <label>Date of Issue</label>
-        <input type="date" name="issue_date" id="issue_date" />
+    <!-- Hidden coordinates -->
+    <input type="hidden" name="latitude" id="latitude" required />
+    <input type="hidden" name="longitude" id="longitude" required />
 
-        <!-- Map picker -->
-        <label>📌 Select exact location on map (click on map)</label>
-        <div class="map-hint">
-          🗺️ नकाशावर क्लिक करा / Click map to drop a marker — latitude &
-          longitude auto-fill
-        </div>
-        <div id="map"></div>
+    <!-- 5. EVIDENCE -->
+    <h3>📎 4. Evidence (Optional)</h3>
+    <label>Upload Image / Document (jpg, pdf, png)</label>
+    <input type="file" name="evidence" accept=".jpg,.jpeg,.png,.pdf" />
 
-        <!-- hidden fields for lat/lng -->
-        <input type="hidden" name="latitude" id="latitude" />
-        <input type="hidden" name="longitude" id="longitude" />
+    <!-- 6. DECLARATION -->
+    <h3>✅ 5. Declaration</h3>
+    <label class="confirm-check">
+      <input type="checkbox" required />
+      <span>I confirm that the information provided is true and correct to the best of my knowledge.</span>
+    </label>
 
-        <!-- 4. EVIDENCE -->
-        <h3>📎 4. Evidence (Optional)</h3>
-        <label>Upload Image / Document (jpg, pdf, png)</label>
-        <input type="file" name="evidence" accept=".jpg,.jpeg,.png,.pdf" />
-
-        <!-- 5. DECLARATION -->
-        <h3>✅ 5. Declaration</h3>
-        <label class="confirm-check">
-          <input type="checkbox" required />
-          <span
-            >I confirm that the information provided is true and correct to the
-            best of my knowledge.</span
-          >
-        </label>
-
-        <!-- submit button -->
-        <div style="text-align: center">
-          <button type="submit">📤 तक्रार नोंदवा / Submit Complaint</button>
-        </div>
-      </form>
-
-      <!-- footer -->
-      <hr />
-      <div
-        style="
-          text-align: center;
-          color: #517a67;
-          font-size: 0.9rem;
-          padding: 10px 0;
-        "
-      >
-        © 2025 महाराष्ट्र शासन तक्रार प्रणाली • Government of Maharashtra
-      </div>
+    <div style="text-align: center">
+      <button type="submit">📤 तक्रार नोंदवा / Submit Complaint</button>
     </div>
+  </form>
 
-    <!-- ========== JAVASCRIPT : only Maharashtra districts & talukas + map ========== -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-      (function () {
-        // ---------- set today's date ----------
-        const today = new Date().toISOString().split("T")[0];
-        document.getElementById("issue_date").value = today;
+  <hr />
+  <div style="text-align: center; color: #517a67; font-size: 0.9rem; padding: 10px 0;">
+    © 2025 महाराष्ट्र शासन तक्रार प्रणाली • Government of Maharashtra
+  </div>
+</div>
 
-        // ---------- location data : ONLY MAHARASHTRA (comprehensive) ----------
-        const locationData = {
-          Maharashtra: {
-            Ahmednagar: {
-              Talukas: [
-                "Ahmednagar",
-                "Akole",
-                "Jamkhed",
-                "Karjat",
-                "Kopargaon",
-                "Nagar",
-                "Nevasa",
-                "Parner",
-                "Pathardi",
-                "Rahata",
-                "Rahuri",
-                "Sangamner",
-                "Shevgaon",
-                "Shrigonda",
-                "Shrirampur",
-              ],
-            },
-            Akola: {
-              Talukas: [
-                "Akola",
-                "Akot",
-                "Balapur",
-                "Barshitakli",
-                "Murtijapur",
-                "Patur",
-                "Telhara",
-              ],
-            },
-            Amravati: {
-              Talukas: [
-                "Amravati",
-                "Achalpur",
-                "Anjangaon Surji",
-                "Bhatkuli",
-                "Chandur Bazaar",
-                "Chandur Railway",
-                "Chikhaldara",
-                "Daryapur",
-                "Dhamangaon Railway",
-                "Dharni",
-                "Morshi",
-                "Nandgaon Khandeshwar",
-                "Teosa",
-                "Warud",
-              ],
-            },
-            Aurangabad: {
-              Talukas: [
-                "Aurangabad",
-                "Gangapur",
-                "Kannad",
-                "Khuldabad",
-                "Paithan",
-                "Phulambri",
-                "Sillod",
-                "Soygaon",
-                "Vaijapur",
-              ],
-            },
-            Beed: {
-              Talukas: [
-                "Beed",
-                "Ambejogai",
-                "Ashti",
-                "Dharur",
-                "Georai",
-                "Kaij",
-                "Majalgaon",
-                "Parli",
-                "Patoda",
-                "Shirur Kasar",
-                "Wadwani",
-              ],
-            },
-            Bhandara: {
-              Talukas: [
-                "Bhandara",
-                "Lakhani",
-                "Lakhandur",
-                "Mohadi",
-                "Pauni",
-                "Sakoli",
-                "Tumsar",
-              ],
-            },
-            Buldhana: {
-              Talukas: [
-                "Buldhana",
-                "Chikhli",
-                "Deulgaon Raja",
-                "Jalgaon Jamod",
-                "Khamgaon",
-                "Lonar",
-                "Malkapur",
-                "Mehkar",
-                "Motala",
-                "Nandura",
-                "Sangrampur",
-                "Shegaon",
-                "Sindkhed Raja",
-              ],
-            },
-            Chandrapur: {
-              Talukas: [
-                "Ballarpur",
-                "Bhadravati",
-                "Brahmapuri",
-                "Chandrapur",
-                "Chimur",
-                "Gondpipri",
-                "Jiwati",
-                "Korpana",
-                "Mul",
-                "Nagbhid",
-                "Pombhurna",
-                "Rajura",
-                "Sawali",
-                "Sindewahi",
-                "Warora",
-              ],
-            },
-            Dhule: { Talukas: ["Dhule", "Sakri", "Shindkheda", "Shirpur"] },
-            Gadchiroli: {
-              Talukas: [
-                "Aheri",
-                "Armori",
-                "Bhamragad",
-                "Chamorshi",
-                "Desaiganj",
-                "Dhanora",
-                "Etapalli",
-                "Gadchiroli",
-                "Korchi",
-                "Kurkheda",
-                "Mulchera",
-                "Sironcha",
-              ],
-            },
-            Gondia: {
-              Talukas: [
-                "Arjuni Morgaon",
-                "Amgaon",
-                "Deori",
-                "Gondia",
-                "Goregaon",
-                "Sadak Arjuni",
-                "Salekasa",
-                "Tirora",
-              ],
-            },
-            Hingoli: {
-              Talukas: [
-                "Aundha Nagnath",
-                "Basmath",
-                "Hingoli",
-                "Kalamnuri",
-                "Sengaon",
-              ],
-            },
-            Jalgaon: {
-              Talukas: [
-                "Jalgaon",
-                "Amalner",
-                "Bhadgaon",
-                "Bhusawal",
-                "Bodwad",
-                "Chalisgaon",
-                "Chopda",
-                "Dharangaon",
-                "Erandol",
-                "Jamner",
-                "Muktainagar",
-                "Pachora",
-                "Parola",
-                "Raver",
-                "Yawal",
-              ],
-            },
-            Jalna: {
-              Talukas: [
-                "Ambad",
-                "Badnapur",
-                "Bhokardan",
-                "Ghansawangi",
-                "Jafrabad",
-                "Jalna",
-                "Mantha",
-                "Partur",
-              ],
-            },
-            Kolhapur: {
-              Talukas: [
-                "Ajra",
-                "Bavda",
-                "Bhudargad",
-                "Chandgad",
-                "Gadhinglaj",
-                "Hatkanangle",
-                "Kagal",
-                "Karvir",
-                "Panhala",
-                "Radhanagari",
-                "Shahuwadi",
-                "Shirol",
-              ],
-            },
-            Latur: {
-              Talukas: [
-                "Ahmedpur",
-                "Ausa",
-                "Chakur",
-                "Deoni",
-                "Jalkot",
-                "Latur",
-                "Nilanga",
-                "Renapur",
-                "Shirur Anantpal",
-                "Udgir",
-              ],
-            },
-            "Mumbai City": { Talukas: ["Mumbai City"] },
-            "Mumbai Suburban": { Talukas: ["Andheri", "Borivali", "Kurla"] },
-            Nagpur: {
-              Talukas: [
-                "Nagpur Urban",
-                "Nagpur Rural",
-                "Hingna",
-                "Kamthi",
-                "Umred",
-                "Kalmeshwar",
-                "Katol",
-                "Kuhi",
-                "Mauda",
-                "Narkhed",
-                "Parseoni",
-                "Ramtek",
-                "Savner",
-              ],
-            },
-            Nandurbar: {
-              Talukas: [
-                "Nandurbar",
-                "Akkalkuwa",
-                "Akrani",
-                "Navapur",
-                "Shahada",
-                "Taloda",
-              ],
-            },
-            Nashik: {
-              Talukas: [
-                "Baglan",
-                "Chandwad",
-                "Deola",
-                "Dindori",
-                "Igatpuri",
-                "Kalwan",
-                "Malegaon",
-                "Nandgaon",
-                "Nashik",
-                "Niphad",
-                "Peint",
-                "Sinnar",
-                "Surgana",
-                "Trimbakeshwar",
-                "Yevla",
-              ],
-            },
-            Osmanabad: {
-              Talukas: [
-                "Bhum",
-                "Kalamb",
-                "Lohara",
-                "Osmanabad",
-                "Paranda",
-                "Tuljapur",
-                "Umarga",
-                "Washi",
-              ],
-            },
-            Palghar: {
-              Talukas: [
-                "Dahanu",
-                "Jawhar",
-                "Mokhada",
-                "Palghar",
-                "Talasari",
-                "Vasai",
-                "Vikramgad",
-                "Wada",
-              ],
-            },
-            Parbhani: {
-              Talukas: [
-                "Gangakhed",
-                "Jintur",
-                "Manwath",
-                "Palam",
-                "Parbhani",
-                "Pathri",
-                "Purna",
-                "Sailu",
-                "Sonpeth",
-              ],
-            },
-            Pune: {
-              Talukas: [
-                "Baramati",
-                "Bhor",
-                "Daund",
-                "Haveli",
-                "Indapur",
-                "Junnar",
-                "Khed",
-                "Maval",
-                "Mulshi",
-                "Pune City",
-                "Purandar",
-                "Shirur",
-                "Velhe",
-              ],
-            },
-            Raigad: {
-              Talukas: [
-                "Alibag",
-                "Karjat",
-                "Khalapur",
-                "Mahad",
-                "Mangaon",
-                "Mhasla",
-                "Murud",
-                "Panvel",
-                "Pen",
-                "Poladpur",
-                "Roha",
-                "Shrivardhan",
-                "Sudhagad",
-                "Tala",
-                "Uran",
-              ],
-            },
-            Ratnagiri: {
-              Talukas: [
-                "Chiplun",
-                "Dapoli",
-                "Guhagar",
-                "Khed",
-                "Lanja",
-                "Mandangad",
-                "Rajapur",
-                "Ratnagiri",
-                "Sangameshwar",
-              ],
-            },
-            Sangli: {
-              Talukas: [
-                "Atpadi",
-                "Jat",
-                "Kadegaon",
-                "Kavathe Mahankal",
-                "Khanapur",
-                "Miraj",
-                "Palus",
-                "Shirala",
-                "Tasgaon",
-                "Walwa",
-              ],
-            },
-            Satara: {
-              Talukas: [
-                "Jaoli",
-                "Karad",
-                "Khandala",
-                "Khatav",
-                "Koregaon",
-                "Mahabaleshwar",
-                "Man",
-                "Patan",
-                "Phaltan",
-                "Satara",
-                "Wai",
-              ],
-            },
-            Sindhudurg: {
-              Talukas: [
-                "Devgad",
-                "Dodamarg",
-                "Kankavli",
-                "Kudal",
-                "Malvan",
-                "Sawantwadi",
-                "Vaibhavwadi",
-                "Vengurla",
-              ],
-            },
-            Solapur: {
-              Talukas: [
-                "Akkalkot",
-                "Barshi",
-                "Karmala",
-                "Madha",
-                "Malshiras",
-                "Mangalvedha",
-                "Mohol",
-                "Pandharpur",
-                "Sangole",
-                "Solapur North",
-                "Solapur South",
-              ],
-            },
-            Thane: {
-              Talukas: [
-                "Ambarnath",
-                "Bhiwandi",
-                "Kalyan",
-                "Murbad",
-                "Shahapur",
-                "Thane",
-              ],
-            },
-            Wardha: {
-              Talukas: [
-                "Arvi",
-                "Ashti",
-                "Deoli",
-                "Hinganghat",
-                "Karanja",
-                "Samudrapur",
-                "Seloo",
-                "Wardha",
-              ],
-            },
-            Washim: {
-              Talukas: [
-                "Karanja",
-                "Malegaon",
-                "Mangrulpir",
-                "Manora",
-                "Risod",
-                "Washim",
-              ],
-            },
-            Yavatmal: {
-              Talukas: [
-                "Arni",
-                "Babulgaon",
-                "Darwha",
-                "Digras",
-                "Ghatanji",
-                "Kalamb",
-                "Kelapur",
-                "Mahagaon",
-                "Maregaon",
-                "Ner",
-                "Pandharkawada",
-                "Pusad",
-                "Ralegaon",
-                "Umarkhed",
-                "Yavatmal",
-                "Zari Jamni",
-              ],
-            },
-          },
-        };
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-        const districtSelect = document.getElementById("district");
-        const talukaSelect = document.getElementById("taluka");
+<script>
+  (function () {
+    // --- Set today's date ---
+    document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
 
-        // ----- load districts (Maharashtra only) -----
-        function loadDistricts() {
-          districtSelect.innerHTML =
-            '<option value="">-- निवडा जिल्हा / Select District --</option>';
-          talukaSelect.innerHTML =
-            '<option value="">-- निवडा तालुका / Select Taluka --</option>';
+    // --- Maharashtra districts & talukas (full dataset as in your original) ---
+    const locationData = {
+      Maharashtra: {
+        Ahmednagar: { Talukas: ["Ahmednagar","Akole","Jamkhed","Karjat","Kopargaon","Nagar","Nevasa","Parner","Pathardi","Rahata","Rahuri","Sangamner","Shevgaon","Shrigonda","Shrirampur"] },
+        Akola: { Talukas: ["Akola","Akot","Balapur","Barshitakli","Murtijapur","Patur","Telhara"] },
+        Amravati: { Talukas: ["Amravati","Achalpur","Anjangaon Surji","Bhatkuli","Chandur Bazaar","Chandur Railway","Chikhaldara","Daryapur","Dhamangaon Railway","Dharni","Morshi","Nandgaon Khandeshwar","Teosa","Warud"] },
+        Aurangabad: { Talukas: ["Aurangabad","Gangapur","Kannad","Khuldabad","Paithan","Phulambri","Sillod","Soygaon","Vaijapur"] },
+        Beed: { Talukas: ["Beed","Ambejogai","Ashti","Dharur","Georai","Kaij","Majalgaon","Parli","Patoda","Shirur Kasar","Wadwani"] },
+        Bhandara: { Talukas: ["Bhandara","Lakhani","Lakhandur","Mohadi","Pauni","Sakoli","Tumsar"] },
+        Buldhana: { Talukas: ["Buldhana","Chikhli","Deulgaon Raja","Jalgaon Jamod","Khamgaon","Lonar","Malkapur","Mehkar","Motala","Nandura","Sangrampur","Shegaon","Sindkhed Raja"] },
+        Chandrapur: { Talukas: ["Ballarpur","Bhadravati","Brahmapuri","Chandrapur","Chimur","Gondpipri","Jiwati","Korpana","Mul","Nagbhid","Pombhurna","Rajura","Sawali","Sindewahi","Warora"] },
+        Dhule: { Talukas: ["Dhule","Sakri","Shindkheda","Shirpur"] },
+        Gadchiroli: { Talukas: ["Aheri","Armori","Bhamragad","Chamorshi","Desaiganj","Dhanora","Etapalli","Gadchiroli","Korchi","Kurkheda","Mulchera","Sironcha"] },
+        Gondia: { Talukas: ["Arjuni Morgaon","Amgaon","Deori","Gondia","Goregaon","Sadak Arjuni","Salekasa","Tirora"] },
+        Hingoli: { Talukas: ["Aundha Nagnath","Basmath","Hingoli","Kalamnuri","Sengaon"] },
+        Jalgaon: { Talukas: ["Jalgaon","Amalner","Bhadgaon","Bhusawal","Bodwad","Chalisgaon","Chopda","Dharangaon","Erandol","Jamner","Muktainagar","Pachora","Parola","Raver","Yawal"] },
+        Jalna: { Talukas: ["Ambad","Badnapur","Bhokardan","Ghansawangi","Jafrabad","Jalna","Mantha","Partur"] },
+        Kolhapur: { Talukas: ["Ajra","Bavda","Bhudargad","Chandgad","Gadhinglaj","Hatkanangle","Kagal","Karvir","Panhala","Radhanagari","Shahuwadi","Shirol"] },
+        Latur: { Talukas: ["Ahmedpur","Ausa","Chakur","Deoni","Jalkot","Latur","Nilanga","Renapur","Shirur Anantpal","Udgir"] },
+        "Mumbai City": { Talukas: ["Mumbai City"] },
+        "Mumbai Suburban": { Talukas: ["Andheri","Borivali","Kurla"] },
+        Nagpur: { Talukas: ["Nagpur Urban","Nagpur Rural","Hingna","Kamthi","Umred","Kalmeshwar","Katol","Kuhi","Mauda","Narkhed","Parseoni","Ramtek","Savner"] },
+        Nandurbar: { Talukas: ["Nandurbar","Akkalkuwa","Akrani","Navapur","Shahada","Taloda"] },
+        Nashik: { Talukas: ["Baglan","Chandwad","Deola","Dindori","Igatpuri","Kalwan","Malegaon","Nandgaon","Nashik","Niphad","Peint","Sinnar","Surgana","Trimbakeshwar","Yevla"] },
+        Osmanabad: { Talukas: ["Bhum","Kalamb","Lohara","Osmanabad","Paranda","Tuljapur","Umarga","Washi"] },
+        Palghar: { Talukas: ["Dahanu","Jawhar","Mokhada","Palghar","Talasari","Vasai","Vikramgad","Wada"] },
+        Parbhani: { Talukas: ["Gangakhed","Jintur","Manwath","Palam","Parbhani","Pathri","Purna","Sailu","Sonpeth"] },
+        Pune: { Talukas: ["Baramati","Bhor","Daund","Haveli","Indapur","Junnar","Khed","Maval","Mulshi","Pune City","Purandar","Shirur","Velhe"] },
+        Raigad: { Talukas: ["Alibag","Karjat","Khalapur","Mahad","Mangaon","Mhasla","Murud","Panvel","Pen","Poladpur","Roha","Shrivardhan","Sudhagad","Tala","Uran"] },
+        Ratnagiri: { Talukas: ["Chiplun","Dapoli","Guhagar","Khed","Lanja","Mandangad","Rajapur","Ratnagiri","Sangameshwar"] },
+        Sangli: { Talukas: ["Atpadi","Jat","Kadegaon","Kavathe Mahankal","Khanapur","Miraj","Palus","Shirala","Tasgaon","Walwa"] },
+        Satara: { Talukas: ["Jaoli","Karad","Khandala","Khatav","Koregaon","Mahabaleshwar","Man","Patan","Phaltan","Satara","Wai"] },
+        Sindhudurg: { Talukas: ["Devgad","Dodamarg","Kankavli","Kudal","Malvan","Sawantwadi","Vaibhavwadi","Vengurla"] },
+        Solapur: { Talukas: ["Akkalkot","Barshi","Karmala","Madha","Malshiras","Mangalvedha","Mohol","Pandharpur","Sangole","Solapur North","Solapur South"] },
+        Thane: { Talukas: ["Ambarnath","Bhiwandi","Kalyan","Murbad","Shahapur","Thane"] },
+        Wardha: { Talukas: ["Arvi","Ashti","Deoli","Hinganghat","Karanja","Samudrapur","Seloo","Wardha"] },
+        Washim: { Talukas: ["Karanja","Malegaon","Mangrulpir","Manora","Risod","Washim"] },
+        Yavatmal: { Talukas: ["Arni","Babulgaon","Darwha","Digras","Ghatanji","Kalamb","Kelapur","Mahagaon","Maregaon","Ner","Pandharkawada","Pusad","Ralegaon","Umarkhed","Yavatmal","Zari Jamni"] }
+      }
+    };
 
-          const selectedState = "Maharashtra"; // fixed
-          const districts = locationData[selectedState];
-          if (!districts) return;
+    const districtSelect = document.getElementById('district');
+    const talukaSelect = document.getElementById('taluka');
 
-          for (let district in districts) {
-            let opt = document.createElement("option");
-            opt.value = district;
-            opt.textContent = district;
-            districtSelect.appendChild(opt);
-          }
+    // Load districts
+    function loadDistricts() {
+      districtSelect.innerHTML = '<option value="">-- निवडा जिल्हा / Select District --</option>';
+      talukaSelect.innerHTML = '<option value="">-- निवडा तालुका / Select Taluka --</option>';
+      const districts = locationData.Maharashtra;
+      for (let d in districts) {
+        let opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        districtSelect.appendChild(opt);
+      }
+    }
+
+    // Load talukas
+    function loadTalukas() {
+      talukaSelect.innerHTML = '<option value="">-- निवडा तालुका / Select Taluka --</option>';
+      const district = districtSelect.value;
+      if (!district) return;
+      const talukas = locationData.Maharashtra[district]?.Talukas || [];
+      talukas.forEach(t => {
+        let opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        talukaSelect.appendChild(opt);
+      });
+    }
+
+    districtSelect.addEventListener('change', loadTalukas);
+    loadDistricts();
+
+    // --- LEAFLET MAP ---
+    const map = L.map('map').setView([19.7515, 75.7139], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let marker = null;
+
+    // Auto‑geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          map.setView([lat, lng], 15);
+          marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup('📍 Your Current Location').openPopup();
+          document.getElementById('latitude').value = lat.toFixed(6);
+          document.getElementById('longitude').value = lng.toFixed(6);
+        },
+        (err) => {
+          console.warn('Geolocation error:', err.message);
+          // Optional: show a subtle note to the user
         }
+      );
+    }
 
-        // ----- load talukas based on selected district -----
-        function loadTalukas() {
-          talukaSelect.innerHTML =
-            '<option value="">-- निवडा तालुका / Select Taluka --</option>';
-          const selectedDistrict = districtSelect.value;
-          if (!selectedDistrict) return;
+    // Manual click
+    map.on('click', function(e) {
+      const lat = e.latlng.lat.toFixed(6);
+      const lng = e.latlng.lng.toFixed(6);
+      document.getElementById('latitude').value = lat;
+      document.getElementById('longitude').value = lng;
 
-          const selectedState = "Maharashtra";
-          const districtData = locationData[selectedState]?.[selectedDistrict];
-          if (!districtData || !districtData.Talukas) return;
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map)
+        .bindPopup('📍 Selected Location<br>Lat: ' + lat + '<br>Lng: ' + lng)
+        .openPopup();
+    });
 
-          const talukas = districtData.Talukas;
-          talukas.forEach(function (taluka) {
-            let opt = document.createElement("option");
-            opt.value = taluka;
-            opt.textContent = taluka;
-            talukaSelect.appendChild(opt);
-          });
-        }
+  })();
+</script>
 
-        // attach event listener
-        districtSelect.addEventListener("change", loadTalukas);
-
-        // initial load of districts (Maharashtra)
-        loadDistricts();
-
-        // ---------- LEAFLET MAP (Maharashtra centered) ----------
-        // var map = L.map('map').setView([19.7515, 75.7139], 7); // Maharashtra state approximate center
-
-        // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //     maxZoom: 19,
-        //     attribution: '© OpenStreetMap'
-        // }).addTo(map);
-
-        // var marker = null;
-
-        // map.on('click', function(e) {
-        //     var lat = e.latlng.lat.toFixed(6);
-        //     var lng = e.latlng.lng.toFixed(6);
-
-        //     document.getElementById('latitude').value = lat;
-        //     document.getElementById('longitude').value = lng;
-
-        //     if (marker) {
-        //         map.removeLayer(marker);
-        //     }
-
-        //     marker = L.marker([lat, lng]).addTo(map)
-        //         .bindPopup('📍 निवडलेले स्थान<br>Lat: ' + lat + '<br>Lng: ' + lng)
-        //         .openPopup();
-        // });
-
-        // console.log('महाराष्ट्र नकाशा तयार — ठिकाण निवडण्यासाठी क्लिक करा');
-
-        (function () {
-          // ---------- set today's date ----------
-          const today = new Date().toISOString().split("T")[0];
-          document.getElementById("issue_date").value = today;
-
-          // ---------- LEAFLET MAP ----------
-          var map = L.map("map").setView([19.7515, 75.7139], 7);
-
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: "© OpenStreetMap",
-          }).addTo(map);
-
-          var marker = null;
-
-          // ===== AUTO DETECT USER LOCATION =====
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              function (position) {
-                var lat = position.coords.latitude;
-                var lng = position.coords.longitude;
-
-                map.setView([lat, lng], 15);
-
-                marker = L.marker([lat, lng])
-                  .addTo(map)
-                  .bindPopup("📍 Your Current Location")
-                  .openPopup();
-
-                document.getElementById("latitude").value = lat.toFixed(6);
-                document.getElementById("longitude").value = lng.toFixed(6);
-              },
-              function (error) {
-                console.log("Location permission denied");
-              },
-            );
-          } else {
-            console.log("Geolocation not supported");
-          }
-
-          // ===== MANUAL MAP CLICK =====
-          map.on("click", function (e) {
-            var lat = e.latlng.lat.toFixed(6);
-            var lng = e.latlng.lng.toFixed(6);
-
-            document.getElementById("latitude").value = lat;
-            document.getElementById("longitude").value = lng;
-
-            if (marker) {
-              map.removeLayer(marker);
-            }
-
-            marker = L.marker([lat, lng])
-              .addTo(map)
-              .bindPopup(
-                "📍 Selected Location<br>Lat: " + lat + "<br>Lng: " + lng,
-              )
-              .openPopup();
-          });
-        })();
-      })();
-    </script>
-  </body>
+</body>
 </html>
-
 {% include "footer.html" %}

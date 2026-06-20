@@ -3,6 +3,7 @@ import json
 from django.contrib import messages
 from complaint.models import complaint
 from django.shortcuts import get_object_or_404
+from .models import ComplaintHistory
 
 def resolve_complaint(request, complaint_id):
 
@@ -10,6 +11,12 @@ def resolve_complaint(request, complaint_id):
 
     c.status = "Resolved"
     c.save()
+    
+    ComplaintHistory.objects.create(
+        complaint=c,
+        status="Resolved",
+        updated_by="State Admin"
+    )
 
     return redirect("state_admin_dashboard")
 
@@ -17,10 +24,14 @@ def mark_complaint_read(request, complaint_id):
 
     c = get_object_or_404(complaint, complaint_id=complaint_id)
 
-    c.is_read = True
-    c.status = "In Progress"
-
+    c.status = "Assigned"
     c.save()
+    
+    ComplaintHistory.objects.create(
+        complaint=c,
+        status="Assigned",
+        updated_by="State Admin"
+    )
 
     return redirect("state_admin_dashboard")
 
@@ -57,6 +68,12 @@ def complaint_view(request):
 
             evidence=request.FILES.get('evidence')
         )
+        
+        ComplaintHistory.objects.create(
+            complaint=c,
+            status="Submitted",
+            updated_by="Citizen"
+        )
 
         return redirect('complaint_result', complaint_id=c.complaint_id)
 
@@ -87,13 +104,18 @@ def complaint_result(request, complaint_id):
 
 def map_complaint(request):
 
-    complaints = complaint.objects.all()
+    complaints = complaint.objects.exclude(
+        latitude__isnull=True
+    ).exclude(
+        longitude__isnull=True
+    )
 
     complaint_data = []
 
     for c in complaints:
         complaint_data.append({
             "id": c.id,
+            "complaint_id": c.complaint_id,
             "department": c.department,
             "status": c.status,
             "description": c.description,
@@ -106,3 +128,41 @@ def map_complaint(request):
         }
     
     return render(request, "map_complaint.html", context)
+
+def close_complaint(request, complaint_id):
+
+    c = get_object_or_404(
+        complaint,
+        complaint_id=complaint_id
+    )
+
+    c.status = "Closed"
+    c.save()
+
+    ComplaintHistory.objects.create(
+        complaint=c,
+        status="Closed",
+        updated_by="Admin"
+    )
+
+    return redirect("state_admin_dashboard")
+
+def complaint_detail(request, complaint_id):
+
+    c = get_object_or_404(
+        complaint,
+        complaint_id=complaint_id
+    )
+
+    history = c.history.all().order_by("timestamp")
+
+    context = {
+        "complaint": c,
+        "history": history
+    }
+
+    return render(
+        request,
+        "complaint_detail.html",
+        context
+    )

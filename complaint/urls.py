@@ -15,5 +15,7 @@ urlpatterns = [
     path('mark-read/<str:complaint_id>/', views.mark_complaint_read, name='mark_complaint_read'),
     
     path("resolve/<str:complaint_id>/", views.resolve_complaint, name="resolve_complaint"),
+    path("close/<str:complaint_id>/", views.close_complaint, name="close_complaint"),
+    path("detail/<str:complaint_id>/", views.complaint_detail, name="complaint_detail"),
 
 ]

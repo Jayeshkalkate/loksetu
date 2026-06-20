@@ -1,0 +1,185 @@
+
+        /* ========== DASHBOARD CSS (rewritten, modern, fully responsive) ========== */
+        :root {
+            --primary: #2c3e8f;
+            --primary-dark: #1a2a6c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --gray-bg: #f4f7fc;
+            --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --card-hover-shadow: 0 20px 32px rgba(0, 0, 0, 0.08);
+            --transition: all 0.25s ease;
+        }
+
+        body {
+            background: var(--gray-bg);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #1e2a3a;
+            scroll-behavior: smooth;
+        }
+
+        /* custom container padding */
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: none;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        /* summary metric cards */
+        .stat-card {
+            border-radius: 1.5rem;
+            padding: 1.25rem 1rem;
+            backdrop-filter: blur(2px);
+            transition: var(--transition);
+            border: none;
+            color: white;
+        }
+        .stat-card .stat-icon {
+            font-size: 2.2rem;
+            opacity: 0.9;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #2c3e8f 0%, #1e2f6e 100%);
+        }
+        .bg-success-gradient {
+            background: linear-gradient(135deg, #2ecc71 0%, #239b56 100%);
+        }
+        .bg-warning-gradient {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        .bg-danger-gradient {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        /* progress bar custom */
+        .progress-custom {
+            height: 8px;
+            border-radius: 10px;
+            background-color: #eef2f6;
+        }
+        .progress-custom .progress-bar {
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* badges & tags */
+        .badge-status {
+            font-weight: 500;
+            padding: 0.35rem 0.85rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+        }
+
+        /* form controls */
+        .form-modern {
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1rem;
+            transition: var(--transition);
+            background-color: #ffffff;
+        }
+        .form-modern:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 62, 143, 0.2);
+            outline: none;
+        }
+
+        /* buttons */
+        .btn-modern {
+            border-radius: 2rem;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            color: white;
+        }
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* fund & project grid */
+        .grid-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* chart containers */
+        .chart-container {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: #ffffffcc;
+            border-radius: 2rem;
+            color: #6c7a89;
+        }
+
+        /* filter bar */
+        .filter-bar {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* responsiveness */
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 1rem;
+            }
+            .stat-card .stat-value {
+                font-size: 1.5rem;
+            }
+            .dashboard-card {
+                margin-bottom: 1rem;
+            }
+            h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b9c3cf;
+            border-radius: 10px;
+        }

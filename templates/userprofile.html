@@ -2,162 +2,136 @@
 
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Citizen Profile - LokSetu</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Citizen Profile - LokSetu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="stylesheet" href="{% static 'css/userprofile.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'css/userprofile.css' %}" />
+  </head>
 
-<body>
+  <body>
+    {% include "header.html" %}
 
-{% include "header.html" %}
+    <div class="container">
+      {% if user.is_authenticated %}
 
-<div class="container">
+      <h2>👤 Citizen Profile</h2>
 
-{% if user.is_authenticated %}
+      <div class="profile-info">
+        <p>
+          <strong>Full Name:</strong>
+          {{ user.get_full_name|default:user.username }}
+        </p>
 
-<h2>👤 Citizen Profile</h2>
+        <p>
+          <strong>Username:</strong>
+          {{ user.username|default:"Not Available" }}
+        </p>
 
-<div class="profile-info">
+        <p>
+          <strong>Email:</strong>
+          {{ user.email|default:"Not Available" }}
+        </p>
 
-<p>
-<strong>Full Name:</strong>
-{{ user.get_full_name|default:user.username }}
-</p>
+        {% if user.citizen %}
 
-<p>
-<strong>Username:</strong>
-{{ user.username|default:"Not Available" }}
-</p>
+        <p>
+          <strong>Phone Number:</strong>
+          {{ user.citizen.phone|default:"Not Available" }}
+        </p>
 
-<p>
-<strong>Email:</strong>
-{{ user.email|default:"Not Available" }}
-</p>
+        <p>
+          <strong>Gender:</strong>
+          {{ user.citizen.gender|default:"Not Specified" }}
+        </p>
 
+        <p>
+          <strong>Aadhaar:</strong>
+          {{ user.citizen.aadhaar|default:"Not Provided" }}
+        </p>
 
-{% if user.citizen %}
+        <p>
+          <strong>Ward Number:</strong>
+          {{ user.citizen.ward|default:"Not Available" }}
+        </p>
 
-<p>
-<strong>Phone Number:</strong>
-{{ user.citizen.phone|default:"Not Available" }}
-</p>
+        <p>
+          <strong>Pincode:</strong>
+          {{ user.citizen.pincode|default:"Not Available" }}
+        </p>
 
-<p>
-<strong>Gender:</strong>
-{{ user.citizen.gender|default:"Not Specified" }}
-</p>
+        <p>
+          <strong>Address:</strong>
+          {{ user.citizen.address|default:"Not Available" }}
+        </p>
 
-<p>
-<strong>Aadhaar:</strong>
-{{ user.citizen.aadhaar|default:"Not Provided" }}
-</p>
+        {% else %}
 
-<p>
-<strong>Ward Number:</strong>
-{{ user.citizen.ward|default:"Not Available" }}
-</p>
+        <p><strong>Phone Number:</strong> Not Available</p>
+        <p><strong>Gender:</strong> Not Available</p>
+        <p><strong>Aadhaar:</strong> Not Available</p>
+        <p><strong>Ward Number:</strong> Not Available</p>
+        <p><strong>Pincode:</strong> Not Available</p>
+        <p><strong>Address:</strong> Not Available</p>
 
-<p>
-<strong>Pincode:</strong>
-{{ user.citizen.pincode|default:"Not Available" }}
-</p>
+        {% endif %}
+      </div>
 
-<p>
-<strong>Address:</strong>
-{{ user.citizen.address|default:"Not Available" }}
-</p>
+      <!-- Dashboard Links -->
 
-{% else %}
+      <div class="admin-link">
+        {% if user.userprofile.role == "super_admin" %}
 
-<p><strong>Phone Number:</strong> Not Available</p>
-<p><strong>Gender:</strong> Not Available</p>
-<p><strong>Aadhaar:</strong> Not Available</p>
-<p><strong>Ward Number:</strong> Not Available</p>
-<p><strong>Pincode:</strong> Not Available</p>
-<p><strong>Address:</strong> Not Available</p>
+        <a href="{% url 'super_admin_dashboard' %}">
+          🛠 Super Admin Dashboard
+        </a>
 
-{% endif %}
+        {% elif user.userprofile and user.userprofile.role == "state_admin" %}
 
-</div>
+        <a href="{% url 'state_admin_dashboard' %}">
+          🏛 State Admin Dashboard
+        </a>
 
+        {% else %}
 
-<!-- Dashboard Links -->
+        <a href="/"> 🏠 Home </a>
 
-<div class="admin-link">
+        {% endif %}
+      </div>
 
-{% if user.userprofile and user.userprofile.role == "super_admin" %}
+      <!-- Django Admin Access -->
 
-<a href="{% url 'super_admin_dashboard' %}">
-🛠 Super Admin Dashboard
-</a>
+      {% if user.is_superuser %}
 
-{% elif user.userprofile and user.userprofile.role == "state_admin" %}
+      <div class="admin-link">
+        <a href="{% url 'admin:index' %}"> ⚙ Django Admin Panel </a>
+      </div>
 
-<a href="{% url 'state_admin_dashboard' %}">
-🏛 State Admin Dashboard
-</a>
+      {% endif %}
 
-{% else %}
+      <!-- Actions -->
 
-<a href="/">
-🏠 Home
-</a>
+      <div class="actions">
+        <a href="{% url 'edit_profile' %}"> ✏️ Edit Profile </a>
 
-{% endif %}
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit">🚪 Logout</button>
+        </form>
+      </div>
 
-</div>
+      {% else %}
 
+      <h2>⚠ You are not logged in</h2>
 
-<!-- Django Admin Access -->
+      <p>Please login to view your profile.</p>
 
-{% if user.is_superuser %}
+      <a href="{% url 'login' %}"> 🔑 Login </a>
 
-<div class="admin-link">
+      {% endif %}
+    </div>
 
-<a href="{% url 'admin:index' %}">
-⚙ Django Admin Panel
-</a>
-
-</div>
-
-{% endif %}
-
-
-<!-- Actions -->
-
-<div class="actions">
-
-<a href="{% url 'edit_profile' %}">
-✏️ Edit Profile
-</a>
-
-<form action="{% url 'logout' %}" method="post">
-{% csrf_token %}
-<button type="submit">🚪 Logout</button>
-</form>
-
-</div>
-
-{% else %}
-
-<h2>⚠ You are not logged in</h2>
-
-<p>
-Please login to view your profile.
-</p>
-
-<a href="{% url 'login' %}">
-🔑 Login
-</a>
-
-{% endif %}
-
-</div>
-
-{% include "footer.html" %}
-
-</body>
+    {% include "footer.html" %}
+  </body>
 </html>
