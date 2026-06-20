@@ -1,125 +1,337 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Login</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #e8f0fe 0%, #d4e0f5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-wrapper {
+      max-width: 440px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+      padding: 40px 36px 36px;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .login-header .logo-icon {
+      font-size: 2.8rem;
+      color: #1a3c6e;
+      background: #e8f0fe;
+      width: 72px;
+      height: 72px;
+      line-height: 72px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .login-header h2 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+    }
+    .login-header p {
+      color: #6c7a8a;
+      font-size: 0.95rem;
+    }
 
-    <title>Login - LokSetu Complaint Portal</title>
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c7a8a;
+      font-size: 1.1rem;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      border: 1.5px solid #d0d7de;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #f8fafc;
+      color: #1a2a3a;
+      font-family: inherit;
+    }
+    .input-group input:focus {
+      border-color: #1a3c6e;
+      box-shadow: 0 0 0 4px rgba(26,60,110,0.10);
+      outline: none;
+      background: #ffffff;
+    }
+    .input-group label {
+      position: absolute;
+      left: 44px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c7a8a;
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      background: transparent;
+      padding: 0 4px;
+    }
+    .input-group input:focus ~ label,
+    .input-group input:not(:placeholder-shown) ~ label {
+      top: 0;
+      transform: translateY(-50%) scale(0.85);
+      background: #ffffff;
+      color: #1a3c6e;
+      font-weight: 500;
+      left: 38px;
+    }
+    .input-group input::placeholder {
+      color: transparent;
+    }
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    .show-password {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: -8px 0 20px;
+      font-size: 0.9rem;
+      color: #4a5a72;
+    }
+    .show-password input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #1a3c6e;
+      cursor: pointer;
+    }
 
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-    
-    <link
-      rel="stylesheet"
-      href="{% static 'css/login.css' %}"
-      type="text/css"
-    />
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26,60,110,0.3);
+    }
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-  </head>
+    .link-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 0;
+      font-size: 0.9rem;
+    }
+    .link-group a {
+      color: #1a3c6e;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .link-group a:hover {
+      color: #14315a;
+      text-decoration: underline;
+    }
 
-  <body>
-    <div class="wrapper">
-      <h2>LokSetu Login</h2>
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+      border-top: 1px solid #e9edf4;
+      padding-top: 20px;
+      font-size: 0.95rem;
+      color: #4a5a72;
+    }
+    .register-link a {
+      color: #1a3c6e;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
 
-      <div class="portal-title">Smart Public Complaint Tracker</div>
+    .error-message {
+      background: #fde8e8;
+      border-left: 4px solid #dc3545;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #7a1a1a;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .error-message i {
+      color: #dc3545;
+    }
+    .validation-error {
+      background: #fde8e8;
+      border-left: 4px solid #dc3545;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #7a1a1a;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: none;
+    }
 
-      {% if messages %} {% for message in messages %}
-      <div class="error-message">{{ message }}</div>
-      {% endfor %} {% endif %}
+    @media (max-width: 480px) {
+      .login-wrapper {
+        padding: 28px 20px;
+      }
+      .login-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
 
-      <form method="POST" action="{% url 'login' %}" id="login-form">
-        {% csrf_token %}
+<div class="login-wrapper">
 
-        <div
-          id="frontend-error"
-          class="validation-error"
-          style="display: none"
-        ></div>
+  <div class="login-header">
+    <div class="logo-icon"><i class="fas fa-user-shield"></i></div>
+    <h2>Welcome Back</h2>
+    <p>Login to your LokSetu account</p>
+  </div>
 
-        <div class="input-field">
-          <i class="fas fa-user"></i>
-
-          <input type="text" name="username" id="username" required autofocus />
-
-          <label>Username</label>
-        </div>
-
-        <div class="input-field">
-          <i class="fas fa-lock"></i>
-
-          <input type="password" name="password" id="password" required />
-
-          <label>Password</label>
-        </div>
-
-        <div class="show-password">
-          <input type="checkbox" id="toggle-password" />
-
-          <label for="toggle-password">Show Password</label>
-        </div>
-
-        <button type="submit" id="login-button">
-          Login
-
-          <span class="spinner" id="spinner"></span>
-        </button>
-
-        <div class="link-group">
-          <a href="{% url 'password_reset_form' %}">Forgot Password?</a>
-        </div>
-      </form>
-
-      <div class="register">
-        Don’t have an account?
-
-        <a href="{% url 'register' %}">Register as Citizen</a>
+  <!-- Django Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ message }}
       </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Frontend Error -->
+  <div id="frontend-error" class="validation-error">
+    <i class="fas fa-exclamation-circle"></i> <span id="error-text"></span>
+  </div>
+
+  <form method="POST" action="{% url 'login' %}" id="login-form" novalidate>
+    {% csrf_token %}
+
+    <div class="input-group">
+      <i class="fas fa-user"></i>
+      <input type="text" name="username" id="username" required autofocus placeholder=" " />
+      <label>Username</label>
     </div>
 
-    <script>
-      const form = document.getElementById("login-form");
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" name="password" id="password" required placeholder=" " />
+      <label>Password</label>
+    </div>
 
-      const button = document.getElementById("login-button");
+    <div class="show-password">
+      <input type="checkbox" id="toggle-password" />
+      <label for="toggle-password">Show Password</label>
+    </div>
 
-      const spinner = document.getElementById("spinner");
+    <button type="submit" id="login-button" class="btn-login">
+      <span id="button-text">Login</span>
+      <span class="spinner" id="spinner"></span>
+    </button>
 
-      const username = document.getElementById("username");
+    <div class="link-group">
+      <a href="{% url 'password_reset_form' %}">Forgot Password?</a>
+      <a href="{% url 'register' %}">Register</a>
+    </div>
+  </form>
 
-      const password = document.getElementById("password");
+  <div class="register-link">
+    Don’t have an account? <a href="{% url 'register' %}">Register as Citizen</a>
+  </div>
 
-      const togglePassword = document.getElementById("toggle-password");
+</div>
 
-      const errorDiv = document.getElementById("frontend-error");
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('login-form');
+    const button = document.getElementById('login-button');
+    const spinner = document.getElementById('spinner');
+    const buttonText = document.getElementById('button-text');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
+    const errorDiv = document.getElementById('frontend-error');
+    const errorText = document.getElementById('error-text');
 
-      togglePassword.addEventListener("change", () => {
-        password.type = togglePassword.checked ? "text" : "password";
-      });
+    // Toggle password visibility
+    togglePassword.addEventListener('change', function() {
+      password.type = this.checked ? 'text' : 'password';
+    });
 
-      form.addEventListener("submit", function (e) {
-        errorDiv.style.display = "none";
+    form.addEventListener('submit', function(e) {
+      // Reset error
+      errorDiv.style.display = 'none';
+      errorText.textContent = '';
 
-        if (!username.value.trim() || !password.value.trim()) {
-          e.preventDefault();
+      // Validate
+      if (!username.value.trim() || !password.value.trim()) {
+        e.preventDefault();
+        errorText.textContent = 'Username and Password are required.';
+        errorDiv.style.display = 'block';
+        return;
+      }
 
-          errorDiv.innerText = "Username and Password are required.";
+      // Show spinner
+      button.disabled = true;
+      buttonText.textContent = 'Logging in...';
+      spinner.style.display = 'inline-block';
+    });
+  });
+</script>
 
-          errorDiv.style.display = "block";
-
-          return;
-        }
-
-        button.disabled = true;
-
-        spinner.style.display = "inline-block";
-      });
-    </script>
-  </body>
+</body>
 </html>

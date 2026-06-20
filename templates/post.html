@@ -1,71 +1,279 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
-<div id="contents">
-  <div class="clearfix">
-    <!-- Sidebar -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – {{ post.title }}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .post-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .post-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* Main Content */
+    .post-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 30px 32px;
+    }
+    .post-card .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .post-card .post-meta .date {
+      color: #6c7a8a;
+      font-size: 0.9rem;
+    }
+    .post-card .post-meta .date i {
+      margin-right: 6px;
+    }
+    .post-card .post-meta .category {
+      background: #e8f0fe;
+      color: #1a3c6e;
+      padding: 2px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .post-card h1 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
+    .post-card .post-image {
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0 20px;
+      background: #f8fafc;
+    }
+    .post-card .post-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .post-card .post-content {
+      color: #2c3e50;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+    .post-card .post-content p {
+      margin-bottom: 16px;
+    }
+    .post-card .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: #f0f4fa;
+      color: #1a3c6e;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .post-card .back-link:hover {
+      background: #1a3c6e;
+      color: #fff;
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .sidebar-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h3 i {
+      margin-right: 10px;
+    }
+    .sidebar-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-card ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .sidebar-card ul li:last-child {
+      border-bottom: none;
+    }
+    .sidebar-card ul li a {
+      color: #2c3e50;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-card ul li a:hover {
+      color: #1a3c6e;
+    }
+    .sidebar-card ul li a i {
+      color: #1a3c6e;
+      font-size: 0.8rem;
+    }
+    .sidebar-card .testimonial {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 14px 18px;
+      border-left: 3px solid #1a3c6e;
+      font-style: italic;
+      color: #2c3e50;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .sidebar-card .testimonial span {
+      display: block;
+      font-style: normal;
+      font-weight: 500;
+      color: #1a3c6e;
+      margin-top: 6px;
+    }
+    .cta-box {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .cta-box h4 {
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.9rem;
+      margin: 0 0 14px;
+    }
+    .cta-box .btn-cta {
+      display: inline-block;
+      background: #fff;
+      color: #1a3c6e;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s;
+      font-size: 0.9rem;
+    }
+    .cta-box .btn-cta:hover {
+      transform: scale(1.03);
+      color: #1a3c6e;
+    }
+    .cta-box .btn-cta i {
+      margin-right: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .post-grid {
+        grid-template-columns: 1fr;
+      }
+      .post-card {
+        padding: 20px;
+      }
+      .post-card h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="post-wrapper">
+
+  <div class="post-grid">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="post-card">
+      <div class="post-meta">
+        <span class="date"><i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"F d, Y" }}</span>
+        <span class="category"><i class="fas fa-tag"></i> {{ post.category|default:"News" }}</span>
+      </div>
+      <h1>{{ post.title }}</h1>
+
+      {% if post.image %}
+      <div class="post-image">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+      </div>
+      {% endif %}
+
+      <div class="post-content">
+        {{ post.description|linebreaks }}
+      </div>
+
+      <a href="{% url 'news' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to News &amp; Updates
+      </a>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
-      <div>
-        <h2>Complaint Categories</h2>
+
+      <!-- Categories -->
+      <div class="sidebar-card">
+        <h3><i class="fas fa-folder-open"></i> Complaint Categories</h3>
         <ul>
-          <li>
-            <a href="#">Road Issues</a>
-          </li>
-          <li>
-            <a href="#">Water Supply</a>
-          </li>
-          <li>
-            <a href="#">Electricity</a>
-          </li>
-          <li>
-            <a href="#">Sanitation</a>
-          </li>
-          <li>
-            <a href="#">Public Safety</a>
-          </li>
+          <li><a href="#"><i class="fas fa-road"></i> Road Issues</a></li>
+          <li><a href="#"><i class="fas fa-tint"></i> Water Supply</a></li>
+          <li><a href="#"><i class="fas fa-bolt"></i> Electricity</a></li>
+          <li><a href="#"><i class="fas fa-trash-alt"></i> Sanitation</a></li>
+          <li><a href="#"><i class="fas fa-shield-alt"></i> Public Safety</a></li>
         </ul>
       </div>
 
-      <div>
-        <h2>Citizen Feedback</h2>
-        <p>
-          &ldquo;LokSetu helped us report a damaged road in our ward and the
+      <!-- Testimonial -->
+      <div class="sidebar-card">
+        <h3><i class="fas fa-quote-left"></i> Citizen Feedback</h3>
+        <div class="testimonial">
+          “LokSetu helped us report a damaged road in our ward and the
           municipal team fixed it within days. It is very helpful for citizens
-          to communicate with authorities easily.&rdquo;
-          <span>- Local Citizen</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main">
-      <!-- Post Title -->
-      <h1>{{ post.title }}</h1>
-
-      <!-- Post Date -->
-      <p><strong>Published on:</strong> {{ post.created_at|date:"F d, Y" }}</p>
-
-      <!-- Post Image -->
-      <div class="frame3">
-        <div class="box">
-          <img
-            src="{{ post.image.url }}"
-            alt="{{ post.title }}"
-            height="199"
-            width="584"
-          />
+          to communicate with authorities easily.”
+          <span>— Local Citizen</span>
         </div>
       </div>
 
-      <!-- Post Description -->
-      <p>{{ post.description }}</p>
+      <!-- CTA -->
+      <div class="cta-box">
+        <h4><i class="fas fa-pen"></i> Report an Issue</h4>
+        <p>Submit a complaint and track its progress.</p>
+        <a href="{% url 'complaint' %}" class="btn-cta">
+          <i class="fas fa-arrow-right"></i> File Complaint
+        </a>
+      </div>
 
-      <br />
-
-      <!-- Back Button -->
-      <p>
-        <a href="{% url 'news' %}">← Back to News & Updates</a>
-      </p>
     </div>
+
   </div>
 </div>
 

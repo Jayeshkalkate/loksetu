@@ -1,258 +1,375 @@
 {% load static %}
 {% include "header.html" %}
 
-<div id="contents">
-  <div class="clearfix">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Services</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .services-wrapper {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .services-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .services-header h1 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 2.4rem;
+    }
+    .services-header h1 i {
+      margin-right: 12px;
+    }
+    .services-header p {
+      color: #4a5a72;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-      
-      <div>
-        <h2>Complaint Services</h2>
-        <ul>
-          <li>
-            <a href="{% url 'complaint' %}">Submit New Complaint</a>
-          </li>
-          <li>
-            <a href="{% url 'track_complaint' %}">Track Complaint Status</a>
-          </li>
-          <li>
-            <a href="{% url 'map_complaint' %}">Complaint Statistics Map</a>
-          </li>
-        </ul>
+    .services-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* Main content – service cards */
+    .service-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 1px solid #e9edf4;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .service-card .icon-box {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: #e8f0fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: #1a3c6e;
+    }
+    .service-card .content {
+      flex: 1;
+    }
+    .service-card .content .dept {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6c7a8a;
+      letter-spacing: 0.5px;
+    }
+    .service-card .content h3 {
+      font-weight: 600;
+      color: #1a2a3a;
+      font-size: 1.2rem;
+      margin: 4px 0 6px;
+    }
+    .service-card .content p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .service-card .content .btn-service {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 40px;
+      background: #1a3c6e;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .service-card .content .btn-service:hover {
+      background: #14315a;
+    }
+    .service-card .content .btn-service i {
+      margin-right: 6px;
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 1px solid #e9edf4;
+    }
+    .sidebar-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h3 i {
+      margin-right: 8px;
+    }
+    .sidebar-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar-card ul li {
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .sidebar-card ul li:last-child {
+      border-bottom: none;
+    }
+    .sidebar-card ul li a {
+      color: #2c3e50;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .sidebar-card ul li a:hover {
+      color: #1a3c6e;
+    }
+    .sidebar-card ul li a i {
+      color: #1a3c6e;
+      width: 20px;
+    }
+    .sidebar-card p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .sidebar-card .testimonial {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      border-left: 3px solid #1a3c6e;
+      font-style: italic;
+      color: #2c3e50;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+    .sidebar-card .testimonial span {
+      display: block;
+      font-style: normal;
+      font-weight: 500;
+      color: #1a3c6e;
+      margin-top: 4px;
+    }
+
+    /* Featured Features (bottom) */
+    .featured-features {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #e9edf4;
+    }
+    .featured-features h2 {
+      text-align: center;
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .feature-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid #e9edf4;
+      transition: transform 0.15s;
+    }
+    .feature-item:hover {
+      transform: translateY(-4px);
+    }
+    .feature-item .f-icon {
+      font-size: 2.4rem;
+      color: #1a3c6e;
+      margin-bottom: 8px;
+    }
+    .feature-item h4 {
+      font-weight: 600;
+      color: #1a2a3a;
+      font-size: 1.1rem;
+      margin: 4px 0;
+    }
+    .feature-item p {
+      color: #4a5a72;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .feature-item .more-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #1a3c6e;
+      font-weight: 500;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .feature-item .more-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .service-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .service-card .icon-box {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+      }
+      .services-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="services-wrapper">
+
+  <div class="services-header">
+    <h1><i class="fas fa-cogs"></i> Public Service Categories</h1>
+    <p>LokSetu connects citizens with the right government departments for faster resolution of public issues.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+
+      <!-- Water Supply -->
+      <div class="service-card">
+        <div class="icon-box"><i class="fas fa-tint"></i></div>
+        <div class="content">
+          <div class="dept">Public Water Department</div>
+          <h3>Water Supply Services</h3>
+          <p>Report issues related to drinking water supply, pipeline leakage, water shortage, or irregular water distribution.</p>
+          <a href="{% url 'complaint' %}" class="btn-service"><i class="fas fa-pen"></i> File Complaint</a>
+        </div>
       </div>
 
-      <div>
-        <h2>Track Funds</h2>
-        <ul>
-          <li><a href="{% url 'dashboard' %}">📊 Funds Dashboard</a></li>
-          <!-- <li><a href="{% url 'dashboard' %}#funds">💰 Funds</a></li>
-          <li><a href="{% url 'dashboard' %}#projects">🏗️ Projects</a></li>
-          <li><a href="{% url 'dashboard' %}#locations">📍 Locations</a></li> -->
-        </ul>
+      <!-- Electricity -->
+      <div class="service-card">
+        <div class="icon-box"><i class="fas fa-bolt"></i></div>
+        <div class="content">
+          <div class="dept">Electricity &amp; Utility Department</div>
+          <h3>Electricity &amp; Street Lighting</h3>
+          <p>Report electricity outages, damaged electric poles, or malfunctioning street lights so the responsible department can act quickly.</p>
+          <a href="{% url 'complaint' %}" class="btn-service"><i class="fas fa-pen"></i> File Complaint</a>
+        </div>
       </div>
 
-      <div>
-        <h2>Village Public Services</h2>
-        <p>
-          LokSetu is a digital governance platform that enables citizens
-          to report issues related to public services in their local
-          areas. The system helps ensure that complaints are directed
-          to the appropriate government departments.
-        </p>
-
-        <p>
-          By using LokSetu, citizens can easily communicate with local
-          authorities and track the progress of their complaints,
-          improving transparency and faster problem resolution.
-        </p>
-      </div>
-
-      <div>
-        <h2>Citizen Feedback</h2>
-        <p>
-          &ldquo;LokSetu has made it much easier for people to report
-          problems like road damage and water supply issues. The
-          communication between citizens and authorities has improved
-          significantly.&rdquo;
-          <span>- Resident of Maharashtra</span>
-        </p>
+      <!-- Infrastructure -->
+      <div class="service-card">
+        <div class="icon-box"><i class="fas fa-road"></i></div>
+        <div class="content">
+          <div class="dept">Infrastructure &amp; Development Department</div>
+          <h3>Roads &amp; Infrastructure</h3>
+          <p>Submit complaints related to potholes, damaged roads, drainage issues, and other infrastructure problems affecting your village or town.</p>
+          <a href="{% url 'complaint' %}" class="btn-service"><i class="fas fa-pen"></i> File Complaint</a>
+        </div>
       </div>
 
     </div>
 
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
 
-    <!-- Main Content -->
-    <div class="main">
+      <div class="sidebar-card">
+        <h3><i class="fas fa-list-ul"></i> Complaint Services</h3>
+        <ul>
+          <li><a href="{% url 'complaint' %}"><i class="fas fa-plus-circle"></i> Submit New Complaint</a></li>
+          <li><a href="{% url 'track_complaint' %}"><i class="fas fa-search"></i> Track Complaint Status</a></li>
+          <li><a href="{% url 'map_complaint' %}"><i class="fas fa-map-marked-alt"></i> Complaint Map</a></li>
+        </ul>
+      </div>
 
-      <h1>Public Service Categories</h1>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-chart-pie"></i> Track Funds</h3>
+        <ul>
+          <li><a href="{% url 'dashboard' %}"><i class="fas fa-wallet"></i> Funds Dashboard</a></li>
+        </ul>
+      </div>
 
-      <ul class="news">
-
-        <!-- Water Supply -->
-        <li>
-          <div class="box">
-            <img
-              src="{% static 'images/meeting.jpg' %}"
-              alt="Water Supply"
-              height="245"
-              width="213"
-            />
-          </div>
-
-          <p class="info">
-            Public Water Department
-          </p>
-
-          <h2>Water Supply Services</h2>
-
-          <p>
-            Citizens can report issues related to drinking water supply,
-            pipeline leakage, water shortage, or irregular water
-            distribution through the LokSetu complaint system.
-          </p>
-
-        </li>
-
-
-        <!-- Electricity -->
-        <li>
-          <div class="box">
-            <img
-              src="{% static 'images/handshake.jpg' %}"
-              alt="Electricity Services"
-              height="245"
-              width="213"
-            />
-          </div>
-
-          <p class="info">
-            Electricity & Utility Department
-          </p>
-
-          <h2>Electricity & Street Lighting</h2>
-
-          <p>
-            Villagers can report electricity outages, damaged electric
-            poles, or malfunctioning street lights so the responsible
-            department can take action quickly.
-          </p>
-
-        </li>
-
-
-        <!-- Infrastructure -->
-        <li>
-          <div class="box">
-            <img
-              src="{% static 'images/smile.jpg' %}"
-              alt="Infrastructure"
-              height="245"
-              width="213"
-            />
-          </div>
-
-          <p class="info">
-            Infrastructure & Development Department
-          </p>
-
-          <h2>Roads & Infrastructure</h2>
-
-          <p>
-            Citizens can submit complaints related to potholes,
-            damaged roads, drainage issues, and other infrastructure
-            problems affecting their village or town.
-          </p>
-
-        </li>
-
-      </ul>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-info-circle"></i> Village Public Services</h3>
+        <p>LokSetu is a digital governance platform that enables citizens to report issues related to public services in their local areas. The system ensures complaints are directed to the appropriate departments.</p>
+        <div class="testimonial">
+          “LokSetu has made it much easier for people to report problems like road damage and water supply issues. The communication between citizens and authorities has improved significantly.”
+          <span>— Resident of Maharashtra</span>
+        </div>
+      </div>
 
     </div>
 
   </div>
-</div>
 
-
-<!-- Features Section -->
-<div class="featured">
-  <h2>LokSetu Service Features</h2>
-
-  <ul class="clearfix">
-
-    <li>
-      <div class="frame1">
-        <div class="box">
-          <img
-            src="{% static 'images/meeting.jpg' %}"
-            alt="Complaint System"
-            height="130"
-            width="197"
-          />
-        </div>
+  <!-- ===== FEATURED FEATURES ===== -->
+  <div class="featured-features">
+    <h2><i class="fas fa-star" style="color:#ffd700;"></i> LokSetu Service Features</h2>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="f-icon"><i class="fas fa-pen-fancy"></i></div>
+        <h4>Simple Complaint Submission</h4>
+        <p>Citizens can report issues quickly using the online complaint system.</p>
+        <a href="{% url 'complaint' %}" class="more-link">Submit Complaint <i class="fas fa-arrow-right"></i></a>
       </div>
-
-      <p>
-        <b>Simple Complaint Submission</b><br>
-        Citizens can report issues related to public services
-        quickly using the online complaint system.
-      </p>
-
-      <a href="{% url 'complaint' %}" class="more">Submit Complaint</a>
-    </li>
-
-
-    <li>
-      <div class="frame1">
-        <div class="box">
-          <img
-            src="{% static 'images/handshake.jpg' %}"
-            alt="Departments"
-            height="130"
-            width="197"
-          />
-        </div>
+      <div class="feature-item">
+        <div class="f-icon"><i class="fas fa-building"></i></div>
+        <h4>Department-Based Management</h4>
+        <p>Complaints are automatically forwarded to the appropriate government department.</p>
+        <a href="{% url 'departments' %}" class="more-link">View Departments <i class="fas fa-arrow-right"></i></a>
       </div>
-
-      <p>
-        <b>Department-Based Management</b><br>
-        Complaints are automatically forwarded to the
-        appropriate government department responsible
-        for resolving the issue.
-      </p>
-
-      <a href="/departments/" class="more">View Departments</a>
-    </li>
-
-
-    <li>
-      <div class="frame1">
-        <div class="box">
-          <img
-            src="{% static 'images/smile.jpg' %}"
-            alt="Tracking"
-            height="130"
-            width="197"
-          />
-        </div>
+      <div class="feature-item">
+        <div class="f-icon"><i class="fas fa-chart-line"></i></div>
+        <h4>Complaint Tracking System</h4>
+        <p>Track status using the unique Complaint ID received after submission.</p>
+        <a href="{% url 'track_complaint' %}" class="more-link">Track Complaint <i class="fas fa-arrow-right"></i></a>
       </div>
-
-      <p>
-        <b>Complaint Tracking System</b><br>
-        Citizens can track the status of their complaint
-        using the Complaint ID received after submission.
-      </p>
-
-      <a href="{% url 'track_complaint' %}" class="more">Track Complaint</a>
-    </li>
-
-
-    <li>
-      <div class="frame1">
-        <div class="box">
-          <img
-            src="{% static 'images/family-small.jpg' %}"
-            alt="Support"
-            height="130"
-            width="197"
-          />
-        </div>
+      <div class="feature-item">
+        <div class="f-icon"><i class="fas fa-handshake"></i></div>
+        <h4>Citizen Support</h4>
+        <p>Improves communication between citizens and authorities for faster resolution.</p>
+        <a href="{% url 'contactus' %}" class="more-link">Contact Support <i class="fas fa-arrow-right"></i></a>
       </div>
-
-      <p>
-        <b>Citizen Support</b><br>
-        LokSetu improves communication between
-        citizens and government authorities to
-        ensure faster issue resolution.
-      </p>
-
-      <a href="/contact/" class="more">Contact Support</a>
-    </li>
-
-  </ul>
-</div>
+    </div>
+  </div>
 
 </div>
 
 {% include "footer.html" %}
-</div>

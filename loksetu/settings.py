@@ -7,7 +7,9 @@ import sentry_sdk
 logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-    
+
+settings.FAST2SMS_API_KEY
+
 # --------------------------------------------------
 # SECURITY
 # --------------------------------------------------

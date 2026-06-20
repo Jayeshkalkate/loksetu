@@ -9,7 +9,19 @@ def role_required(allowed_roles):
             if not request.user.is_authenticated:
                 return HttpResponseForbidden("Login Required")
 
-            role = request.user.userprofile.role
+            profile = getattr(
+                request.user,
+                "userprofile",
+                None
+            )
+
+            
+            if not profile:
+                return HttpResponseForbidden(
+                    "Profile Missing"
+                )
+                
+            role = profile.role
 
             if role not in allowed_roles:
                 return HttpResponseForbidden("Permission Denied")

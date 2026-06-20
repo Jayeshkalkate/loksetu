@@ -1,144 +1,336 @@
 {% load static %}
 {% include "header.html" %}
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>महाराष्ट्र तक्रार फॉर्म · Public Complaint · Maharashtra</title>
+  <title>LokSetu – Citizen Complaint | Maharashtra</title>
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static 'css/complaint.css' %}" type="text/css" />
+  <!-- Inline styles for this page (can be moved to a separate CSS file) -->
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .complaint-wrapper {
+      max-width: 860px;
+      margin: 30px auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      padding: 30px 35px 20px;
+    }
+    .complaint-header {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e9edf4;
+      margin-bottom: 28px;
+    }
+    .complaint-header .badge-gov {
+      background: #1a3c6e;
+      color: white;
+      padding: 6px 22px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .complaint-header h2 {
+      font-weight: 700;
+      color: #1a3c6e;
+      margin: 8px 0 4px;
+      font-size: 2rem;
+    }
+    .complaint-header .subhead {
+      color: #4a5a72;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .form-section {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 18px 22px 10px;
+      margin-bottom: 25px;
+      border-left: 4px solid #1a3c6e;
+    }
+    .form-section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a3c6e;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+    .form-section h3 i {
+      margin-right: 8px;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #2c3e50;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .form-label .required {
+      color: #dc3545;
+      margin-left: 2px;
+    }
+    .form-control, .form-select {
+      border-radius: 6px;
+      border: 1px solid #d0d7de;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: white;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #1a3c6e;
+      box-shadow: 0 0 0 3px rgba(26, 60, 110, 0.15);
+      outline: none;
+    }
+    .static-state {
+      background: #eef2f6;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-weight: 500;
+      color: #1a3c6e;
+      margin-bottom: 12px;
+    }
+    .map-wrapper {
+      border-radius: 8px;
+      border: 1px solid #d0d7de;
+      overflow: hidden;
+      margin: 10px 0 15px;
+    }
+    #map {
+      height: 45vh;
+      min-height: 260px;
+      width: 100%;
+    }
+    .map-hint {
+      font-size: 0.9rem;
+      color: #4a5a72;
+      background: #f1f5f9;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 6px 0 12px;
+    }
+    .checkbox-declaration {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 10px 0 20px;
+    }
+    .checkbox-declaration input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: #1a3c6e;
+    }
+    .checkbox-declaration label {
+      font-weight: 400;
+      color: #2c3e50;
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      border: none;
+      padding: 14px 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      color: #fff;
+      transition: transform 0.15s, box-shadow 0.2s;
+      width: 100%;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 60, 110, 0.35);
+      color: #fff;
+    }
+    .btn-submit i {
+      margin-right: 10px;
+    }
+    .footer-note {
+      text-align: center;
+      color: #6c7a8a;
+      font-size: 0.85rem;
+      border-top: 1px solid #e9edf4;
+      padding-top: 18px;
+      margin-top: 20px;
+    }
+    .alert-custom {
+      border-radius: 8px;
+      border-left: 5px solid #28a745;
+      padding: 12px 20px;
+      background: #e8f5e9;
+      color: #1e5a3a;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .complaint-wrapper {
+        padding: 20px 15px;
+      }
+      .complaint-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- Header Badge -->
-  <div style="text-align: center; margin-bottom: 10px">
-    <span style="background: #1d6e4a; color: white; padding: 6px 22px; border-radius: 40px; font-weight: 500;">
-      ⚖️ जनसेतू | महाराष्ट्र शासन तक्रार व्यवस्था
-    </span>
+<div class="complaint-wrapper">
+
+  <!-- Header -->
+  <div class="complaint-header">
+    <div class="badge-gov">⚖️ LokSetu | महाराष्ट्र शासन</div>
+    <h2>📋 Citizen Complaint Form</h2>
+    <p class="subhead">कृपया आपली तक्रार तपशीलवार नोंदवा — Please provide complete details of your grievance</p>
   </div>
-
-  <h2>📋 Maharashtra Public Complaint Form</h2>
-  <div class="subhead">कृपया आपली तक्रार नोंदविण्यासाठी सर्व तपशील भरा (महाराष्ट्र राज्य)</div>
 
   <!-- Django Messages -->
   {% if messages %}
     {% for message in messages %}
-      <div style="background: #e6f7ee; border: 1px solid #2f8f5b; color: #1d6e4a; padding: 12px; margin-bottom: 15px; border-radius: 6px; text-align: center; font-weight: 500;">
-        {{ message }}
+      <div class="alert-custom">
+        <i class="fas fa-check-circle me-2"></i> {{ message }}
       </div>
     {% endfor %}
   {% endif %}
 
-  <form method="POST" action="{% url 'complaint' %}" enctype="multipart/form-data">
+  <form method="POST" action="{% url 'complaint' %}" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
 
-    <!-- 1. PERSONAL DETAILS -->
-    <h3>🔹 1. Personal Details</h3>
-    <label>Full Name <span style="color: #b33">*</span></label>
-    <input type="text" name="full_name" placeholder="e.g. Rajesh Kumar" required />
+    <!-- SECTION 1: Personal Details -->
+    <div class="form-section">
+      <h3><i class="fas fa-user-circle"></i> 1. Personal Details</h3>
 
-    <label>Mobile Number <span style="color: #b33">*</span> (10 digits)</label>
-    <input type="tel" name="phone" maxlength="10" pattern="[0-9]{10}" placeholder="9876543210" required />
+      <label class="form-label">Full Name <span class="required">*</span></label>
+      <input type="text" name="full_name" class="form-control" placeholder="e.g. Rajesh Kumar" required />
 
-    <label>Email Address</label>
-    <input type="email" name="email" placeholder="you@example.com" />
+      <label class="form-label">Mobile Number <span class="required">*</span> (10 digits)</label>
+      <input type="tel" name="phone" class="form-control" maxlength="10" pattern="[0-9]{10}" placeholder="9876543210" required />
 
-    <label>Gender</label>
-    <select name="gender">
-      <option value="">-- Select Gender --</option>
-      <option>Male</option>
-      <option>Female</option>
-      <option>Other</option>
-    </select>
+      <label class="form-label">Email Address</label>
+      <input type="email" name="email" class="form-control" placeholder="you@example.com" />
 
-    <label>Aadhaar Number (Optional, 12 digits)</label>
-    <input type="text" name="aadhaar" maxlength="12" placeholder="1234 5678 9012" />
+      <label class="form-label">Gender</label>
+      <select name="gender" class="form-select">
+        <option value="">-- Select Gender --</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
 
-    <!-- 2. ADDRESS (Maharashtra only) -->
-    <h3>📍 2. Address Details (महाराष्ट्र)</h3>
-    <label>State <span style="color: #b33">*</span></label>
-    <input type="hidden" name="state" value="Maharashtra" />
-    <div class="static-state">🏔️ Maharashtra (महाराष्ट्र)</div>
-
-    <label>District <span style="color: #b33">*</span></label>
-    <select id="district" name="district" required>
-      <option value="">-- निवडा जिल्हा / Select District --</option>
-    </select>
-
-    <label>Taluka / City <span style="color: #b33">*</span></label>
-    <select id="taluka" name="taluka" required>
-      <option value="">-- निवडा तालुका / Select Taluka --</option>
-    </select>
-
-    <label>Village / Area <span style="color: #b33">*</span></label>
-    <input type="text" name="village" placeholder="e.g. Andheri East, or village name" required />
-
-    <label>Ward Number</label>
-    <input type="text" name="ward" placeholder="e.g. 12 / C" />
-
-    <label>Pincode <span style="color: #b33">*</span></label>
-    <input type="text" name="pincode" maxlength="6" pattern="[0-9]{6}" placeholder="400001" required />
-
-    <!-- 3. COMPLAINT DETAILS -->
-    <h3>⚠️ 3. Complaint Details</h3>
-    <label>Department</label>
-    <select name="department">
-      <option value="">-- Select Department --</option>
-      <option>Water Supply</option>
-      <option>Electricity</option>
-      <option>Road / Infrastructure</option>
-      <option>Sanitation</option>
-      <option>Health Services</option>
-      <option>Public Transport</option>
-      <option>Other</option>
-    </select>
-
-    <label>Complaint Title <span style="color: #b33">*</span></label>
-    <input type="text" name="title" placeholder="e.g. Broken water pipeline" required />
-
-    <label>Complaint Description <span style="color: #b33">*</span></label>
-    <textarea name="description" rows="4" placeholder="तक्रारीचे तपशीलवार वर्णन करा..." required></textarea>
-
-    <label>Location of Issue (landmark / street)</label>
-    <input type="text" name="issue_location" placeholder="e.g. Near bus stand, opposite post office" />
-
-    <label>Date of Issue</label>
-    <input type="date" name="issue_date" id="issue_date" />
-
-    <!-- 4. MAP PICKER -->
-    <label>📌 Select exact location on map (click on map)</label>
-    <div class="map-hint">🗺️ नकाशावर क्लिक करा / Click map to drop a marker — latitude & longitude auto-fill</div>
-    <div id="map" style="height: 50vh; min-height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
-
-    <!-- Hidden coordinates -->
-    <input type="hidden" name="latitude" id="latitude" required />
-    <input type="hidden" name="longitude" id="longitude" required />
-
-    <!-- 5. EVIDENCE -->
-    <h3>📎 4. Evidence (Optional)</h3>
-    <label>Upload Image / Document (jpg, pdf, png)</label>
-    <input type="file" name="evidence" accept=".jpg,.jpeg,.png,.pdf" />
-
-    <!-- 6. DECLARATION -->
-    <h3>✅ 5. Declaration</h3>
-    <label class="confirm-check">
-      <input type="checkbox" required />
-      <span>I confirm that the information provided is true and correct to the best of my knowledge.</span>
-    </label>
-
-    <div style="text-align: center">
-      <button type="submit">📤 तक्रार नोंदवा / Submit Complaint</button>
+      <label class="form-label">Aadhaar Number (Optional, 12 digits)</label>
+      <input type="text" name="aadhaar" class="form-control" maxlength="12" placeholder="1234 5678 9012" />
     </div>
+
+    <!-- SECTION 2: Address (Maharashtra) -->
+    <div class="form-section">
+      <h3><i class="fas fa-map-pin"></i> 2. Address Details (महाराष्ट्र)</h3>
+
+      <label class="form-label">State <span class="required">*</span></label>
+      <input type="hidden" name="state" value="Maharashtra" />
+      <div class="static-state">🏔️ Maharashtra (महाराष्ट्र)</div>
+
+      <label class="form-label">District <span class="required">*</span></label>
+      <select id="district" name="district" class="form-select" required>
+        <option value="">-- निवडा जिल्हा / Select District --</option>
+      </select>
+
+      <label class="form-label">Taluka / City <span class="required">*</span></label>
+      <select id="taluka" name="taluka" class="form-select" required>
+        <option value="">-- निवडा तालुका / Select Taluka --</option>
+      </select>
+
+      <label class="form-label">Village / Area <span class="required">*</span></label>
+      <input type="text" name="village" class="form-control" placeholder="e.g. Andheri East, or village name" required />
+
+      <label class="form-label">Ward Number</label>
+      <input type="text" name="ward" class="form-control" placeholder="e.g. 12 / C" />
+
+      <label class="form-label">Pincode <span class="required">*</span></label>
+      <input type="text" name="pincode" class="form-control" maxlength="6" pattern="[0-9]{6}" placeholder="400001" required />
+    </div>
+
+    <!-- SECTION 3: Complaint Details -->
+    <div class="form-section">
+      <h3><i class="fas fa-exclamation-triangle"></i> 3. Complaint Details</h3>
+
+      <label class="form-label">Department</label>
+      <select name="department" class="form-select">
+        <option value="">-- Select Department --</option>
+        <option>Water Supply</option>
+        <option>Electricity</option>
+        <option>Road / Infrastructure</option>
+        <option>Sanitation</option>
+        <option>Health Services</option>
+        <option>Public Transport</option>
+        <option>Other</option>
+      </select>
+
+      <label class="form-label">Complaint Title <span class="required">*</span></label>
+      <input type="text" name="title" class="form-control" placeholder="e.g. Broken water pipeline" required />
+
+      <label class="form-label">Complaint Description <span class="required">*</span></label>
+      <textarea name="description" class="form-control" rows="4" placeholder="तक्रारीचे तपशीलवार वर्णन करा..." required></textarea>
+
+      <label class="form-label">Location of Issue (landmark / street)</label>
+      <input type="text" name="issue_location" class="form-control" placeholder="e.g. Near bus stand, opposite post office" />
+
+      <label class="form-label">Date of Issue</label>
+      <input type="date" name="issue_date" id="issue_date" class="form-control" />
+    </div>
+
+    <!-- SECTION 4: Map Picker -->
+    <div class="form-section">
+      <h3><i class="fas fa-map-marked-alt"></i> 4. Select Exact Location</h3>
+      <div class="map-hint">🗺️ नकाशावर क्लिक करा / Click on the map to drop a marker — coordinates will auto-fill</div>
+      <div class="map-wrapper">
+        <div id="map"></div>
+      </div>
+      <input type="hidden" name="latitude" id="latitude" required />
+      <input type="hidden" name="longitude" id="longitude" required />
+      <div class="text-muted" style="font-size:0.9rem;">
+        <i class="fas fa-info-circle"></i> If you don't select a location, your device's current location will be used (if available).
+      </div>
+    </div>
+
+    <!-- SECTION 5: Evidence -->
+    <div class="form-section">
+      <h3><i class="fas fa-paperclip"></i> 5. Evidence (Optional)</h3>
+      <label class="form-label">Upload Image / Document (JPG, PNG, PDF)</label>
+      <input type="file" name="evidence" class="form-control" accept=".jpg,.jpeg,.png,.pdf" />
+      <div class="text-muted" style="font-size:0.85rem; margin-top:2px;">Max size: 5MB</div>
+    </div>
+
+    <!-- SECTION 6: Declaration -->
+    <div class="form-section" style="border-left-color: #28a745;">
+      <h3><i class="fas fa-check-circle" style="color:#28a745;"></i> 6. Declaration</h3>
+      <div class="checkbox-declaration">
+        <input type="checkbox" id="declaration" required />
+        <label for="declaration">
+          I confirm that the information provided is true and correct to the best of my knowledge.
+          <span class="required">*</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn-submit">
+      <i class="fas fa-paper-plane"></i> तक्रार नोंदवा / Submit Complaint
+    </button>
+
   </form>
 
-  <hr />
-  <div style="text-align: center; color: #517a67; font-size: 0.9rem; padding: 10px 0;">
-    © 2025 महाराष्ट्र शासन तक्रार प्रणाली • Government of Maharashtra
+  <div class="footer-note">
+    © 2025 LokSetu · महाराष्ट्र शासन तक्रार प्रणाली · Government of Maharashtra
   </div>
 </div>
 
@@ -146,11 +338,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-  (function () {
-    // --- Set today's date ---
+  (function() {
+    // Set today's date as default
     document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
 
-    // --- Maharashtra districts & talukas (full dataset as in your original) ---
+    // --- Full Maharashtra districts & talukas (same as your original) ---
     const locationData = {
       Maharashtra: {
         Ahmednagar: { Talukas: ["Ahmednagar","Akole","Jamkhed","Karjat","Kopargaon","Nagar","Nevasa","Parner","Pathardi","Rahata","Rahuri","Sangamner","Shevgaon","Shrigonda","Shrirampur"] },
@@ -194,10 +386,8 @@
     const districtSelect = document.getElementById('district');
     const talukaSelect = document.getElementById('taluka');
 
-    // Load districts
     function loadDistricts() {
       districtSelect.innerHTML = '<option value="">-- निवडा जिल्हा / Select District --</option>';
-      talukaSelect.innerHTML = '<option value="">-- निवडा तालुका / Select Taluka --</option>';
       const districts = locationData.Maharashtra;
       for (let d in districts) {
         let opt = document.createElement('option');
@@ -207,7 +397,6 @@
       }
     }
 
-    // Load talukas
     function loadTalukas() {
       talukaSelect.innerHTML = '<option value="">-- निवडा तालुका / Select Taluka --</option>';
       const district = districtSelect.value;
@@ -224,7 +413,7 @@
     districtSelect.addEventListener('change', loadTalukas);
     loadDistricts();
 
-    // --- LEAFLET MAP ---
+    // --- Leaflet Map ---
     const map = L.map('map').setView([19.7515, 75.7139], 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -233,7 +422,7 @@
 
     let marker = null;
 
-    // Auto‑geolocation
+    // Try geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -247,7 +436,6 @@
         },
         (err) => {
           console.warn('Geolocation error:', err.message);
-          // Optional: show a subtle note to the user
         }
       );
     }

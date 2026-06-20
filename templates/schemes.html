@@ -1,298 +1,516 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
-<link rel="stylesheet" href="{% static 'css/schemes.css' %}" />
-<div class="container py-3">
-  <!-- HERO -->
-  <div class="hero-section text-center">
-    <h1>लोकसेतू | LOKSETU</h1>
-    <p class="lead">
-      Empowering citizens through transparent, accessible government schemes
-    </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Government Schemes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/schemes.css' %}" />
+  <style>
+    /* ===== OVERRIDES & ADDITIONS ===== */
+    body {
+      background: #f4f7fc;
+    }
+    .schemes-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+    }
 
-    <!-- SEARCH -->
-    <form method="GET" class="mt-3" style="max-width: 500px; margin: auto">
+    /* Hero */
+    .hero-schemes {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      padding: 32px 28px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .hero-schemes h1 {
+      font-weight: 800;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+    .hero-schemes h1 i {
+      margin-right: 12px;
+    }
+    .hero-schemes .lead {
+      font-weight: 300;
+      opacity: 0.9;
+      font-size: 1.1rem;
+      margin: 6px 0 16px;
+    }
+    .hero-schemes .search-box {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .hero-schemes .search-box .input-group {
+      background: rgba(255,255,255,0.15);
+      border-radius: 50px;
+      padding: 4px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hero-schemes .search-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+    }
+    .hero-schemes .search-box input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+    .hero-schemes .search-box input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .hero-schemes .search-box .btn-search {
+      background: #ffd700;
+      color: #1a3c6e;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 24px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .hero-schemes .search-box .btn-search:hover {
+      background: #ffe44d;
+    }
+
+    /* Admin Controls */
+    .admin-controls {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #e9edf4;
+    }
+    .admin-controls .admin-label {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 0.9rem;
+    }
+    .admin-controls .btn-admin {
+      border-radius: 40px;
+      font-weight: 500;
+      padding: 6px 18px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .btn-admin-outline {
+      background: transparent;
+      border: 1.5px solid #1a3c6e;
+      color: #1a3c6e;
+    }
+    .btn-admin-outline:hover {
+      background: #1a3c6e;
+      color: #fff;
+    }
+    .btn-admin-warning {
+      background: #ffc107;
+      border: 1.5px solid #ffc107;
+      color: #1a2a3a;
+    }
+    .btn-admin-warning:hover {
+      background: #e0a800;
+      border-color: #e0a800;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 12px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      border: 1px solid #e9edf4;
+      transition: transform 0.15s;
+    }
+    .stat-item:hover {
+      transform: translateY(-3px);
+    }
+    .stat-item .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a3c6e;
+      line-height: 1.2;
+    }
+    .stat-item .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6c7a8a;
+    }
+
+    /* Filter */
+    .filter-bar {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      border: 1px solid #e9edf4;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .filter-bar .filter-label {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.9rem;
+    }
+    .filter-bar select {
+      padding: 8px 16px;
+      border-radius: 40px;
+      border: 1.5px solid #d0d7de;
+      background: #f8fafc;
+      font-size: 0.9rem;
+      min-width: 160px;
+    }
+    .filter-bar select:focus {
+      border-color: #1a3c6e;
+      outline: none;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.5rem;
+      margin-top: 32px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .section-title i {
+      color: #ffd700;
+    }
+
+    /* Scheme Grid */
+    .scheme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+    .scheme-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border: 1px solid #e9edf4;
+      transition: transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .scheme-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .scheme-card .badge-level {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 2px 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .badge-level.central { background: #1a3c6e; color: #fff; }
+    .badge-level.state { background: #2a5a9a; color: #fff; }
+    .badge-level.district { background: #fd7e14; color: #fff; }
+    .badge-level.taluka { background: #6f42c1; color: #fff; }
+    .badge-level.village { background: #28a745; color: #fff; }
+
+    .scheme-card .category-tag {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #1a3c6e;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 40px;
+      margin-top: 6px;
+      align-self: flex-start;
+    }
+    .scheme-card h3 {
+      font-weight: 600;
+      color: #1a2a3a;
+      font-size: 1.1rem;
+      margin: 8px 0 4px;
+      line-height: 1.3;
+    }
+    .scheme-card .location {
+      font-size: 0.85rem;
+      color: #6c7a8a;
+      margin-bottom: 8px;
+    }
+    .scheme-card .location i {
+      margin-right: 4px;
+    }
+    .scheme-card .description {
+      color: #4a5a72;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      flex: 1;
+      margin-bottom: 12px;
+    }
+    .scheme-card .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .scheme-card .actions .btn-detail {
+      padding: 6px 18px;
+      border-radius: 40px;
+      background: #1a3c6e;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .scheme-card .actions .btn-detail:hover {
+      background: #14315a;
+    }
+    .scheme-card .actions .btn-apply {
+      padding: 6px 18px;
+      border-radius: 40px;
+      background: #28a745;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .scheme-card .actions .btn-apply:hover {
+      background: #218838;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      color: #6c7a8a;
+      background: #f8fafc;
+      border-radius: 16px;
+    }
+    .empty-state i {
+      font-size: 3rem;
+      color: #d0d7de;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-schemes { padding: 24px 16px; }
+      .hero-schemes h1 { font-size: 1.6rem; }
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
+      .scheme-grid { grid-template-columns: 1fr; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-bar select { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="schemes-wrapper">
+
+  <!-- ===== HERO ===== -->
+  <div class="hero-schemes">
+    <h1><i class="fas fa-hand-holding-heart"></i> Government Schemes</h1>
+    <p class="lead">Empowering citizens through transparent, accessible government schemes</p>
+    <form method="GET" class="search-box">
       <div class="input-group">
-        <input
-          type="text
-          name="search"
-          value="{{ search_query }}"
-          class="form-control"
-          placeholder="Search schemes..."
-        />
-        <button class="btn btn-dark">Search</button>
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search schemes..." class="form-control" />
+        <button class="btn-search"><i class="fas fa-search"></i> Search</button>
       </div>
     </form>
   </div>
 
-  
-    {% if request.user.is_authenticated %}
-    <div class="admin-box">
-      
-      <!-- <h5 class="admin-title">Admin Controls</h6> <hr> <br> -->
-      <div class="admin-actions">
-        {% if request.user.is_staff %}
-        <a href="{% url 'add_scheme' %}" class="btn btn-light btn-sm">
-          ➕ Add Scheme
-        </a> | 
-        <a href="{% url 'bulk_upload' %}" class="btn btn-warning btn-sm">
-          📂 Bulk Upload
-        </a>
-        {% endif %}
-      </div>
-      
-    </div>
-    {% endif %}
+  <!-- ===== ADMIN CONTROLS ===== -->
+  {% if request.user.is_authenticated and request.user.is_staff %}
+  <div class="admin-controls">
+    <span class="admin-label"><i class="fas fa-user-cog"></i> Admin</span>
+    <a href="{% url 'add_scheme' %}" class="btn-admin btn-admin-outline"><i class="fas fa-plus-circle"></i> Add Scheme</a>
+    <a href="{% url 'bulk_upload' %}" class="btn-admin btn-admin-warning"><i class="fas fa-upload"></i> Bulk Upload</a>
+  </div>
+  {% endif %}
 
-    <br> <hr> <br>
-  <!-- STATS -->
-  <div class="stats-container">
-    <div class="stat-card">
+  <!-- ===== STATS ===== -->
+  <div class="stats-row">
+    <div class="stat-item">
       <div class="number">{{ total_count }}</div>
       <div class="label">Total Schemes</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-item">
       <div class="number">{{ schemes.central.paginator.count }}</div>
       <div class="label">Central</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-item">
       <div class="number">{{ schemes.state.paginator.count }}</div>
       <div class="label">State</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-item">
       <div class="number">{{ schemes.district.paginator.count }}</div>
       <div class="label">District</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-item">
       <div class="number">{{ schemes.taluka.paginator.count }}</div>
       <div class="label">Taluka</div>
     </div>
   </div>
 
-  <!-- FILTER -->
-  <div class="filter-section text-center">
-    <form method="GET">
-      <select
-        name="category"
-        onchange="this.form.submit()"
-        class="form-select w-50 mx-auto"
-      >
+  <!-- ===== FILTER ===== -->
+  <div class="filter-bar">
+    <span class="filter-label"><i class="fas fa-filter"></i> Filter by Category:</span>
+    <form method="GET" style="display:inline;">
+      <select name="category" onchange="this.form.submit()">
         <option value="">All Categories</option>
-        <option
-          value="Education"
-          {%
-          if
-          category=""
-          ="Education"
-          %}selected{%
-          endif
-          %}
-        >
-          Education
-        </option>
-        <option
-          value="Agriculture"
-          {%
-          if
-          category=""
-          ="Agriculture"
-          %}selected{%
-          endif
-          %}
-        >
-          Agriculture
-        </option>
-        <option
-          value="Health"
-          {%
-          if
-          category=""
-          ="Health"
-          %}selected{%
-          endif
-          %}
-        >
-          Health
-        </option>
-        <option
-          value="Housing"
-          {%
-          if
-          category=""
-          ="Housing"
-          %}selected{%
-          endif
-          %}
-        >
-          Housing
-        </option>
+        <option value="Education" {% if category == "Education" %}selected{% endif %}>Education</option>
+        <option value="Agriculture" {% if category == "Agriculture" %}selected{% endif %}>Agriculture</option>
+        <option value="Health" {% if category == "Health" %}selected{% endif %}>Health</option>
+        <option value="Housing" {% if category == "Housing" %}selected{% endif %}>Housing</option>
       </select>
     </form>
   </div>
 
-  <!-- ================= CENTRAL ================= -->
-  <h3 class="section-title">🇮🇳 Central Schemes</h3>
+  <!-- ===== CENTRAL SCHEMES ===== -->
+  <h3 class="section-title"><i class="fas fa-flag"></i> Central Schemes</h3>
   <div class="scheme-grid">
     {% for scheme in schemes.central %}
     <div class="scheme-card">
-      <span class="scheme-badge badge-central">Central</span>
-
-      <span class="category-chip">{{ scheme.category }}</span>
-
-      <h3 class="scheme-title">{{ scheme.title }}</h3>
-
-      <div class="scheme-meta">📍 {{ scheme.state }}</div>
-
-      <p class="scheme-description">
-        {{ scheme.description|truncatechars:120 }}
-      </p>
-
-      <div class="card-actions">
-        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-details"
-          >Details</a
-        >
-
+      <span class="badge-level central">Central</span>
+      <span class="category-tag">{{ scheme.category }}</span>
+      <h3>{{ scheme.title }}</h3>
+      <div class="location"><i class="fas fa-map-marker-alt"></i> {{ scheme.state|default:"All India" }}</div>
+      <p class="description">{{ scheme.description|truncatechars:120 }}</p>
+      <div class="actions">
+        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-detail"><i class="fas fa-info-circle"></i> Details</a>
         {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"
-          >Apply</a
-        >
+        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"><i class="fas fa-external-link-alt"></i> Apply</a>
         {% endif %}
       </div>
     </div>
     {% empty %}
-    <div class="empty-state">
-      <p>No schemes found</p>
-    </div>
+    <div class="empty-state"><i class="fas fa-inbox"></i><p>No central schemes found</p></div>
     {% endfor %}
   </div>
 
-  <!-- ================= STATE ================= -->
-  <h3 class="section-title">🏛 State Schemes</h3>
+  <!-- ===== STATE SCHEMES ===== -->
+  <h3 class="section-title"><i class="fas fa-building"></i> State Schemes</h3>
   <div class="scheme-grid">
     {% for scheme in schemes.state %}
     <div class="scheme-card">
-      <span class="scheme-badge badge-state">State</span>
-
-      <span class="category-chip">{{ scheme.category }}</span>
-
-      <h3 class="scheme-title">{{ scheme.title }}</h3>
-
-      <div class="scheme-meta">📍 {{ scheme.state }}</div>
-
-      <p class="scheme-description">
-        {{ scheme.description|truncatechars:120 }}
-      </p>
-
-      <div class="card-actions">
-        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-details"
-          >Details</a
-        >
-
+      <span class="badge-level state">State</span>
+      <span class="category-tag">{{ scheme.category }}</span>
+      <h3>{{ scheme.title }}</h3>
+      <div class="location"><i class="fas fa-map-marker-alt"></i> {{ scheme.state|default:"Maharashtra" }}</div>
+      <p class="description">{{ scheme.description|truncatechars:120 }}</p>
+      <div class="actions">
+        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-detail"><i class="fas fa-info-circle"></i> Details</a>
         {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"
-          >Apply</a
-        >
+        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"><i class="fas fa-external-link-alt"></i> Apply</a>
         {% endif %}
       </div>
     </div>
+    {% empty %}
+    <div class="empty-state"><i class="fas fa-inbox"></i><p>No state schemes found</p></div>
     {% endfor %}
   </div>
 
-  <!-- ================= DISTRICT ================= -->
-  <h3 class="section-title">🏙 District Schemes</h3>
+  <!-- ===== DISTRICT SCHEMES ===== -->
+  <h3 class="section-title"><i class="fas fa-city"></i> District Schemes</h3>
   <div class="scheme-grid">
     {% for scheme in schemes.district %}
     <div class="scheme-card">
-      <span class="scheme-badge badge-district">District</span>
-
-      <span class="category-chip">{{ scheme.category }}</span>
-
-      <h3 class="scheme-title">{{ scheme.title }}</h3>
-
-      <div class="scheme-meta">📍 {{ scheme.district }}</div>
-
-      <p class="scheme-description">
-        {{ scheme.description|truncatechars:120 }}
-      </p>
-
-      <div class="card-actions">
-        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-details"
-          >Details</a
-        >
-
+      <span class="badge-level district">District</span>
+      <span class="category-tag">{{ scheme.category }}</span>
+      <h3>{{ scheme.title }}</h3>
+      <div class="location"><i class="fas fa-map-marker-alt"></i> {{ scheme.district }}</div>
+      <p class="description">{{ scheme.description|truncatechars:120 }}</p>
+      <div class="actions">
+        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-detail"><i class="fas fa-info-circle"></i> Details</a>
         {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"
-          >Apply</a
-        >
+        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"><i class="fas fa-external-link-alt"></i> Apply</a>
         {% endif %}
       </div>
     </div>
+    {% empty %}
+    <div class="empty-state"><i class="fas fa-inbox"></i><p>No district schemes found</p></div>
     {% endfor %}
   </div>
 
-  <!-- ================= TALUKA ================= -->
-  <h3 class="section-title">🏘 Taluka Schemes</h3>
+  <!-- ===== TALUKA SCHEMES ===== -->
+  <h3 class="section-title"><i class="fas fa-map-pin"></i> Taluka Schemes</h3>
   <div class="scheme-grid">
     {% for scheme in schemes.taluka %}
     <div class="scheme-card">
-      <span class="scheme-badge badge-taluka">Taluka</span>
-
-      <span class="category-chip">{{ scheme.category }}</span>
-
-      <h3 class="scheme-title">{{ scheme.title }}</h3>
-
-      <div class="scheme-meta">📍 {{ scheme.taluka }}</div>
-
-      <p class="scheme-description">
-        {{ scheme.description|truncatechars:120 }}
-      </p>
-
-      <div class="card-actions">
-        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-details"
-          >Details</a
-        >
-
+      <span class="badge-level taluka">Taluka</span>
+      <span class="category-tag">{{ scheme.category }}</span>
+      <h3>{{ scheme.title }}</h3>
+      <div class="location"><i class="fas fa-map-marker-alt"></i> {{ scheme.taluka }}</div>
+      <p class="description">{{ scheme.description|truncatechars:120 }}</p>
+      <div class="actions">
+        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-detail"><i class="fas fa-info-circle"></i> Details</a>
         {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"
-          >Apply</a
-        >
+        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"><i class="fas fa-external-link-alt"></i> Apply</a>
         {% endif %}
       </div>
     </div>
+    {% empty %}
+    <div class="empty-state"><i class="fas fa-inbox"></i><p>No taluka schemes found</p></div>
     {% endfor %}
   </div>
 
-  <!-- ================= VILLAGE ================= -->
-  <h3 class="section-title">🌾 Village Schemes</h3>
+  <!-- ===== VILLAGE SCHEMES ===== -->
+  <h3 class="section-title"><i class="fas fa-home"></i> Village Schemes</h3>
   <div class="scheme-grid">
     {% for scheme in schemes.village %}
     <div class="scheme-card">
-      <span class="scheme-badge badge-village">Village</span>
-
-      <span class="category-chip">{{ scheme.category }}</span>
-
-      <h3 class="scheme-title">{{ scheme.title }}</h3>
-
-      <div class="scheme-meta">📍 {{ scheme.village }}</div>
-
-      <p class="scheme-description">
-        {{ scheme.description|truncatechars:120 }}
-      </p>
-
-      <div class="card-actions">
-        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-details"
-          >Details</a
-        >
-
+      <span class="badge-level village">Village</span>
+      <span class="category-tag">{{ scheme.category }}</span>
+      <h3>{{ scheme.title }}</h3>
+      <div class="location"><i class="fas fa-map-marker-alt"></i> {{ scheme.village }}</div>
+      <p class="description">{{ scheme.description|truncatechars:120 }}</p>
+      <div class="actions">
+        <a href="{% url 'scheme_detail' scheme.slug %}" class="btn-detail"><i class="fas fa-info-circle"></i> Details</a>
         {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"
-          >Apply</a
-        >
+        <a href="{{ scheme.official_link }}" target="_blank" class="btn-apply"><i class="fas fa-external-link-alt"></i> Apply</a>
         {% endif %}
       </div>
     </div>
+    {% empty %}
+    <div class="empty-state"><i class="fas fa-inbox"></i><p>No village schemes found</p></div>
     {% endfor %}
   </div>
+
 </div>
 
 <script src="{% static 'js/script.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 {% include "footer.html" %}

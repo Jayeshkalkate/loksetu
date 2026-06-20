@@ -1,39 +1,189 @@
 {% load static %}
 {% include "header.html" %}
 
-<div id="contents">
-  <div class="clearfix">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Privacy Policy</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .policy-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .policy-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .policy-header h1 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+    .policy-header h1 i {
+      margin-right: 12px;
+    }
+    .policy-header p {
+      color: #4a5a72;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
 
-      <div>
-        <h2>Privacy Commitment</h2>
-        <p>
-          LokSetu respects the privacy of its users. We are committed
-          to protecting the personal information shared by citizens
-          while using the platform.
-        </p>
-      </div>
+    /* Policy Items */
+    .policy-item {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      border-left: 4px solid #1a3c6e;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .policy-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    }
+    .policy-item h2 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.15rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .policy-item h2 i {
+      margin-right: 10px;
+      color: #2a5a9a;
+    }
+    .policy-item p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+    .policy-item ul {
+      margin: 8px 0 0 20px;
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
 
-      <div>
-        <h2>Data Protection</h2>
-        <p>
-          All information submitted through LokSetu is used only
-          for complaint management and service improvement.
-          We do not sell or misuse user data.
-        </p>
-      </div>
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .sidebar-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h3 i {
+      margin-right: 10px;
+    }
+    .sidebar-card p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .sidebar-card .highlight-box {
+      background: #e8f0fe;
+      border-radius: 8px;
+      padding: 14px 18px;
+      border-left: 3px solid #1a3c6e;
+      margin-top: 12px;
+    }
+    .sidebar-card .highlight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sidebar-card .highlight-box i {
+      color: #1a3c6e;
+      margin-right: 6px;
+    }
 
-    </div>
+    .cta-box {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .cta-box h4 {
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.9rem;
+      margin: 0 0 14px;
+    }
+    .cta-box .btn-cta {
+      display: inline-block;
+      background: #fff;
+      color: #1a3c6e;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s;
+      font-size: 0.9rem;
+    }
+    .cta-box .btn-cta:hover {
+      transform: scale(1.03);
+      color: #1a3c6e;
+    }
+    .cta-box .btn-cta i {
+      margin-right: 6px;
+    }
 
-    <!-- Main Content -->
-    <div class="main">
+    @media (max-width: 768px) {
+      .policy-grid {
+        grid-template-columns: 1fr;
+      }
+      .policy-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
 
-      <h1>Privacy Policy</h1>
+<div class="policy-wrapper">
 
-      <div class="section">
-        <h2>1. Introduction</h2>
+  <!-- Header -->
+  <div class="policy-header">
+    <h1><i class="fas fa-shield-alt"></i> Privacy Policy</h1>
+    <p>How we collect, use, and protect your information on LokSetu.</p>
+  </div>
+
+  <div class="policy-grid">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+
+      <div class="policy-item">
+        <h2><i class="fas fa-info-circle"></i> 1. Introduction</h2>
         <p>
           LokSetu is a digital platform designed to help citizens report
           public service issues and track their resolution. This privacy
@@ -42,13 +192,9 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>2. Information We Collect</h2>
-        <p>
-          LokSetu may collect the following types of information
-          when users submit complaints or create accounts:
-        </p>
-
+      <div class="policy-item">
+        <h2><i class="fas fa-database"></i> 2. Information We Collect</h2>
+        <p>LokSetu may collect the following types of information when users submit complaints or create accounts:</p>
         <ul>
           <li>Name and contact information</li>
           <li>Email address or phone number</li>
@@ -57,8 +203,8 @@
         </ul>
       </div>
 
-      <div class="section">
-        <h2>3. How We Use the Information</h2>
+      <div class="policy-item">
+        <h2><i class="fas fa-cogs"></i> 3. How We Use the Information</h2>
         <p>
           The information collected is used strictly for the purpose
           of managing and resolving public complaints. It helps the
@@ -67,8 +213,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>4. Data Security</h2>
+      <div class="policy-item">
+        <h2><i class="fas fa-lock"></i> 4. Data Security</h2>
         <p>
           LokSetu takes appropriate technical and administrative
           measures to protect user information from unauthorized
@@ -77,8 +223,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>5. Information Sharing</h2>
+      <div class="policy-item">
+        <h2><i class="fas fa-share-alt"></i> 5. Information Sharing</h2>
         <p>
           LokSetu does not share personal user information with
           third parties except when necessary to forward complaints
@@ -86,8 +232,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>6. User Responsibility</h2>
+      <div class="policy-item">
+        <h2><i class="fas fa-user-check"></i> 6. User Responsibility</h2>
         <p>
           Users are responsible for providing accurate information
           when submitting complaints. False or misleading information
@@ -95,8 +241,8 @@
         </p>
       </div>
 
-      <div class="section last-child">
-        <h2>7. Updates to This Policy</h2>
+      <div class="policy-item" style="border-left-color: #28a745;">
+        <h2><i class="fas fa-sync-alt"></i> 7. Updates to This Policy</h2>
         <p>
           LokSetu may update this privacy policy from time to time
           to reflect improvements in the system or legal requirements.
@@ -105,8 +251,45 @@
       </div>
 
     </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+
+      <div class="sidebar-card">
+        <h3><i class="fas fa-handshake"></i> Privacy Commitment</h3>
+        <p>
+          LokSetu respects the privacy of its users. We are committed
+          to protecting the personal information shared by citizens
+          while using the platform.
+        </p>
+        <div class="highlight-box">
+          <p><i class="fas fa-check-circle"></i> All information submitted through LokSetu is used only
+          for complaint management and service improvement.
+          We do not sell or misuse user data.</p>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3><i class="fas fa-gavel"></i> Legal Compliance</h3>
+        <p>
+          This platform complies with the Information Technology Act, 2000,
+          and other applicable laws of India. All user data is handled in
+          accordance with data protection guidelines.
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h4><i class="fas fa-question-circle"></i> Have Questions?</h4>
+        <p>Reach out to our support team for clarification.</p>
+        <a href="{% url 'contactus' %}" class="btn-cta">
+          <i class="fas fa-envelope"></i> Contact Us
+        </a>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
 {% include "footer.html" %}
-</div>

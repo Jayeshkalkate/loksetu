@@ -1,137 +1,510 @@
 {% load static %}
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Citizen Profile - LokSetu</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – My Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/userprofile.css' %}" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f4f7fc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .profile-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .profile-header {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      padding: 28px 32px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .profile-header .user-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .profile-header .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .profile-header .user-text h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .profile-header .user-text .role-badge {
+      display: inline-block;
+      background: rgba(255,215,0,0.2);
+      color: #ffd700;
+      padding: 2px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    .profile-header .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-header {
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-header-light {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-header-light:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+    .btn-header-gold {
+      background: #ffd700;
+      color: #1a3c6e;
+    }
+    .btn-header-gold:hover {
+      background: #ffe44d;
+      transform: translateY(-2px);
+      color: #1a3c6e;
+    }
 
-    <link rel="stylesheet" href="{% static 'css/userprofile.css' %}" />
-  </head>
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
 
-  <body>
-    {% include "header.html" %}
+    /* Profile Card */
+    .profile-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 24px 28px;
+      border: 1px solid #e9edf4;
+      margin-bottom: 24px;
+    }
+    .profile-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .profile-card h3 i {
+      margin-right: 10px;
+    }
 
-    <div class="container">
-      {% if user.is_authenticated %}
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+    .info-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .info-item .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6c7a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .info-item .value {
+      font-weight: 500;
+      color: #1a2a3a;
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+    .info-item .value .not-provided {
+      color: #b0b8c4;
+      font-style: italic;
+      font-weight: 400;
+    }
 
-      <h2>👤 Citizen Profile</h2>
+    /* Actions */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+    .action-btn.primary {
+      background: #e8f0fe;
+      color: #1a3c6e;
+    }
+    .action-btn.primary:hover {
+      background: #d4e0f5;
+      transform: translateY(-2px);
+    }
+    .action-btn.success {
+      background: #e8f5e9;
+      color: #28a745;
+    }
+    .action-btn.success:hover {
+      background: #d4edda;
+      transform: translateY(-2px);
+    }
+    .action-btn.warning {
+      background: #fff3e0;
+      color: #fd7e14;
+    }
+    .action-btn.warning:hover {
+      background: #ffe0b2;
+      transform: translateY(-2px);
+    }
+    .action-btn.danger {
+      background: #fde8e8;
+      color: #dc3545;
+    }
+    .action-btn.danger:hover {
+      background: #f8d0d0;
+      transform: translateY(-2px);
+    }
+    .action-btn.dark {
+      background: #1a3c6e;
+      color: #fff;
+    }
+    .action-btn.dark:hover {
+      background: #14315a;
+      transform: translateY(-2px);
+    }
+    .action-btn i {
+      font-size: 0.9rem;
+    }
+    .action-btn.full-width {
+      grid-column: 1 / -1;
+    }
 
-      <div class="profile-info">
-        <p>
-          <strong>Full Name:</strong>
-          {{ user.get_full_name|default:user.username }}
-        </p>
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 1px solid #e9edf4;
+    }
+    .sidebar-card h4 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1rem;
+      margin-top: 0;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h4 i {
+      margin-right: 8px;
+    }
+    .sidebar-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-card ul li {
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .sidebar-card ul li:last-child {
+      border-bottom: none;
+    }
+    .sidebar-card ul li a {
+      color: #2c3e50;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+    .sidebar-card ul li a:hover {
+      color: #1a3c6e;
+    }
+    .sidebar-card ul li a i {
+      color: #1a3c6e;
+      width: 20px;
+    }
 
-        <p>
-          <strong>Username:</strong>
-          {{ user.username|default:"Not Available" }}
-        </p>
+    .logout-form {
+      display: inline;
+    }
+    .logout-form button {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      width: 100%;
+      text-align: left;
+    }
+    .logout-form button:hover {
+      color: #1a3c6e;
+    }
 
-        <p>
-          <strong>Email:</strong>
-          {{ user.email|default:"Not Available" }}
-        </p>
+    @media (max-width: 768px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+      .profile-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .profile-header .user-info {
+        flex-direction: column;
+      }
+      .profile-header .header-actions {
+        justify-content: center;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+      .action-btn.full-width {
+        grid-column: 1;
+      }
+    }
+  </style>
+</head>
+<body>
 
-        {% if user.citizen %}
+{% include "header.html" %}
 
-        <p>
-          <strong>Phone Number:</strong>
-          {{ user.citizen.phone|default:"Not Available" }}
-        </p>
+<div class="profile-wrapper">
 
-        <p>
-          <strong>Gender:</strong>
-          {{ user.citizen.gender|default:"Not Specified" }}
-        </p>
+  {% if user.is_authenticated %}
 
-        <p>
-          <strong>Aadhaar:</strong>
-          {{ user.citizen.aadhaar|default:"Not Provided" }}
-        </p>
+  <!-- ===== PROFILE HEADER ===== -->
+  <div class="profile-header">
+    <div class="user-info">
+      <div class="avatar"><i class="fas fa-user-circle"></i></div>
+      <div class="user-text">
+        <h1>{{ user.get_full_name|default:user.username }}</h1>
+        <span class="role-badge">
+          <i class="fas fa-user-tag"></i>
+          {{ user.userprofile.role|default:"Citizen"|title }}
+        </span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="{% url 'edit_profile' %}" class="btn-header btn-header-gold">
+        <i class="fas fa-pen"></i> Edit Profile
+      </a>
+      <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-header btn-header-light" style="background:rgba(220,53,69,0.25); color:#ff6b6b; border-color:rgba(220,53,69,0.2);">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </form>
+    </div>
+  </div>
 
-        <p>
-          <strong>Ward Number:</strong>
-          {{ user.citizen.ward|default:"Not Available" }}
-        </p>
+  <div class="profile-grid">
 
-        <p>
-          <strong>Pincode:</strong>
-          {{ user.citizen.pincode|default:"Not Available" }}
-        </p>
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
 
-        <p>
-          <strong>Address:</strong>
-          {{ user.citizen.address|default:"Not Available" }}
-        </p>
-
-        {% else %}
-
-        <p><strong>Phone Number:</strong> Not Available</p>
-        <p><strong>Gender:</strong> Not Available</p>
-        <p><strong>Aadhaar:</strong> Not Available</p>
-        <p><strong>Ward Number:</strong> Not Available</p>
-        <p><strong>Pincode:</strong> Not Available</p>
-        <p><strong>Address:</strong> Not Available</p>
-
-        {% endif %}
+      <!-- Personal Information -->
+      <div class="profile-card">
+        <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Full Name</div>
+            <div class="value">{{ user.get_full_name|default:user.username }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Username</div>
+            <div class="value">{{ user.username }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Email</div>
+            <div class="value">{{ user.email|default:"<span class='not-provided'>Not provided</span>"|safe }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Phone</div>
+            <div class="value">{{ user.citizen.phone|default:"<span class='not-provided'>Not provided</span>"|safe }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Gender</div>
+            <div class="value">{{ user.citizen.gender|default:"<span class='not-provided'>Not specified</span>"|safe }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Aadhaar</div>
+            <div class="value">{{ user.citizen.aadhaar|default:"<span class='not-provided'>Not provided</span>"|safe }}</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Dashboard Links -->
-
-      <div class="admin-link">
-        {% if user.userprofile.role == "super_admin" %}
-
-        <a href="{% url 'super_admin_dashboard' %}">
-          🛠 Super Admin Dashboard
-        </a>
-
-        {% elif user.userprofile and user.userprofile.role == "state_admin" %}
-
-        <a href="{% url 'state_admin_dashboard' %}">
-          🏛 State Admin Dashboard
-        </a>
-
-        {% else %}
-
-        <a href="/"> 🏠 Home </a>
-
-        {% endif %}
+      <!-- Address Information -->
+      <div class="profile-card">
+        <h3><i class="fas fa-map-pin"></i> Address Details</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Address</div>
+            <div class="value">{{ user.citizen.address|default:"<span class='not-provided'>Not provided</span>"|safe }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Ward Number</div>
+            <div class="value">{{ user.citizen.ward|default:"<span class='not-provided'>Not available</span>"|safe }}</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Pincode</div>
+            <div class="value">{{ user.citizen.pincode|default:"<span class='not-provided'>Not available</span>"|safe }}</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Django Admin Access -->
+      <!-- Quick Actions -->
+      <div class="profile-card">
+        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+        <div class="actions-grid">
+          <a href="{% url 'complaint' %}" class="action-btn primary"><i class="fas fa-pen"></i> File Complaint</a>
+          <a href="{% url 'track_complaint' %}" class="action-btn primary"><i class="fas fa-search"></i> Track Complaint</a>
+          <a href="{% url 'schemes' %}" class="action-btn success"><i class="fas fa-hand-holding-heart"></i> View Schemes</a>
+          <a href="{% url 'map_complaint' %}" class="action-btn warning"><i class="fas fa-map-marked-alt"></i> Complaint Map</a>
 
-      {% if user.is_superuser %}
+          <!-- Admin Links -->
+          {% if user.userprofile.role == "super_admin" %}
+          <a href="{% url 'super_admin_dashboard' %}" class="action-btn dark full-width">
+            <i class="fas fa-crown"></i> Super Admin Dashboard
+          </a>
+          {% elif user.userprofile.role == "state_admin" %}
+          <a href="{% url 'state_admin_dashboard' %}" class="action-btn dark full-width">
+            <i class="fas fa-building"></i> State Admin Dashboard
+          </a>
+          {% endif %}
 
-      <div class="admin-link">
-        <a href="{% url 'admin:index' %}"> ⚙ Django Admin Panel </a>
+          {% if user.is_superuser %}
+          <a href="{% url 'admin:index' %}" class="action-btn dark full-width">
+            <i class="fas fa-cog"></i> Django Admin Panel
+          </a>
+          {% endif %}
+        </div>
       </div>
 
-      {% endif %}
-
-      <!-- Actions -->
-
-      <div class="actions">
-        <a href="{% url 'edit_profile' %}"> ✏️ Edit Profile </a>
-
-        <form action="{% url 'logout' %}" method="post">
-          {% csrf_token %}
-          <button type="submit">🚪 Logout</button>
-        </form>
-      </div>
-
-      {% else %}
-
-      <h2>⚠ You are not logged in</h2>
-
-      <p>Please login to view your profile.</p>
-
-      <a href="{% url 'login' %}"> 🔑 Login </a>
-
-      {% endif %}
     </div>
 
-    {% include "footer.html" %}
-  </body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+
+      <div class="sidebar-card">
+        <h4><i class="fas fa-chart-simple"></i> Account Summary</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-file-alt"></i> Total Complaints: {{ user.complaints.count|default:"0" }}</a></li>
+          <li><a href="#"><i class="fas fa-check-circle"></i> Resolved: {{ user.complaints.resolved.count|default:"0" }}</a></li>
+          <li><a href="#"><i class="fas fa-clock"></i> Pending: {{ user.complaints.pending.count|default:"0" }}</a></li>
+          <li><a href="#"><i class="fas fa-calendar-alt"></i> Member Since: {{ user.date_joined|date:"d M Y" }}</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h4><i class="fas fa-life-ring"></i> Need Help?</h4>
+        <ul>
+          <li><a href="{% url 'faq' %}"><i class="fas fa-question-circle"></i> FAQ</a></li>
+          <li><a href="{% url 'contactus' %}"><i class="fas fa-envelope"></i> Contact Support</a></li>
+          <li><a href="{% url 'how_it_works' %}"><i class="fas fa-play-circle"></i> How It Works</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h4><i class="fas fa-shield-alt"></i> Account Security</h4>
+        <ul>
+          <li><a href="{% url 'password_reset_form' %}"><i class="fas fa-key"></i> Change Password</a></li>
+          <li><a href="{% url 'privacy_policy' %}"><i class="fas fa-lock"></i> Privacy Policy</a></li>
+          <li>
+            <form action="{% url 'logout' %}" method="post" class="logout-form">
+              {% csrf_token %}
+              <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  {% else %}
+
+  <!-- ===== NOT LOGGED IN ===== -->
+  <div style="max-width:500px; margin:60px auto; background:#fff; border-radius:20px; padding:40px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#fd7e14; margin-bottom:16px;"></i>
+    <h2 style="color:#1a3c6e; font-weight:700; margin-bottom:8px;">Not Logged In</h2>
+    <p style="color:#4a5a72; font-size:1.05rem; margin-bottom:20px;">Please login to view your profile and access all features.</p>
+    <a href="{% url 'login' %}" class="btn-header btn-header-gold" style="display:inline-flex; padding:12px 36px; font-size:1rem;">
+      <i class="fas fa-sign-in-alt"></i> Login
+    </a>
+    <a href="{% url 'register' %}" class="btn-header btn-header-light" style="display:inline-flex; padding:12px 36px; font-size:1rem; background:#e8f0fe; color:#1a3c6e; border-color:#d0d7de; margin-left:8px;">
+      <i class="fas fa-user-plus"></i> Register
+    </a>
+  </div>
+
+  {% endif %}
+
+</div>
+
+{% include "footer.html" %}
+</body>
 </html>

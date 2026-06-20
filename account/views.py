@@ -49,7 +49,7 @@ def send_otp(request):
         }
 
         headers = {
-            "authorization": "YOUR_API_KEY",
+            "authorization": settings.FAST2SMS_API_KEY,
             "Content-Type": "application/x-www-form-urlencoded"
         }
 
@@ -281,7 +281,7 @@ def super_admin_dashboard(request):
 
     complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
-    total = complaint.objects.count()
+    total = Complaint.objects.count()
     pending = complaint.objects.filter(status="Pending").count()
     progress = complaint.objects.filter(status="In Progress").count()
     resolved = complaint.objects.filter(status="Resolved").count()
@@ -358,7 +358,7 @@ def state_dashboard(request):
 
     complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
-    total = complaint.objects.count()
+    total = Complaint.objects.count()
 
     pending = complaint.objects.filter(status="Pending").count()
 
@@ -467,10 +467,22 @@ def edit_profile(request):
 
 @login_required
 def profile(request):
-    return render(request, "userprofile.html")
+    citizen = Citizen.objects.filter(
+        user=request.user
+    ).first()
+
+    return render(
+        request,
+        "userprofile.html",
+        {"citizen": citizen}
+    )
 
 
 @login_required
+@role_required([
+    "state_officer",
+    "super_admin"
+])
 def verify_scheme(request, scheme_id):
 
     scheme = get_object_or_404(Scheme, id=scheme_id)

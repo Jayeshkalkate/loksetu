@@ -1,14 +1,331 @@
 {% load static %}
 {% include "header.html" %}
 
-<div id="contents">
-  <div class="clearfix">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Emergency Contacts</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .emergency-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .emergency-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .emergency-header h1 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+    .emergency-header h1 i {
+      margin-right: 12px;
+      color: #dc3545;
+    }
+    .emergency-header p {
+      color: #4a5a72;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-    <!-- Sidebar -->
+    .emergency-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* Emergency Cards */
+    .emergency-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      border-left: 5px solid #dc3545;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .emergency-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    }
+    .emergency-card.blue-border {
+      border-left-color: #1a3c6e;
+    }
+    .emergency-card.green-border {
+      border-left-color: #28a745;
+    }
+    .emergency-card.orange-border {
+      border-left-color: #fd7e14;
+    }
+    .emergency-card.purple-border {
+      border-left-color: #6f42c1;
+    }
+    .emergency-card h2 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+    .emergency-card h2 i {
+      margin-right: 10px;
+    }
+    .emergency-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .emergency-card ul li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .emergency-card ul li:last-child {
+      border-bottom: none;
+    }
+    .emergency-card ul li .number {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.3rem;
+      min-width: 60px;
+      background: #e8f0fe;
+      padding: 4px 12px;
+      border-radius: 40px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+    .emergency-card ul li .number.red {
+      background: #fde8e8;
+      color: #dc3545;
+    }
+    .emergency-card ul li .number.green {
+      background: #e8f5e9;
+      color: #28a745;
+    }
+    .emergency-card ul li .number.orange {
+      background: #fff3e0;
+      color: #fd7e14;
+    }
+    .emergency-card ul li .number.purple {
+      background: #f3e8ff;
+      color: #6f42c1;
+    }
+    .emergency-card ul li .desc {
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+    .emergency-card ul li .desc small {
+      display: block;
+      color: #6c7a8a;
+      font-size: 0.8rem;
+    }
+
+    .emergency-note {
+      background: #fde8e8;
+      border-radius: 10px;
+      padding: 16px 20px;
+      border-left: 4px solid #dc3545;
+      margin-top: 10px;
+    }
+    .emergency-note p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #7a1a1a;
+    }
+    .emergency-note i {
+      color: #dc3545;
+      margin-right: 8px;
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .sidebar-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h3 i {
+      margin-right: 10px;
+    }
+    .sidebar-card p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .cta-box h4 {
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.95rem;
+      margin: 0 0 16px;
+    }
+    .cta-box .btn-cta {
+      display: inline-block;
+      background: #fff;
+      color: #dc3545;
+      padding: 10px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s;
+    }
+    .cta-box .btn-cta:hover {
+      transform: scale(1.03);
+      color: #dc3545;
+    }
+    .cta-box .btn-cta i {
+      margin-right: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .emergency-grid {
+        grid-template-columns: 1fr;
+      }
+      .emergency-header h1 {
+        font-size: 1.8rem;
+      }
+      .emergency-card ul li {
+        flex-wrap: wrap;
+      }
+      .emergency-card ul li .number {
+        min-width: 50px;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="emergency-wrapper">
+
+  <!-- Header -->
+  <div class="emergency-header">
+    <h1><i class="fas fa-phone-alt"></i> Emergency Contact Numbers</h1>
+    <p>Immediate assistance numbers for citizens across Maharashtra and India.</p>
+  </div>
+
+  <div class="emergency-grid">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+
+      <!-- National Emergency -->
+      <div class="emergency-card">
+        <h2><i class="fas fa-ambulance" style="color:#dc3545;"></i> National Emergency Helpline</h2>
+        <ul>
+          <li>
+            <span class="number red">112</span>
+            <span class="desc">National Emergency Helpline <small>All emergencies (Police, Fire, Ambulance)</small></span>
+          </li>
+          <li>
+            <span class="number red">100</span>
+            <span class="desc">Police <small>Law enforcement and public safety</small></span>
+          </li>
+          <li>
+            <span class="number red">101</span>
+            <span class="desc">Fire Brigade <small>Fire emergencies and rescue</small></span>
+          </li>
+          <li>
+            <span class="number red">102</span>
+            <span class="desc">Ambulance <small>Emergency medical transport</small></span>
+          </li>
+          <li>
+            <span class="number red">108</span>
+            <span class="desc">Emergency Medical Service <small>24×7 medical assistance</small></span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Women & Child Safety -->
+      <div class="emergency-card purple-border">
+        <h2><i class="fas fa-female" style="color:#6f42c1;"></i> Women &amp; Child Safety</h2>
+        <ul>
+          <li>
+            <span class="number purple">1091</span>
+            <span class="desc">Women Helpline <small>Support for women in distress</small></span>
+          </li>
+          <li>
+            <span class="number purple">1098</span>
+            <span class="desc">Child Helpline <small>Protection and support for children</small></span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Disaster Management -->
+      <div class="emergency-card orange-border">
+        <h2><i class="fas fa-bolt" style="color:#fd7e14;"></i> Disaster Management</h2>
+        <ul>
+          <li>
+            <span class="number orange">1070</span>
+            <span class="desc">State Disaster Management Helpline <small>Natural disaster coordination</small></span>
+          </li>
+          <li>
+            <span class="number orange">1077</span>
+            <span class="desc">District Disaster Control Room <small>Local disaster response</small></span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Health Services -->
+      <div class="emergency-card green-border">
+        <h2><i class="fas fa-heartbeat" style="color:#28a745;"></i> Health &amp; Medical Services</h2>
+        <ul>
+          <li>
+            <span class="number green">104</span>
+            <span class="desc">Health Helpline <small>Medical advice and health information</small></span>
+          </li>
+          <li>
+            <span class="number green">108</span>
+            <span class="desc">Emergency Medical Transport <small>Ambulance and emergency care</small></span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Important Note -->
+      <div class="emergency-note">
+        <p><i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> For non-emergency public service complaints such as water supply, electricity, sanitation, or roads, please use the <a href="{% url 'complaint' %}" style="color:#1a3c6e; font-weight:600;">LokSetu complaint submission system</a>.</p>
+      </div>
+
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
 
-      <div>
-        <h2>Emergency Help</h2>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-info-circle"></i> Emergency Help</h3>
         <p>
           In case of emergencies, citizens can contact the following
           helpline numbers for immediate assistance. These services
@@ -16,71 +333,37 @@
         </p>
       </div>
 
-      <div>
-        <h2>Important Advice</h2>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-lightbulb"></i> Important Advice</h3>
         <p>
           For urgent situations such as accidents, fire hazards,
           medical emergencies, or law enforcement support,
           please use the official emergency numbers listed here.
         </p>
+        <div style="background:#f8fafc; border-radius:8px; padding:12px 16px; margin-top:12px; border-left:3px solid #1a3c6e;">
+          <p style="margin:0; font-size:0.9rem;">
+            <i class="fas fa-phone" style="color:#1a3c6e;"></i> <strong>Emergency TIPS:</strong>
+          </p>
+          <ul style="margin:6px 0 0 20px; font-size:0.85rem; color:#4a5a72;">
+            <li>Stay calm and speak clearly.</li>
+            <li>Provide your exact location.</li>
+            <li>Describe the situation briefly.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h4><i class="fas fa-exclamation-circle"></i> Non-Emergency?</h4>
+        <p>Report public service issues through LokSetu.</p>
+        <a href="{% url 'complaint' %}" class="btn-cta">
+          <i class="fas fa-pen"></i> File a Complaint
+        </a>
       </div>
 
     </div>
 
-    <!-- Main Content -->
-    <div class="main">
-
-      <h1>Emergency Contact Numbers</h1>
-
-      <div class="section">
-        <h2>National Emergency Helpline</h2>
-        <ul>
-          <li><strong>112</strong> – National Emergency Helpline</li>
-          <li><strong>100</strong> – Police</li>
-          <li><strong>101</strong> – Fire Brigade</li>
-          <li><strong>102</strong> – Ambulance</li>
-          <li><strong>108</strong> – Emergency Medical Service</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>Women & Child Safety</h2>
-        <ul>
-          <li><strong>1091</strong> – Women Helpline</li>
-          <li><strong>1098</strong> – Child Helpline</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>Disaster Management</h2>
-        <ul>
-          <li><strong>1070</strong> – State Disaster Management Helpline</li>
-          <li><strong>1077</strong> – District Disaster Control Room</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>Health & Medical Services</h2>
-        <ul>
-          <li><strong>104</strong> – Health Helpline</li>
-          <li><strong>108</strong> – Emergency Medical Transport</li>
-        </ul>
-      </div>
-
-      <div class="section last-child">
-        <h2>Important Note</h2>
-        <p>
-          These emergency contact numbers are provided for the
-          safety and assistance of citizens. For non-emergency
-          public service complaints such as water supply,
-          electricity, sanitation, or roads, please use the
-          LokSetu complaint submission system.
-        </p>
-      </div>
-
-    </div>
   </div>
 </div>
 
 {% include "footer.html" %}
-</div>

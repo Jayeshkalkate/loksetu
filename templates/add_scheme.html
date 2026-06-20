@@ -1,94 +1,305 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
 <link rel="stylesheet" href="{% static 'css/add_scheme.css' %}" />
 
-<div class="container mt-5">
-  <div class="card shadow-lg p-4">
-    <h2 class="mb-3 text-center">➕ Add New Scheme</h2>
+<style>
+  /* Government-Grade Form Styling */
+  .form-section {
+    background: #f9fafc;
+    border-radius: 8px;
+    padding: 20px 20px 10px;
+    margin-bottom: 25px;
+    border-left: 4px solid #1a3c6e;
+  }
+  .form-section h5 {
+    color: #1a3c6e;
+    font-weight: 600;
+    margin-bottom: 18px;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  .form-section h5 i {
+    margin-right: 8px;
+  }
+  .form-label {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.9rem;
+  }
+  .form-label .required {
+    color: #dc3545;
+    margin-left: 2px;
+  }
+  .form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #d0d7de;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #ffffff;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #1a3c6e;
+    box-shadow: 0 0 0 3px rgba(26, 60, 110, 0.15);
+  }
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+  .form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 4px;
+  }
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+  }
+  .card-header-custom {
+    background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+    color: #ffffff;
+    padding: 18px 28px;
+    border-radius: 12px 12px 0 0;
+    margin: -1px -1px 0 -1px;
+  }
+  .card-header-custom h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 0.3px;
+  }
+  .card-header-custom h3 i {
+    margin-right: 10px;
+  }
+  .card-header-custom p {
+    margin: 4px 0 0;
+    opacity: 0.85;
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+  .btn-save {
+    background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+    border: none;
+    padding: 12px 48px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-radius: 8px;
+    color: #fff;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 60, 110, 0.35);
+    color: #fff;
+  }
+  .btn-save i {
+    margin-right: 8px;
+  }
+  .btn-outline-secondary-custom {
+    border: 1.5px solid #1a3c6e;
+    color: #1a3c6e;
+    background: transparent;
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-outline-secondary-custom:hover {
+    background: #1a3c6e;
+    color: #fff;
+  }
+  .file-upload-wrapper {
+    position: relative;
+  }
+  .file-upload-wrapper input[type="file"] {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px dashed #b0b8c4;
+    border-radius: 6px;
+    width: 100%;
+  }
+  .file-upload-wrapper input[type="file"]:hover {
+    background: #f1f3f5;
+  }
+  .alert-custom {
+    border-radius: 8px;
+    border-left: 5px solid #28a745;
+  }
+  @media (max-width: 768px) {
+    .card-header-custom {
+      padding: 14px 18px;
+    }
+    .card-header-custom h3 {
+      font-size: 1.2rem;
+    }
+    .form-section {
+      padding: 15px 15px 5px;
+    }
+    .btn-save {
+      width: 100%;
+    }
+  }
+</style>
 
-    <!-- ✅ MESSAGES -->
-    {% if messages %} {% for message in messages %}
-    <div class="alert alert-success">{{ message }}</div>
-    {% endfor %} {% endif %}
+<div class="container mt-4 mb-5">
 
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
+  <!-- BREADCRUMB -->
+  <nav aria-label="breadcrumb" style="font-size: 0.9rem;">
+    <ol class="breadcrumb bg-transparent p-0 mb-3">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}" style="color: #1a3c6e; text-decoration: none;">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'schemes' %}" style="color: #1a3c6e; text-decoration: none;">Schemes</a></li>
+      <li class="breadcrumb-item active" aria-current="page" style="color: #6c757d;">Add New Scheme</li>
+    </ol>
+  </nav>
 
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label>Title</label>
-          {{ form.title }}
-        </div>
+  <div class="card shadow-lg">
 
-        <div class="col-md-6 mb-3">
-          <label>Category</label>
-          {{ form.category }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>Level</label>
-          {{ form.level }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>State</label>
-          {{ form.state }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>District</label>
-          {{ form.district }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>Taluka</label>
-          {{ form.taluka }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>Village</label>
-          {{ form.village }}
-        </div>
-
-        <div class="col-md-12 mb-3">
-          <label>Description</label>
-          {{ form.description }}
-        </div>
-
-        <div class="col-md-12 mb-3">
-          <label>Eligibility</label>
-          {{ form.eligibility }}
-        </div>
-
-        <div class="col-md-12 mb-3">
-          <label>Benefits</label>
-          {{ form.benefits }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>Official Link</label>
-          {{ form.official_link }}
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label>Upload Image</label>
-          {{ form.image }}
-        </div>
-      </div>
-
-      <div class="text-center mt-3">
-        <button type="submit" class="btn btn-success px-4">
-          ➕ Add Scheme
-        </button>
-      </div>
-    </form>
-
-    <div class="text-center mt-3">
-      <a href="{% url 'schemes' %}" class="btn btn-outline-dark btn-sm">
-        ⬅ Back
-      </a>
+    <!-- CARD HEADER -->
+    <div class="card-header-custom">
+      <h3><i class="fas fa-plus-circle"></i> Add New Government Scheme</h3>
+      <p>Provide scheme details below to make it visible to citizens across Maharashtra</p>
     </div>
-  </div>
+
+    <!-- CARD BODY -->
+    <div class="card-body p-4 p-lg-5">
+
+      <!-- ✅ SUCCESS / ERROR MESSAGES -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissible fade show alert-custom" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- ===== SECTION 1: SCHEME INFORMATION ===== -->
+        <div class="form-section">
+          <h5><i class="fas fa-info-circle"></i> Scheme Information</h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.title.id_for_label }}" class="form-label">
+                Scheme Title <span class="required">*</span>
+              </label>
+              {{ form.title }}
+              <div class="form-text">Enter the full official name of the scheme.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.category.id_for_label }}" class="form-label">
+                Category <span class="required">*</span>
+              </label>
+              {{ form.category }}
+              <div class="form-text">e.g., Agriculture, Education, Health, Infrastructure.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.level.id_for_label }}" class="form-label">
+                Administrative Level <span class="required">*</span>
+              </label>
+              {{ form.level }}
+              <div class="form-text">Select the governance level under which this scheme operates.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="{{ form.description.id_for_label }}" class="form-label">
+                Description <span class="required">*</span>
+              </label>
+              {{ form.description }}
+              <div class="form-text">Provide a clear and concise overview of the scheme's objectives.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.eligibility.id_for_label }}" class="form-label">
+                Eligibility Criteria <span class="required">*</span>
+              </label>
+              {{ form.eligibility }}
+              <div class="form-text">Who can apply? (e.g., income limits, age, residency, caste/category).</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.benefits.id_for_label }}" class="form-label">
+                Benefits <span class="required">*</span>
+              </label>
+              {{ form.benefits }}
+              <div class="form-text">List the key benefits or financial assistance provided.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 2: LOCATION DETAILS ===== -->
+        <div class="form-section">
+          <h5><i class="fas fa-map-marker-alt"></i> Location Details</h5>
+          <p class="text-muted" style="font-size: 0.9rem; margin-top: -6px;">
+            Specify the geographic coverage of this scheme.
+          </p>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label for="{{ form.state.id_for_label }}" class="form-label">State</label>
+              {{ form.state }}
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="{{ form.district.id_for_label }}" class="form-label">District</label>
+              {{ form.district }}
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="{{ form.taluka.id_for_label }}" class="form-label">Taluka</label>
+              {{ form.taluka }}
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="{{ form.village.id_for_label }}" class="form-label">Village</label>
+              {{ form.village }}
+            </div>
+          </div>
+          <div class="form-text">
+            <i class="fas fa-info-circle"></i> Leave fields blank if the scheme applies to all regions at that level.
+          </div>
+        </div>
+
+        <!-- ===== SECTION 3: ADDITIONAL INFO ===== -->
+        <div class="form-section">
+          <h5><i class="fas fa-link"></i> Additional Resources</h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.official_link.id_for_label }}" class="form-label">
+                Official Website / Application Link
+              </label>
+              {{ form.official_link }}
+              <div class="form-text">Paste the full URL where citizens can apply or learn more.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.image.id_for_label }}" class="form-label">
+                Scheme Image / Banner
+              </label>
+              <div class="file-upload-wrapper">
+                {{ form.image }}
+              </div>
+              <div class="form-text">Upload a relevant image (JPG, PNG – max 2MB).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== FORM ACTIONS ===== -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between mt-4 pt-3 border-top">
+          <a href="{% url 'schemes' %}" class="btn btn-outline-secondary-custom">
+            <i class="fas fa-arrow-left me-2"></i> Back to Schemes
+          </a>
+          <button type="submit" class="btn btn-save">
+            <i class="fas fa-save"></i> Publish Scheme
+          </button>
+        </div>
+
+      </form>
+
+    </div> <!-- /card-body -->
+  </div> <!-- /card -->
 </div>
 
 {% include "footer.html" %}

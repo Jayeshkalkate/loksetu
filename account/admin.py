@@ -3,7 +3,14 @@ from .models import Citizen, UserProfile
 
 
 class CitizenAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'gender', 'ward', 'pincode')
+    list_display = (
+        'user',
+        'phone',
+        'district',
+        'taluka',
+        'village',
+        'gender'
+    )
     search_fields = ('user__username', 'phone', 'village')
 
 

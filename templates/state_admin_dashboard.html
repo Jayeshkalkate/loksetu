@@ -1,191 +1,413 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
-<div class="container">
-  <h1>🏛️ Maharashtra State Admin Dashboard</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – State Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/state_admin_dashboard.css' %}" />
+  <style>
+    /* ===== LOKSETU GOVERNMENT THEME ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f4f7fc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .dashboard-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+    }
 
-  <p>Monitor and manage public complaints across Maharashtra.</p>
+    /* Header */
+    .dash-header {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      padding: 24px 28px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .dash-header h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .dash-header h1 i {
+      margin-right: 12px;
+    }
+    .dash-header p {
+      margin: 4px 0 0;
+      opacity: 0.8;
+      font-weight: 300;
+    }
+    .dash-header .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .dash-header .btn-header {
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-header-primary {
+      background: #ffd700;
+      color: #1a3c6e;
+    }
+    .btn-header-primary:hover {
+      background: #ffe44d;
+      transform: translateY(-2px);
+    }
+    .btn-header-success {
+      background: #28a745;
+      color: #fff;
+    }
+    .btn-header-success:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+    .btn-header-outline {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-header-outline:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
 
-  <!-- ================= STATISTICS ================= -->
+    /* Section Title */
+    .section-title {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.4rem;
+      margin-top: 32px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .section-title i {
+      color: #ffd700;
+    }
 
-  <h2>🏏 Sports Management</h2>
+    /* Stats Cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border: 1px solid #e9edf4;
+      transition: transform 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+    }
+    .stat-card .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .stat-card .icon.blue { background: #e8f0fe; color: #1a3c6e; }
+    .stat-card .icon.orange { background: #fff3e0; color: #fd7e14; }
+    .stat-card .icon.green { background: #e8f5e9; color: #28a745; }
+    .stat-card .icon.red { background: #fde8e8; color: #dc3545; }
+    .stat-card .icon.purple { background: #f3e8ff; color: #6f42c1; }
+    .stat-card .info .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a2a3a;
+      line-height: 1.2;
+    }
+    .stat-card .info .label {
+      font-size: 0.85rem;
+      color: #6c7a8a;
+      font-weight: 500;
+    }
 
-  <a href="{% url 'add_tournament' %}" class="btn btn-primary">
-    ➕ Add Tournament
-  </a>
+    /* Tables */
+    .table-wrapper {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border: 1px solid #e9edf4;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    .table-wrapper table thead th {
+      background: #f8fafc;
+      color: #1a3c6e;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid #e9edf4;
+    }
+    .table-wrapper table tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f2f5;
+      color: #2c3e50;
+    }
+    .table-wrapper table tbody tr:hover {
+      background: #f8fafc;
+    }
+    .table-wrapper table tbody tr:last-child td {
+      border-bottom: none;
+    }
 
-  <a href="{% url 'sport_events' %}" class="btn btn-success">
-    📋 View Tournaments
-  </a>
+    /* Status Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .status-badge.pending { background: #fde8e8; color: #dc3545; }
+    .status-badge.progress { background: #fff3e0; color: #fd7e14; }
+    .status-badge.resolved { background: #e8f5e9; color: #28a745; }
+    .status-badge.rejected { background: #f3e8ff; color: #6f42c1; }
 
-  <div class="stats">
-    <div class="card total">
-      <h2>{{ total_complaints }}</h2>
-      <p>Total Complaints</p>
+    /* Action Links */
+    .action-link {
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 40px;
+      transition: all 0.2s;
+    }
+    .action-link.verify { color: #28a745; background: #e8f5e9; }
+    .action-link.verify:hover { background: #28a745; color: #fff; }
+    .action-link.read { color: #1a3c6e; background: #e8f0fe; }
+    .action-link.read:hover { background: #1a3c6e; color: #fff; }
+    .action-link.resolve { color: #28a745; background: #e8f5e9; }
+    .action-link.resolve:hover { background: #28a745; color: #fff; }
+    .action-link.completed { color: #6c7a8a; cursor: default; }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: #6c7a8a;
+    }
+    .empty-state i {
+      font-size: 2.5rem;
+      color: #d0d7de;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .dash-header { flex-direction: column; align-items: stretch; text-align: center; }
+      .dash-header .header-actions { justify-content: center; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-card { padding: 14px 16px; }
+      .stat-card .info .number { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .table-wrapper { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+
+  <!-- ===== HEADER ===== -->
+  <div class="dash-header">
+    <div>
+      <h1><i class="fas fa-building"></i> State Admin Dashboard</h1>
+      <p>Monitor and manage public complaints across Maharashtra</p>
     </div>
-
-    <div class="card pending">
-      <h2>{{ pending_complaints }}</h2>
-      <p>Pending</p>
-    </div>
-
-    <div class="card progress">
-      <h2>{{ progress_complaints }}</h2>
-      <p>In Progress</p>
-    </div>
-
-    <div class="card resolved">
-      <h2>{{ resolved_complaints }}</h2>
-      <p>Resolved</p>
+    <div class="header-actions">
+      <a href="{% url 'add_tournament' %}" class="btn-header btn-header-primary">
+        <i class="fas fa-plus-circle"></i> Add Tournament
+      </a>
+      <a href="{% url 'sport_events' %}" class="btn-header btn-header-success">
+        <i class="fas fa-list"></i> View Tournaments
+      </a>
     </div>
   </div>
 
-  <!-- ================= DISTRICT SUMMARY ================= -->
+  <!-- ===== STATISTICS ===== -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="icon blue"><i class="fas fa-clipboard-list"></i></div>
+      <div class="info">
+        <div class="number">{{ total_complaints }}</div>
+        <div class="label">Total Complaints</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon red"><i class="fas fa-clock"></i></div>
+      <div class="info">
+        <div class="number">{{ pending_complaints }}</div>
+        <div class="label">Pending</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon orange"><i class="fas fa-spinner"></i></div>
+      <div class="info">
+        <div class="number">{{ progress_complaints }}</div>
+        <div class="label">In Progress</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon green"><i class="fas fa-check-circle"></i></div>
+      <div class="info">
+        <div class="number">{{ resolved_complaints }}</div>
+        <div class="label">Resolved</div>
+      </div>
+    </div>
+  </div>
 
-  <h2>📊 District Complaint Summary</h2>
+  <!-- ===== DISTRICT SUMMARY ===== -->
+  <h3 class="section-title"><i class="fas fa-map-marked-alt"></i> District Complaint Summary</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>District</th>
+          <th>Total Complaints</th>
+          <th>Pending</th>
+          <th>Resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in district_data %}
+        <tr>
+          <td><strong>{{ d.district }}</strong></td>
+          <td>{{ d.total }}</td>
+          <td>{{ d.pending }}</td>
+          <td>{{ d.resolved }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty-state"><i class="fas fa-inbox"></i><br />No district data available</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>District</th>
-        <th>Total Complaints</th>
-        <th>Pending</th>
-        <th>Resolved</th>
-      </tr>
-    </thead>
+  <!-- ===== SCHEMES VERIFICATION ===== -->
+  <h3 class="section-title"><i class="fas fa-file-signature"></i> Schemes Waiting for Verification</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Level</th>
+          <th>District</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in pending_schemes %}
+        <tr>
+          <td>{{ s.title }}</td>
+          <td><span class="status-badge progress">{{ s.scheme_level }}</span></td>
+          <td>{{ s.district|default:"—" }}</td>
+          <td>
+            <a href="{% url 'verify_scheme' s.id %}" class="action-link verify">
+              <i class="fas fa-check-circle"></i> Verify
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty-state"><i class="fas fa-check-double"></i><br />No pending schemes for verification</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-    <tbody>
-      {% for d in district_data %}
+  <!-- ===== RECENT COMPLAINTS ===== -->
+  <h3 class="section-title"><i class="fas fa-list-ul"></i> Recent Complaints</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>District</th>
+          <th>Department</th>
+          <th>Status</th>
+          <th>Action</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+        <tr>
+          <td><strong>#{{ c.complaint_id }}</strong></td>
+          <td>{{ c.title|truncatechars:30 }}</td>
+          <td>{{ c.district }}</td>
+          <td>{{ c.department|default:"—" }}</td>
+          <td>
+            <span class="status-badge {% if c.status == 'Pending' %}pending{% elif c.status == 'In Progress' %}progress{% elif c.status == 'Resolved' %}resolved{% else %}rejected{% endif %}">
+              {{ c.status }}
+            </span>
+          </td>
+          <td>
+            {% if not c.is_read %}
+            <a href="{% url 'mark_complaint_read' c.complaint_id %}" class="action-link read">
+              <i class="fas fa-book-open"></i> Mark Read
+            </a>
+            {% elif c.status != "Resolved" %}
+            <a href="{% url 'resolve_complaint' c.complaint_id %}" class="action-link resolve">
+              <i class="fas fa-check"></i> Resolve
+            </a>
+            {% else %}
+            <span class="action-link completed"><i class="fas fa-check-circle"></i> Completed</span>
+            {% endif %}
+          </td>
+          <td style="font-size:0.85rem; color:#6c7a8a;">{{ c.created_at|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="empty-state"><i class="fas fa-inbox"></i><br />No complaints found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-      <tr>
-        <td>{{ d.district }}</td>
-
-        <td>{{ d.total }}</td>
-
-        <td>{{ d.pending }}</td>
-
-        <td>{{ d.resolved }}</td>
-      </tr>
-
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <hr />
-
-  <!-- ================= Schemes Verification ================= -->
-
-  <h2>📜 Schemes Waiting for Verification</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Level</th>
-        <th>District</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for s in pending_schemes %}
-
-      <tr>
-        <td>{{ s.title }}</td>
-
-        <td>{{ s.scheme_level }}</td>
-
-        <td>{{ s.district }}</td>
-
-        <td>
-          <a href="{% url 'verify_scheme' s.id %}" style="color: green">
-            ✔ Verify
-          </a>
-        </td>
-      </tr>
-
-      {% empty %}
-
-      <tr>
-        <td colspan="4">No pending schemes</td>
-      </tr>
-
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <!-- ================= Complaint LIST ================= -->
-
-  <h2>📋 Recent Complaints</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>District</th>
-        <th>Department</th>
-        <th>Status</th>
-        <th>Action</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for c in complaints %}
-
-      <tr>
-        <td>{{ c.complaint_id }}</td>
-
-        <td>{{ c.title }}</td>
-
-        <td>{{ c.district }}</td>
-
-        <td>{{ c.department }}</td>
-
-        <td>
-          {% if c.status == "Pending" %}
-          <span class="status pending">{{ c.status }}</span>
-
-          {% elif c.status == "In Progress" %}
-          <span class="status progress">{{ c.status }}</span>
-
-          {% elif c.status == "Resolved" %}
-          <span class="status resolved">{{ c.status }}</span>
-
-          {% else %}
-          <span class="status rejected">{{ c.status }}</span>
-          {% endif %}
-        </td>
-
-        <td>
-          {% if not c.is_read %}
-
-          <a href="{% url 'mark_complaint_read' c.complaint_id %}">
-            📖 Mark Read
-          </a>
-
-          {% elif c.status != "Resolved" %}
-
-          <a
-            href="{% url 'resolve_complaint' c.complaint_id %}"
-            style="color: green"
-          >
-            ✅ Resolve
-          </a>
-
-          {% else %}
-
-          <span style="color: gray">✔ Completed</span>
-
-          {% endif %}
-        </td>
-
-        <td>{{ c.created_at }}</td>
-      </tr>
-
-      {% endfor %}
-    </tbody>
-  </table>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 {% include "footer.html" %}

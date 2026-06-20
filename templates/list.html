@@ -1,0 +1,192 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Document List</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .list-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .list-header h2 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .list-header h2 i {
+      margin-right: 12px;
+    }
+    .list-header .btn-upload {
+      padding: 10px 24px;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.15s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .list-header .btn-upload:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 60, 110, 0.3);
+      color: #fff;
+    }
+
+    .table-wrapper {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      border: 1px solid #e9edf4;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    table thead th {
+      background: #f8fafc;
+      color: #1a3c6e;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid #e9edf4;
+    }
+    table tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f2f5;
+      color: #2c3e50;
+    }
+    table tbody tr:hover {
+      background: #f8fafc;
+    }
+    table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .btn-view {
+      padding: 4px 16px;
+      border-radius: 40px;
+      background: #e8f5e9;
+      color: #28a745;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-view:hover {
+      background: #28a745;
+      color: #fff;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #6c7a8a;
+    }
+    .empty-state i {
+      font-size: 3rem;
+      color: #d0d7de;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .list-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .list-header .btn-upload {
+        justify-content: center;
+      }
+      .table-wrapper {
+        padding: 14px;
+      }
+      table {
+        font-size: 0.85rem;
+      }
+      table thead th, table tbody td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="list-wrapper">
+
+  <div class="list-header">
+    <h2><i class="fas fa-folder-open"></i> Document List</h2>
+    <a href="{% url 'upload_document' %}" class="btn-upload">
+      <i class="fas fa-plus-circle"></i> Upload New
+    </a>
+  </div>
+
+  <div class="table-wrapper">
+    {% if documents %}
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Uploaded By</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for document in documents %}
+        <tr>
+          <td><strong>{{ document.title }}</strong></td>
+          <td>{{ document.uploaded_by.username }}</td>
+          <td style="color:#6c7a8a; font-size:0.9rem;">{{ document.uploaded_at|date:"d M Y" }}</td>
+          <td>
+            <a href="{{ document.file.url }}" target="_blank" class="btn-view">
+              <i class="fas fa-eye"></i> View
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <p>No documents uploaded yet.</p>
+      <a href="{% url 'upload_document' %}" class="btn-view" style="background:#1a3c6e; color:#fff; padding:8px 24px;">
+        <i class="fas fa-upload"></i> Upload First Document
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+{% include "footer.html" %}

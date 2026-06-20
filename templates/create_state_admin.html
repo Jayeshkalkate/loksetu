@@ -1,38 +1,297 @@
 {% load static %}
 {% include "header.html" %}
 
-<div class="container mt-5">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Create State Admin</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .admin-wrapper {
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .admin-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    .admin-card .card-header-custom {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #ffffff;
+      padding: 18px 28px;
+    }
+    .admin-card .card-header-custom h3 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 0.3px;
+    }
+    .admin-card .card-header-custom h3 i {
+      margin-right: 10px;
+    }
+    .admin-card .card-header-custom p {
+      margin: 4px 0 0;
+      opacity: 0.85;
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+    .admin-card .card-body {
+      padding: 28px 30px 32px;
+    }
 
-  <div class="card shadow p-4 mx-auto" style="max-width:500px;">
-    <h3 class="text-center mb-4">➕ Create State Admin</h3>
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      font-weight: 500;
+      color: #2c3e50;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    .form-group label .required {
+      color: #dc3545;
+      margin-left: 2px;
+    }
+    .form-group .form-text {
+      font-size: 0.8rem;
+      color: #6c7a8a;
+      margin-top: 4px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+    .form-control:focus {
+      border-color: #1a3c6e;
+      box-shadow: 0 0 0 3px rgba(26, 60, 110, 0.15);
+      outline: none;
+    }
+    .form-control.is-invalid {
+      border-color: #dc3545;
+    }
+    .form-control.is-invalid:focus {
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    }
 
-    {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
+    .btn-create {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      border: none;
+      padding: 12px 0;
+      font-weight: 600;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      color: #fff;
+      width: 100%;
+      transition: transform 0.15s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 60, 110, 0.35);
+      color: #fff;
+    }
+    .btn-create i {
+      margin-right: 10px;
+    }
 
-    <form method="post">
-      {% csrf_token %}
+    .btn-back {
+      display: inline-block;
+      border: 1.5px solid #1a3c6e;
+      color: #1a3c6e;
+      background: transparent;
+      padding: 8px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    .btn-back:hover {
+      background: #1a3c6e;
+      color: #fff;
+    }
+    .btn-back i {
+      margin-right: 8px;
+    }
 
-      <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input type="text" name="username" class="form-control" required>
+    .alert-custom {
+      border-radius: 8px;
+      border-left: 5px solid #dc3545;
+      padding: 12px 20px;
+      background: #fde8e8;
+      color: #7a1a1a;
+      margin-bottom: 20px;
+    }
+    .alert-custom i {
+      margin-right: 8px;
+    }
+
+    .breadcrumb-custom {
+      background: transparent;
+      padding: 0;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    .breadcrumb-custom a {
+      color: #1a3c6e;
+      text-decoration: none;
+    }
+    .breadcrumb-custom a:hover {
+      text-decoration: underline;
+    }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid #e9edf4;
+      margin: 20px 0 22px;
+    }
+
+    @media (max-width: 480px) {
+      .admin-card .card-body {
+        padding: 20px;
+      }
+      .admin-card .card-header-custom {
+        padding: 14px 20px;
+      }
+      .admin-card .card-header-custom h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-wrapper">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="breadcrumb-custom">
+    <ol class="breadcrumb" style="list-style: none; padding: 0; display: flex; gap: 8px; flex-wrap: wrap;">
+      <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li style="color: #6c7a8a;">›</li>
+      <li><a href="{% url 'admin_users' %}">User Management</a></li>
+      <li style="color: #6c7a8a;">›</li>
+      <li style="color: #1a3c6e; font-weight: 500;">Create State Admin</li>
+    </ol>
+  </nav>
+
+  <!-- Card -->
+  <div class="admin-card">
+
+    <!-- Header -->
+    <div class="card-header-custom">
+      <h3><i class="fas fa-user-shield"></i> Create State Admin</h3>
+      <p>Add a new state-level administrator to manage governance operations</p>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+
+      <!-- Error Message -->
+      {% if error %}
+      <div class="alert-custom">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
       </div>
+      {% endif %}
 
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control">
+      <!-- Success Message -->
+      {% if success %}
+      <div class="alert alert-success" style="border-radius:8px; border-left:5px solid #28a745; padding:12px 20px; background:#e8f5e9; color:#1e5a3a; margin-bottom:20px;">
+        <i class="fas fa-check-circle me-2"></i> {{ success }}
       </div>
+      {% endif %}
 
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
+      <form method="post" novalidate>
+        {% csrf_token %}
 
-      <button class="btn btn-success w-100">Create Admin</button>
-    </form>
+        <div class="form-group">
+          <label for="username">Username <span class="required">*</span></label>
+          <input type="text" name="username" id="username" class="form-control" required placeholder="e.g. state_admin_pune" />
+          <div class="form-text">Must be unique. Use lowercase letters, numbers, and underscores.</div>
+        </div>
 
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input type="email" name="email" id="email" class="form-control" required placeholder="admin@maharashtra.gov.in" />
+          <div class="form-text">Official government email address preferred.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" name="phone" id="phone" class="form-control" placeholder="9876543210" />
+          <div class="form-text">Optional, but recommended for two-factor authentication.</div>
+        </div>
+
+        <hr class="form-divider" />
+
+        <div class="form-group">
+          <label for="password">Password <span class="required">*</span></label>
+          <input type="password" name="password" id="password" class="form-control" required placeholder="Min 8 characters" minlength="8" />
+          <div class="form-text">Must be at least 8 characters with a mix of letters, numbers, and symbols.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm_password">Confirm Password <span class="required">*</span></label>
+          <input type="password" name="confirm_password" id="confirm_password" class="form-control" required placeholder="Re-enter password" />
+        </div>
+
+        <hr class="form-divider" />
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 12px;">
+          <a href="{% url 'admin_users' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back
+          </a>
+          <button type="submit" class="btn-create">
+            <i class="fas fa-user-plus"></i> Create Admin
+          </button>
+        </div>
+
+      </form>
+
+    </div>
   </div>
 
+  <!-- Footer note -->
+  <div style="text-align:center; color:#6c7a8a; font-size:0.85rem; margin-top:20px;">
+    <i class="fas fa-shield-alt"></i> All admin accounts are protected with role-based access control.
+  </div>
 </div>
 
+<script>
+  // Basic password confirmation validation (optional enhancement)
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('confirm_password');
+
+    if (form && password && confirm) {
+      form.addEventListener('submit', function(e) {
+        if (password.value !== confirm.value) {
+          e.preventDefault();
+          alert('Passwords do not match. Please re-enter.');
+          confirm.focus();
+          confirm.classList.add('is-invalid');
+        } else {
+          confirm.classList.remove('is-invalid');
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
 {% include "footer.html" %}

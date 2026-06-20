@@ -1,39 +1,185 @@
 {% load static %}
 {% include "header.html" %}
 
-<div id="contents">
-  <div class="clearfix">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Terms &amp; Conditions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .terms-wrapper {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .terms-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .terms-header h1 {
+      font-weight: 700;
+      color: #1a3c6e;
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+    .terms-header h1 i {
+      margin-right: 12px;
+    }
+    .terms-header p {
+      color: #4a5a72;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+    .terms-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
 
-      <div>
-        <h2>Usage Guidelines</h2>
-        <p>
-          LokSetu is a digital platform designed to help citizens
-          report public issues and track their resolution. Users
-          must follow the guidelines and submit complaints
-          responsibly.
-        </p>
-      </div>
+    /* Terms Items */
+    .terms-item {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      border-left: 4px solid #1a3c6e;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .terms-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    }
+    .terms-item h2 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.15rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .terms-item h2 i {
+      margin-right: 10px;
+      color: #2a5a9a;
+    }
+    .terms-item p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
 
-      <div>
-        <h2>Important Notice</h2>
-        <p>
-          By using the LokSetu platform, users agree to follow
-          all the terms and conditions mentioned on this page.
-        </p>
-      </div>
+    /* Sidebar */
+    .sidebar-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .sidebar-card h3 {
+      font-weight: 600;
+      color: #1a3c6e;
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 10px;
+    }
+    .sidebar-card h3 i {
+      margin-right: 10px;
+    }
+    .sidebar-card p {
+      color: #4a5a72;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .sidebar-card .highlight-box {
+      background: #e8f0fe;
+      border-radius: 8px;
+      padding: 14px 18px;
+      border-left: 3px solid #1a3c6e;
+      margin-top: 12px;
+    }
+    .sidebar-card .highlight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sidebar-card .highlight-box i {
+      color: #1a3c6e;
+      margin-right: 6px;
+    }
 
-    </div>
+    .cta-box {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .cta-box h4 {
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.9rem;
+      margin: 0 0 14px;
+    }
+    .cta-box .btn-cta {
+      display: inline-block;
+      background: #fff;
+      color: #1a3c6e;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s;
+      font-size: 0.9rem;
+    }
+    .cta-box .btn-cta:hover {
+      transform: scale(1.03);
+      color: #1a3c6e;
+    }
+    .cta-box .btn-cta i {
+      margin-right: 6px;
+    }
 
-    <!-- Main Content -->
-    <div class="main">
+    @media (max-width: 768px) {
+      .terms-grid {
+        grid-template-columns: 1fr;
+      }
+      .terms-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
 
-      <h1>Terms & Conditions</h1>
+<div class="terms-wrapper">
 
-      <div class="section">
-        <h2>1. Acceptance of Terms</h2>
+  <!-- Header -->
+  <div class="terms-header">
+    <h1><i class="fas fa-file-contract"></i> Terms &amp; Conditions</h1>
+    <p>Please read these terms carefully before using the LokSetu platform.</p>
+  </div>
+
+  <div class="terms-grid">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+
+      <div class="terms-item">
+        <h2><i class="fas fa-check-circle"></i> 1. Acceptance of Terms</h2>
         <p>
           By accessing or using the LokSetu platform, users agree
           to comply with these Terms and Conditions. If you do not
@@ -41,8 +187,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>2. Purpose of the Platform</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-bullseye"></i> 2. Purpose of the Platform</h2>
         <p>
           LokSetu is intended to help citizens report issues related
           to public services such as water supply, roads, electricity,
@@ -52,8 +198,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>3. User Responsibilities</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-user-check"></i> 3. User Responsibilities</h2>
         <p>
           Users must provide accurate and truthful information while
           submitting complaints. Misuse of the platform, including
@@ -62,8 +208,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>4. Complaint Handling</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-cogs"></i> 4. Complaint Handling</h2>
         <p>
           Complaints submitted through LokSetu are forwarded to the
           concerned departments for review and action. Resolution
@@ -72,8 +218,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>5. Limitation of Liability</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-shield-alt"></i> 5. Limitation of Liability</h2>
         <p>
           LokSetu provides a platform for reporting issues but does
           not guarantee immediate resolution of every complaint.
@@ -82,8 +228,8 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>6. Prohibited Activities</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-ban"></i> 6. Prohibited Activities</h2>
         <p>
           Users must not use the platform for unlawful activities,
           including submitting fake complaints, harassment,
@@ -91,27 +237,63 @@
         </p>
       </div>
 
-      <div class="section">
-        <h2>7. Changes to Terms</h2>
+      <div class="terms-item">
+        <h2><i class="fas fa-sync-alt"></i> 7. Changes to Terms</h2>
         <p>
           LokSetu reserves the right to update or modify these
-          Terms & Conditions at any time. Continued use of the
+          Terms &amp; Conditions at any time. Continued use of the
           platform indicates acceptance of the updated terms.
         </p>
       </div>
 
-      <div class="section last-child">
-        <h2>8. Contact Information</h2>
+      <div class="terms-item" style="border-left-color: #28a745;">
+        <h2><i class="fas fa-envelope"></i> 8. Contact Information</h2>
         <p>
-          If you have any questions regarding these Terms &
+          If you have any questions regarding these Terms &amp;
           Conditions, please contact the LokSetu support team
-          through the Contact page.
+          through the <a href="{% url 'contactus' %}" style="color:#1a3c6e; font-weight:500;">Contact page</a>.
         </p>
       </div>
 
     </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+
+      <div class="sidebar-card">
+        <h3><i class="fas fa-info-circle"></i> Usage Guidelines</h3>
+        <p>
+          LokSetu is a digital platform designed to help citizens
+          report public issues and track their resolution. Users
+          must follow the guidelines and submit complaints
+          responsibly.
+        </p>
+      </div>
+
+      <div class="sidebar-card">
+        <h3><i class="fas fa-exclamation-triangle"></i> Important Notice</h3>
+        <div class="highlight-box">
+          <p><i class="fas fa-check-circle"></i> By using the LokSetu platform, users agree to follow
+          all the terms and conditions mentioned on this page.</p>
+        </div>
+        <div class="highlight-box" style="border-left-color:#2a5a9a; margin-top:10px;">
+          <p><i class="fas fa-gavel"></i> This platform complies with the Information Technology Act, 2000,
+          and other applicable laws of India.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h4><i class="fas fa-question-circle"></i> Have Questions?</h4>
+        <p>Reach out to our support team.</p>
+        <a href="{% url 'contactus' %}" class="btn-cta">
+          <i class="fas fa-envelope"></i> Contact Us
+        </a>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
 {% include "footer.html" %}
-</div>

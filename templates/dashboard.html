@@ -1,35 +1,283 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Fund Transparency Dashboard</title>
+    <title>LokSetu – Fund Transparency Dashboard</title>
     <!-- Bootstrap 5 + Icons + Chart.js -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- Custom Dashboard CSS (inline below or external, but we'll embed the rewritten CSS) -->
+    <!-- Custom Dashboard Styles -->
+    <style>
+        /* ===== LokSetu Government-Grade Theme ===== */
+        body {
+            background: #f4f7fc;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .container-custom {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+            color: #fff;
+            padding: 18px 28px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dashboard-header h2 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.7rem;
+            letter-spacing: 0.3px;
+        }
+        .dashboard-header h2 i {
+            margin-right: 12px;
+        }
+        .dashboard-header .btn-modern {
+            border-radius: 40px;
+            padding: 8px 22px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-modern i {
+            margin-right: 6px;
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-light-custom {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .btn-light-custom:hover {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+        .btn-outline-light-custom {
+            border: 1.5px solid rgba(255,255,255,0.5);
+            color: #fff;
+            background: transparent;
+        }
+        .btn-outline-light-custom:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .btn-success-custom {
+            background: #28a745;
+            color: #fff;
+        }
+        .btn-success-custom:hover {
+            background: #218838;
+            color: #fff;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            margin-bottom: 28px;
+        }
+        .filter-bar .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+        }
+        .form-modern {
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
+            padding: 10px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+        .form-modern:focus {
+            border-color: #1a3c6e;
+            box-shadow: 0 0 0 3px rgba(26,60,110,0.15);
+            outline: none;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            transition: transform 0.15s;
+            border-left: 5px solid #1a3c6e;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        .stat-card .stat-icon {
+            font-size: 2.2rem;
+            opacity: 0.7;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a2a3a;
+        }
+        .stat-card .stat-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 6px;
+        }
+        .stat-card .stat-sub {
+            font-size: 0.8rem;
+            color: #6c7a8a;
+        }
+        .stat-card.bg-primary-gradient {
+            background: linear-gradient(135deg, #e8f0fe 0%, #d4e0f5 100%);
+            border-left-color: #1a3c6e;
+        }
+        .stat-card.bg-success-gradient {
+            background: linear-gradient(135deg, #e6f7ee 0%, #c8f0d9 100%);
+            border-left-color: #28a745;
+        }
+        .stat-card.bg-warning-gradient {
+            background: linear-gradient(135deg, #fff8e6 0%, #ffecce 100%);
+            border-left-color: #ffc107;
+        }
+        .stat-card.bg-danger-gradient {
+            background: linear-gradient(135deg, #fde8e8 0%, #f8d0d0 100%);
+            border-left-color: #dc3545;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            height: 100%;
+        }
+        .chart-container h5 {
+            color: #1a3c6e;
+            font-weight: 600;
+        }
+
+        /* Cards for Funds / Projects */
+        .dashboard-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            padding: 20px;
+            transition: transform 0.15s, box-shadow 0.2s;
+            height: 100%;
+            border: 1px solid #f0f2f5;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+        .dashboard-card .card-title {
+            font-weight: 600;
+            color: #1a2a3a;
+            font-size: 1.1rem;
+        }
+        .dashboard-card .card-sub {
+            color: #6c7a8a;
+            font-size: 0.9rem;
+        }
+        .progress-custom {
+            height: 8px;
+            border-radius: 20px;
+            background: #e9edf4;
+        }
+        .progress-custom .progress-bar {
+            border-radius: 20px;
+        }
+        .badge-status {
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c7a8a;
+            background: #f8fafc;
+            border-radius: 16px;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: #b0b8c4;
+        }
+
+        /* Modals */
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .dashboard-header .header-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .dashboard-header .header-actions .btn-modern {
+                flex: 1;
+                text-align: center;
+            }
+            .stat-value {
+                font-size: 1.4rem;
+            }
+        }
+        @media (max-width: 576px) {
+            .container-custom {
+                padding: 0 12px;
+            }
+            .filter-bar .row > div {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-{% load static %}
+
 {% include "header.html" %}
 
 <div class="container-custom">
-    <!-- Dashboard Header -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold" style="color: #1e2a3a;"><i class="bi bi-graph-up"></i> Fund Transparency Dashboard</h2>
-        <div class="mt-2 mt-sm-0">
+
+    <!-- ===== DASHBOARD HEADER ===== -->
+    <div class="dashboard-header">
+        <h2><i class="bi bi-graph-up-arrow"></i> Fund Transparency Dashboard</h2>
+        <div class="header-actions d-flex flex-wrap gap-2">
             {% if request.user.role == 'admin' %}
-            <a href="?view=dashboard" class="btn btn-dark btn-modern me-2"><i class="bi bi-speedometer2"></i> Dashboard</a>
-            <a href="?view=upload" class="btn btn-outline-primary btn-modern me-2"><i class="bi bi-cloud-upload"></i> Bulk Upload</a>
-            <a href="{% url 'create_fund' %}" class="btn btn-success btn-modern"><i class="bi bi-plus-circle"></i> Add Fund</a>
+            <a href="?view=dashboard" class="btn btn-light-custom btn-modern"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="?view=upload" class="btn btn-outline-light-custom btn-modern"><i class="bi bi-cloud-upload"></i> Bulk Upload</a>
+            <a href="{% url 'create_fund' %}" class="btn btn-success-custom btn-modern"><i class="bi bi-plus-circle"></i> Add Fund</a>
             {% else %}
-            <a href="?view=dashboard" class="btn btn-dark btn-modern"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="?view=dashboard" class="btn btn-light-custom btn-modern"><i class="bi bi-speedometer2"></i> Dashboard</a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Display messages (django messages) -->
+    <!-- ===== MESSAGES ===== -->
     {% if messages %}
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
@@ -39,23 +287,23 @@
         {% endfor %}
     {% endif %}
 
-    <!-- MAIN VIEW LOGIC: dashboard, create, edit, upload, fund detail, location detail -->
+    <!-- ===== VIEW LOGIC ===== -->
     {% if view_type == 'dashboard' %}
-        <!-- ==================== DASHBOARD VIEW ==================== -->
-        <!-- FILTER + SEARCH SECTION -->
-        <div class="filter-bar mb-4">
+
+        <!-- ===== FILTER BAR ===== -->
+        <div class="filter-bar">
             <form method="GET" class="row g-3 align-items-end">
                 <input type="hidden" name="view" value="dashboard">
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold"><i class="bi bi-search"></i> Search Fund/Project</label>
-                    <input type="text" name="search" value="{{ request.GET.search|default:'' }}" class="form-control form-modern" placeholder="Title, department, project name...">
+                    <label class="form-label"><i class="bi bi-search"></i> Search</label>
+                    <input type="text" name="search" value="{{ request.GET.search|default:'' }}" class="form-control form-modern" placeholder="Title, department...">
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label fw-semibold">Year</label>
+                    <label class="form-label">Year</label>
                     <input type="number" name="year" value="{{ request.GET.year|default:'' }}" class="form-control form-modern" placeholder="2025">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold">Location</label>
+                    <label class="form-label">Location</label>
                     <select name="location" class="form-select form-modern">
                         <option value="">All Locations</option>
                         {% for loc in locations %}
@@ -64,7 +312,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-primary-custom btn-modern w-100"><i class="bi bi-funnel"></i> Apply</button>
+                    <button class="btn btn-primary btn-modern w-100" style="background:#1a3c6e; border:none;"><i class="bi bi-funnel"></i> Apply</button>
                 </div>
                 <div class="col-md-2">
                     <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern w-100"><i class="bi bi-arrow-repeat"></i> Reset</a>
@@ -72,69 +320,69 @@
             </form>
         </div>
 
-        <!-- SUMMARY CARDS -->
+        <!-- ===== SUMMARY CARDS ===== -->
         <div class="row g-4 mb-5">
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card bg-primary-gradient">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div><i class="bi bi-wallet2 stat-icon"></i></div>
-                        <div class="stat-value">₹{{ total_funds|floatformat:0|default:"0" }}</div>
+                        <i class="bi bi-wallet2 stat-icon"></i>
+                        <span class="stat-value">₹{{ total_funds|floatformat:0|default:"0" }}</span>
                     </div>
-                    <div class="mt-2 fw-semibold">Total Allocated</div>
-                    <small class="opacity-75">Overall budget</small>
+                    <div class="stat-label">Total Allocated</div>
+                    <div class="stat-sub">Overall budget</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card bg-success-gradient">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div><i class="bi bi-cash-stack stat-icon"></i></div>
-                        <div class="stat-value">₹{{ total_released|floatformat:0|default:"0" }}</div>
+                        <i class="bi bi-cash-stack stat-icon"></i>
+                        <span class="stat-value">₹{{ total_released|floatformat:0|default:"0" }}</span>
                     </div>
-                    <div class="mt-2 fw-semibold">Released Funds</div>
-                    <small class="opacity-75">Disbursed amount</small>
+                    <div class="stat-label">Released Funds</div>
+                    <div class="stat-sub">Disbursed amount</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card bg-warning-gradient">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div><i class="bi bi-pie-chart stat-icon"></i></div>
-                        <div class="stat-value">₹{{ total_used|floatformat:0|default:"0" }}</div>
+                        <i class="bi bi-pie-chart stat-icon"></i>
+                        <span class="stat-value">₹{{ total_used|floatformat:0|default:"0" }}</span>
                     </div>
-                    <div class="mt-2 fw-semibold">Utilized</div>
-                    <small class="opacity-75">Expenditure</small>
+                    <div class="stat-label">Utilized</div>
+                    <div class="stat-sub">Expenditure</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card bg-danger-gradient">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div><i class="bi bi-arrow-return-left stat-icon"></i></div>
-                        <div class="stat-value">₹{{ remaining|floatformat:0|default:"0" }}</div>
+                        <i class="bi bi-arrow-return-left stat-icon"></i>
+                        <span class="stat-value">₹{{ remaining|floatformat:0|default:"0" }}</span>
                     </div>
-                    <div class="mt-2 fw-semibold">Remaining Balance</div>
-                    <small class="opacity-75">Unused funds</small>
+                    <div class="stat-label">Remaining Balance</div>
+                    <div class="stat-sub">Unused funds</div>
                 </div>
             </div>
         </div>
 
-        <!-- CHARTS ROW (fund analytics) -->
+        <!-- ===== CHARTS ===== -->
         <div class="row g-4 mb-5">
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h5 class="fw-semibold mb-3"><i class="bi bi-pie-chart-fill"></i> Funds by Location</h5>
-                    <canvas id="locationChart" width="400" height="250" style="max-height: 260px; width:100%"></canvas>
+                    <h5><i class="bi bi-pie-chart-fill me-2"></i> Funds by Location</h5>
+                    <canvas id="locationChart" width="400" height="250" style="max-height:260px; width:100%;"></canvas>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h5 class="fw-semibold mb-3"><i class="bi bi-bar-chart-steps"></i> Yearly Allocation Trend</h5>
-                    <canvas id="yearlyChart" width="400" height="250" style="max-height: 260px; width:100%"></canvas>
+                    <h5><i class="bi bi-bar-chart-steps me-2"></i> Yearly Allocation Trend</h5>
+                    <canvas id="yearlyChart" width="400" height="250" style="max-height:260px; width:100%;"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- FUNDS SECTION -->
+        <!-- ===== FUNDS LIST ===== -->
         <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-            <h4 class="fw-bold"><i class="bi bi-bank2"></i> Funds</h4>
+            <h4 class="fw-bold" style="color:#1a3c6e;"><i class="bi bi-bank2 me-2"></i> Funds</h4>
             {% if request.user.role == 'admin' %}
             <a href="{% url 'create_fund' %}" class="btn btn-sm btn-success rounded-pill"><i class="bi bi-plus-lg"></i> New Fund</a>
             {% endif %}
@@ -143,22 +391,22 @@
             {% if funds %}
                 {% for fund in funds %}
                 <div class="col-md-6 col-xl-4">
-                    <div class="dashboard-card grid-card p-3">
+                    <div class="dashboard-card">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h5 class="fw-bold mb-1">{{ fund.title|truncatechars:35 }}</h5>
+                            <h5 class="card-title">{{ fund.title|truncatechars:35 }}</h5>
                             <span class="badge bg-secondary bg-opacity-25 text-dark rounded-pill">{{ fund.year }}</span>
                         </div>
-                        <p class="text-muted small mb-2"><i class="bi bi-building"></i> {{ fund.department|default:"General" }} • {{ fund.location.name|default:"Unknown" }}</p>
-                        <div class="mt-2">
+                        <div class="card-sub"><i class="bi bi-building me-1"></i> {{ fund.department|default:"General" }} • {{ fund.location.name|default:"Unknown" }}</div>
+                        <div class="mt-3">
                             <div class="d-flex justify-content-between small">
                                 <span>Total: <strong>₹{{ fund.total_amount|floatformat:0 }}</strong></span>
                                 <span>Released: ₹{{ fund.released_amount|floatformat:0|default:"0" }}</span>
                                 <span>Used: ₹{{ fund.used_amount|floatformat:0|default:"0" }}</span>
                             </div>
-                            <div class="progress progress-custom mt-1 mb-2">
+                            <div class="progress progress-custom mt-1 mb-1">
                                 <div class="progress-bar bg-primary" style="width: {% widthratio fund.released_amount fund.total_amount 100 %}%"></div>
                             </div>
-                            <div class="small text-secondary">Release progress: {% widthratio fund.released_amount fund.total_amount 100 %}%</div>
+                            <div class="small text-secondary">Release: {% widthratio fund.released_amount fund.total_amount 100 %}%</div>
                         </div>
                         {% if request.user.role == 'admin' %}
                         <div class="mt-3 d-flex gap-2">
@@ -172,26 +420,26 @@
             {% else %}
                 <div class="col-12">
                     <div class="empty-state">
-                        <i class="bi bi-inbox fs-1"></i>
-                        <p class="mt-2 mb-0">No funds found 😔</p>
+                        <i class="bi bi-inbox"></i>
+                        <p class="mt-2 mb-0">No funds found</p>
                         <small>Adjust filters or create a new fund.</small>
                     </div>
                 </div>
             {% endif %}
         </div>
 
-        <!-- PROJECTS SECTION -->
-        <h4 class="fw-bold mb-3"><i class="bi bi-kanban"></i> Projects</h4>
+        <!-- ===== PROJECTS LIST ===== -->
+        <h4 class="fw-bold mb-3" style="color:#1a3c6e;"><i class="bi bi-kanban me-2"></i> Projects</h4>
         <div class="row g-4">
             {% if projects %}
                 {% for project in projects %}
                 <div class="col-md-6 col-xl-4">
-                    <div class="dashboard-card grid-card p-3">
+                    <div class="dashboard-card">
                         <div class="d-flex justify-content-between">
-                            <h5 class="fw-semibold">{{ project.name|truncatechars:40 }}</h5>
+                            <h5 class="card-title">{{ project.name|truncatechars:40 }}</h5>
                             <span class="badge-status bg-{% if project.status == 'completed' %}success{% elif project.status == 'ongoing' %}warning{% else %}secondary{% endif %} text-white">{{ project.status|title }}</span>
                         </div>
-                        <p class="small text-secondary mt-1">Fund: <strong>{{ project.fund.title|default:"—" }}</strong></p>
+                        <div class="card-sub">Fund: <strong>{{ project.fund.title|default:"—" }}</strong></div>
                         <div class="mt-2">
                             <div class="d-flex justify-content-between small">
                                 <span>Progress</span>
@@ -211,19 +459,19 @@
             {% else %}
                 <div class="col-12">
                     <div class="empty-state">
-                        <i class="bi bi-folder2-open fs-1"></i>
+                        <i class="bi bi-folder2-open"></i>
                         <p class="mt-2">No projects available</p>
                     </div>
                 </div>
             {% endif %}
         </div>
 
+    <!-- ===== CREATE FUND ===== -->
     {% elif view_type == 'create_fund' %}
-        <!-- CREATE FUND FORM -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="dashboard-card p-4 p-lg-5">
-                    <h3 class="fw-bold mb-4"><i class="bi bi-plus-circle-fill text-success"></i> Create New Fund</h3>
+                    <h3 class="fw-bold mb-4" style="color:#1a3c6e;"><i class="bi bi-plus-circle-fill text-success me-2"></i> Create New Fund</h3>
                     <form method="POST" action="{% url 'create_fund' %}">
                         {% csrf_token %}
                         <div class="row g-3">
@@ -266,12 +514,12 @@
             </div>
         </div>
 
+    <!-- ===== EDIT FUND ===== -->
     {% elif view_type == 'edit_fund' %}
-        <!-- EDIT FUND -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="dashboard-card p-4 p-lg-5">
-                    <h3 class="fw-bold mb-4"><i class="bi bi-pencil-square text-warning"></i> Edit Fund</h3>
+                    <h3 class="fw-bold mb-4" style="color:#1a3c6e;"><i class="bi bi-pencil-square text-warning me-2"></i> Edit Fund</h3>
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row g-3">
@@ -305,7 +553,7 @@
                             </div>
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-warning btn-modern px-5"><i class="bi bi-pencil"></i> Update Fund</button>
-                                <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Back to Dashboard</a>
+                                <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Back</a>
                             </div>
                         </div>
                     </form>
@@ -313,37 +561,37 @@
             </div>
         </div>
 
+    <!-- ===== BULK UPLOAD ===== -->
     {% elif view_type == 'upload' %}
-        <!-- BULK UPLOAD JSON -->
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="dashboard-card p-5 text-center">
                     <i class="bi bi-filetype-json fs-1 text-primary"></i>
-                    <h3 class="fw-bold mt-2">Bulk Upload Funds (JSON)</h3>
-                    <p class="text-secondary">Upload a JSON file with an array of funds. Ensure fields: title, department, total_amount, released_amount, year, location_id</p>
+                    <h3 class="fw-bold mt-2" style="color:#1a3c6e;">Bulk Upload Funds (JSON)</h3>
+                    <p class="text-secondary">Upload a JSON file with an array of funds. Required fields: title, department, total_amount, released_amount, year, location_id.</p>
                     <form method="POST" action="{% url 'funds_bulk_upload' %}" enctype="multipart/form-data" class="mt-4">
                         {% csrf_token %}
                         <input type="file" name="file" accept=".json" class="form-control form-modern mb-3" required>
-                        <button class="btn btn-primary btn-modern px-5"><i class="bi bi-cloud-upload"></i> Upload & Process</button>
+                        <button class="btn btn-primary btn-modern px-5"><i class="bi bi-cloud-upload"></i> Upload &amp; Process</button>
                         <a href="?view=dashboard" class="btn btn-outline-secondary btn-modern ms-2">Cancel</a>
                     </form>
                 </div>
             </div>
         </div>
 
+    <!-- ===== FUND DETAIL ===== -->
     {% elif view_type == 'fund' and selected_fund %}
-        <!-- SINGLE FUND DETAIL VIEW -->
         <div class="dashboard-card p-4 mb-4">
             <div class="d-flex justify-content-between flex-wrap">
-                <h3 class="fw-bold">{{ selected_fund.title }}</h3>
+                <h3 class="fw-bold" style="color:#1a3c6e;">{{ selected_fund.title }}</h3>
                 <a href="?view=dashboard" class="btn btn-sm btn-outline-dark rounded-pill"><i class="bi bi-arrow-left"></i> Back</a>
             </div>
-            <p><i class="bi bi-building"></i> {{ selected_fund.department }} | Year {{ selected_fund.year }} | Location: {{ selected_fund.location.name }}</p>
+            <p><i class="bi bi-building me-1"></i> {{ selected_fund.department }} | Year {{ selected_fund.year }} | Location: {{ selected_fund.location.name }}</p>
             <div class="row g-3 mt-2">
-                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Total</strong><br>₹{{ selected_fund.total_amount }}</div>
-                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Released</strong><br>₹{{ selected_fund.released_amount }}</div>
-                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Utilized</strong><br>₹{{ selected_fund.used_amount|default:"0" }}</div>
-                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Remaining</strong><br>₹{{ selected_fund.released_amount|add:"-"|add:selected_fund.used_amount|default:selected_fund.released_amount }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Total</strong><br>₹{{ selected_fund.total_amount|floatformat:0 }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Released</strong><br>₹{{ selected_fund.released_amount|floatformat:0 }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Utilized</strong><br>₹{{ selected_fund.used_amount|default:0|floatformat:0 }}</div>
+                <div class="col-md-3 bg-light rounded-4 p-3 text-center"><strong>Remaining</strong><br>₹{{ selected_fund.released_amount|add:"-"|add:selected_fund.used_amount|default:selected_fund.released_amount|floatformat:0 }}</div>
             </div>
             <hr>
             <h5>Associated Projects</h5>
@@ -361,17 +609,17 @@
             </div>
         </div>
 
+    <!-- ===== LOCATION DETAIL ===== -->
     {% elif view_type == 'location' and selected_location %}
-        <!-- LOCATION DETAIL VIEW -->
         <div class="dashboard-card p-4">
-            <h3><i class="bi bi-geo-alt-fill text-info"></i> {{ selected_location.name }} Region</h3>
-            <p>Funds & projects under this location</p>
+            <h3 style="color:#1a3c6e;"><i class="bi bi-geo-alt-fill text-info me-2"></i> {{ selected_location.name }} Region</h3>
+            <p>Funds &amp; projects under this location</p>
             <div class="row mt-3">
                 {% for fund in location_funds %}
                 <div class="col-md-6">
                     <div class="border rounded-3 p-3 mb-3">
                         <h6>{{ fund.title }}</h6>
-                        <small>₹{{ fund.total_amount }} allocated • Released ₹{{ fund.released_amount }}</small>
+                        <small>₹{{ fund.total_amount|floatformat:0 }} allocated • Released ₹{{ fund.released_amount|floatformat:0 }}</small>
                         <a href="?view=fund&id={{ fund.id }}" class="btn btn-sm btn-link">View details</a>
                     </div>
                 </div>
@@ -380,13 +628,15 @@
                 {% endfor %}
             </div>
         </div>
+
     {% else %}
-        <!-- fallback: redirect to dashboard -->
+        <!-- fallback -->
         <div class="alert alert-warning">View not recognized. <a href="?view=dashboard">Go to Dashboard</a></div>
     {% endif %}
-</div>
 
-<!-- Delete Confirmation Modal (for admin delete) -->
+</div><!-- /container-custom -->
+
+<!-- ===== DELETE CONFIRMATION MODAL ===== -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4">
@@ -408,4 +658,72 @@
     </div>
 </div>
 
+<!-- ===== CHART SCRIPTS ===== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Location Chart (Pie)
+        var ctx1 = document.getElementById('locationChart').getContext('2d');
+        var locationData = {{ location_chart_data|safe }};
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: locationData.labels || [],
+                datasets: [{
+                    data: locationData.values || [],
+                    backgroundColor: ['#1a3c6e', '#2a5a9a', '#4a7ab5', '#6a9acf', '#8abae9', '#aad0f5'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Yearly Chart (Bar)
+        var ctx2 = document.getElementById('yearlyChart').getContext('2d');
+        var yearlyData = {{ yearly_chart_data|safe }};
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: yearlyData.labels || [],
+                datasets: [{
+                    label: 'Total Allocation (₹)',
+                    data: yearlyData.values || [],
+                    backgroundColor: '#2a5a9a',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: function(value) { return '₹' + value.toLocaleString(); } }
+                    }
+                }
+            }
+        });
+
+        // Delete Modal: set fund id and title
+        var deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var fundId = button.getAttribute('data-fund-id');
+            var fundTitle = button.getAttribute('data-fund-title');
+            document.getElementById('deleteFundTitle').textContent = fundTitle;
+            document.getElementById('deleteForm').action = "{% url 'delete_fund' 0 %}".replace('0', fundId);
+        });
+    });
+</script>
+
 {% include "footer.html" %}
+</body>
+</html>

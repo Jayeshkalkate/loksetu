@@ -1,48 +1,340 @@
-{% load static %} {% include "header.html" %}
+{% load static %}
+{% include "header.html" %}
 
-<link
-  rel="stylesheet"
-  href="{% static 'css/edit_profile.css' %}"
-  type="text/css"
-/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LokSetu – Edit Profile</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}" type="text/css" />
+  <style>
+    body {
+      background: #f4f7fc;
+    }
+    .profile-wrapper {
+      max-width: 720px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .profile-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    .profile-card .card-header-custom {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      color: #ffffff;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .profile-card .card-header-custom .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .profile-card .card-header-custom .header-text h3 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 0.3px;
+    }
+    .profile-card .card-header-custom .header-text p {
+      margin: 4px 0 0;
+      opacity: 0.85;
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+    .profile-card .card-body {
+      padding: 28px 30px 32px;
+    }
 
-<div class="container">
-  <h2>Edit Profile</h2>
+    .form-section {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 18px 22px 10px;
+      margin-bottom: 25px;
+      border-left: 4px solid #1a3c6e;
+    }
+    .form-section h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a3c6e;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+    .form-section h4 i {
+      margin-right: 8px;
+    }
 
-  <form method="post">
-    {% csrf_token %}
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      font-weight: 500;
+      color: #2c3e50;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    .form-group label .required {
+      color: #dc3545;
+      margin-left: 2px;
+    }
+    .form-group .form-text {
+      font-size: 0.8rem;
+      color: #6c7a8a;
+      margin-top: 4px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+    .form-control:focus {
+      border-color: #1a3c6e;
+      box-shadow: 0 0 0 3px rgba(26, 60, 110, 0.15);
+      outline: none;
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .form-control[readonly] {
+      background: #f1f3f5;
+      cursor: not-allowed;
+    }
 
-    <label>Full Name</label>
-    <input
-      type="text"
-      name="full_name"
-      value="{{ request.user.first_name }}"
-      required
-    />
+    .btn-update {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+      border: none;
+      padding: 12px 40px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      color: #fff;
+      transition: transform 0.15s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .btn-update:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 60, 110, 0.35);
+      color: #fff;
+    }
+    .btn-update i {
+      margin-right: 8px;
+    }
 
-    <label>Email</label>
-    <input type="email" name="email" value="{{ request.user.email }}" />
+    .btn-cancel {
+      display: inline-block;
+      border: 1.5px solid #6c7a8a;
+      color: #6c7a8a;
+      background: transparent;
+      padding: 10px 30px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    .btn-cancel:hover {
+      background: #6c7a8a;
+      color: #fff;
+    }
+    .btn-cancel i {
+      margin-right: 8px;
+    }
 
-    <label>Phone</label>
-    <input type="text" name="phone" value="{{ citizen.phone }}" />
+    .breadcrumb-custom {
+      background: transparent;
+      padding: 0;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    .breadcrumb-custom a {
+      color: #1a3c6e;
+      text-decoration: none;
+    }
+    .breadcrumb-custom a:hover {
+      text-decoration: underline;
+    }
 
-    <label>Gender</label>
-    <input type="text" name="gender" value="{{ citizen.gender }}" />
+    .alert-custom {
+      border-radius: 8px;
+      border-left: 5px solid #28a745;
+      padding: 12px 20px;
+      background: #e8f5e9;
+      color: #1e5a3a;
+      margin-bottom: 20px;
+    }
 
-    <label>Aadhaar</label>
-    <input type="text" name="aadhaar" value="{{ citizen.aadhaar }}" />
+    @media (max-width: 480px) {
+      .profile-card .card-body {
+        padding: 20px;
+      }
+      .profile-card .card-header-custom {
+        padding: 14px 20px;
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
 
-    <label>Ward</label>
-    <input type="text" name="ward" value="{{ citizen.ward }}" />
+<div class="profile-wrapper">
 
-    <label>Pincode</label>
-    <input type="text" name="pincode" value="{{ citizen.pincode }}" />
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="breadcrumb-custom">
+    <ol class="breadcrumb" style="list-style: none; padding: 0; display: flex; gap: 8px; flex-wrap: wrap;">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li style="color: #6c7a8a;">›</li>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li style="color: #6c7a8a;">›</li>
+      <li style="color: #1a3c6e; font-weight: 500;">Edit Profile</li>
+    </ol>
+  </nav>
 
-    <label>Address</label>
-    <textarea name="address">{{ citizen.address }}</textarea>
+  <!-- Card -->
+  <div class="profile-card">
 
-    <button type="submit">Update Profile</button>
-  </form>
+    <!-- Header -->
+    <div class="card-header-custom">
+      <div class="avatar"><i class="fas fa-user-circle"></i></div>
+      <div class="header-text">
+        <h3><i class="fas fa-edit"></i> Edit Profile</h3>
+        <p>Update your personal information and contact details</p>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+
+      <!-- Success Message -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-custom">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- ===== Personal Information ===== -->
+        <div class="form-section">
+          <h4><i class="fas fa-user"></i> Personal Information</h4>
+
+          <div class="form-group">
+            <label for="full_name">Full Name <span class="required">*</span></label>
+            <input type="text" name="full_name" id="full_name" class="form-control"
+                   value="{{ request.user.first_name }}" required placeholder="Your full name" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" name="email" id="email" class="form-control"
+                   value="{{ request.user.email }}" required placeholder="you@example.com" />
+            <div class="form-text">Your email will be used for notifications and communication.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" name="phone" id="phone" class="form-control"
+                   value="{{ citizen.phone|default:'' }}" placeholder="10-digit mobile number" maxlength="10" />
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender" class="form-control">
+              <option value="">-- Select --</option>
+              <option value="Male" {% if citizen.gender == "Male" %}selected{% endif %}>Male</option>
+              <option value="Female" {% if citizen.gender == "Female" %}selected{% endif %}>Female</option>
+              <option value="Other" {% if citizen.gender == "Other" %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="aadhaar">Aadhaar Number</label>
+            <input type="text" name="aadhaar" id="aadhaar" class="form-control"
+                   value="{{ citizen.aadhaar|default:'' }}" placeholder="12-digit Aadhaar (optional)" maxlength="12" />
+            <div class="form-text">Optional, but helps verify your identity for faster service.</div>
+          </div>
+        </div>
+
+        <!-- ===== Address ===== -->
+        <div class="form-section" style="border-left-color: #2a5a9a;">
+          <h4><i class="fas fa-map-pin"></i> Address Details</h4>
+
+          <div class="form-group">
+            <label for="address">Full Address</label>
+            <textarea name="address" id="address" class="form-control" rows="3"
+                      placeholder="Enter your complete address including village, taluka, district">{{ citizen.address|default:'' }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="ward">Ward Number</label>
+            <input type="text" name="ward" id="ward" class="form-control"
+                   value="{{ citizen.ward|default:'' }}" placeholder="e.g. Ward 12 / C" />
+          </div>
+
+          <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <input type="text" name="pincode" id="pincode" class="form-control"
+                   value="{{ citizen.pincode|default:'' }}" placeholder="6-digit pincode" maxlength="6" />
+          </div>
+        </div>
+
+        <!-- ===== Account Info (Read-only) ===== -->
+        <div class="form-section" style="border-left-color: #6c7a8a; background: #f1f5f9;">
+          <h4><i class="fas fa-lock"></i> Account Information</h4>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" value="{{ request.user.username }}" readonly />
+            <div class="form-text">Username cannot be changed. Contact support for assistance.</div>
+          </div>
+          <div class="form-group">
+            <label>Account Created</label>
+            <input type="text" class="form-control" value="{{ request.user.date_joined|date:'d M Y, h:i A' }}" readonly />
+          </div>
+        </div>
+
+        <!-- ===== Actions ===== -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 12px; margin-top: 8px;">
+          <a href="{% url 'dashboard' %}" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i> Cancel
+          </a>
+          <button type="submit" class="btn-update">
+            <i class="fas fa-save"></i> Update Profile
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Footer note -->
+  <div style="text-align:center; color:#6c7a8a; font-size:0.85rem; margin-top:20px;">
+    <i class="fas fa-user-shield"></i> Your personal data is secure and used only for service delivery.
+  </div>
 </div>
 
 {% include "footer.html" %}
