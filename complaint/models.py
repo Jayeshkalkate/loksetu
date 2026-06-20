@@ -60,7 +60,7 @@ class Complaint(models.Model):
         if not self.complaint_id:
 
             year = datetime.datetime.now().year
-            count = complaint.objects.count() + 1
+            count = Complaint.objects.count() + 1
 
             self.complaint_id = f"LKS-MH-{year}-{count:06d}"
 
@@ -73,7 +73,7 @@ class Complaint(models.Model):
 class ComplaintHistory(models.Model):
 
     complaint = models.ForeignKey(
-        complaint,
+        Complaint,
         on_delete=models.CASCADE,
         related_name="history"
     )

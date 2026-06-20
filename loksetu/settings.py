@@ -20,11 +20,10 @@ DEBUG = config(
     cast=bool
 )
 
-ALLOWED_HOSTS = [
-    ".onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1,.onrender.com"
+).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
@@ -171,7 +170,7 @@ STATICFILES_STORAGE = (
 MEDIA_URL = "/media/"
 
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUD_NAME"),
+    "CLOUD_NAME": config("CLOUD_NAME", default=""),
     "API_KEY": config("API_KEY"),
     "API_SECRET": config("API_SECRET"),
 }
@@ -254,3 +253,4 @@ SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+SECURE_HSTS_SECONDS = 31536000
