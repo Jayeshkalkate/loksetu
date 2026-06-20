@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from account.models import Citizen
-from complaint.models import complaint
+from complaint.models import Complaint
 from schemes.models import Scheme
 from funds.models import Fund, Project
 
@@ -13,7 +13,7 @@ class CitizenSerializer(serializers.ModelSerializer):
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
-        model = complaint
+        model = Complaint
         fields = "__all__"
         
         

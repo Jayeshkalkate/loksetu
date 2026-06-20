@@ -3,22 +3,34 @@ import os
 from decouple import config
 import logging
 import dj_database_url
-
+import sentry_sdk
 logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+    
 # --------------------------------------------------
 # SECURITY
 # --------------------------------------------------
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-dev-key"
+)
 
 DEBUG = config(
     "DEBUG",
     default=False,
     cast=bool
 )
+
+# --------------------------------------------------
+# SECURITY
+# --------------------------------------------------
+
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=config("SENTRY_DSN", default="")
+    )
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
@@ -57,8 +69,6 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 ]
-
-# AUTH_USER_MODEL = "account.CustomUser"
 
 # --------------------------------------------------
 # MIDDLEWARE
@@ -107,9 +117,11 @@ WSGI_APPLICATION = 'loksetu.wsgi.application'
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=config("DATABASE_URL"),
+        default=config(
+            "DATABASE_URL",
+            default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        ),
         conn_max_age=600,
-        ssl_require=True
     )
 }
 
@@ -171,8 +183,8 @@ MEDIA_URL = "/media/"
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": config("CLOUD_NAME", default=""),
-    "API_KEY": config("API_KEY"),
-    "API_SECRET": config("API_SECRET"),
+    "API_KEY": config("API_KEY", default=""),
+    "API_SECRET": config("API_SECRET", default=""),
 }
 
 STORAGES = {
@@ -196,8 +208,8 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -222,8 +234,8 @@ REST_FRAMEWORK = {
 # CELERY
 # --------------------------------------------------
 
-CELERY_BROKER_URL = config("REDIS_URL")
-CELERY_RESULT_BACKEND = config("REDIS_URL")
+CELERY_BROKER_URL = config("REDIS_URL", default="redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = config("REDIS_URL", default="redis://localhost:6379/0")
 
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -253,4 +265,21 @@ SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SECURE_HSTS_SECONDS = 31536000
+# --------------------------------------------------
+# LOGGING CONFIGURATION
+# --------------------------------------------------
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
+

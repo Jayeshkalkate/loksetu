@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 import datetime
 from django.contrib.auth.models import User
 
@@ -80,9 +81,10 @@ class ComplaintHistory(models.Model):
 
     status = models.CharField(max_length=50)
 
-    updated_by = models.CharField(
-        max_length=100,
-        default="System"
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True
     )
 
     timestamp = models.DateTimeField(auto_now_add=True)

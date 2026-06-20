@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from .models import Citizen
 from django.db.models import Count
-from complaint.models import complaint
+from complaint.models import Complaint
 from schemes.models import Scheme
 import random
 from django.http import JsonResponse

@@ -1,7 +1,7 @@
 from rest_framework import generics
 
 from account.models import Citizen
-from complaint.models import complaint
+from complaint.models import Complaint
 from schemes.models import Scheme
 from funds.models import Fund, Project
 

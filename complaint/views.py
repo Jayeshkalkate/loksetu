@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 import json
 from django.contrib import messages
-from complaint.models import complaint
+from complaint.models import Complaint
 from django.shortcuts import get_object_or_404
 from .models import ComplaintHistory
 

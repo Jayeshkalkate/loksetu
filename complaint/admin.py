@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import complaint
+from .models import Complaint
 from .models import ComplaintHistory
 
 admin.site.register(ComplaintHistory)
@@ -30,5 +30,5 @@ class complaintAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(complaint, complaintAdmin)
+admin.site.register(Complaint, complaintAdmin)
 
