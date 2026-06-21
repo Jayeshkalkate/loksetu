@@ -6,11 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
-    # dependencies = [
-    #     ('Complaint', '0002_Complainthistory'),
-    #     migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    # ]
     
     dependencies = [
         ('complaint', '0002_complainthistory'),

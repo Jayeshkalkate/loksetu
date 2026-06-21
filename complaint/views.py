@@ -76,7 +76,7 @@ def Complaint_view(request):
 
         return redirect('Complaint_result', Complaint_id=c.Complaint_id)
 
-    return render(request,"Complaint.html")
+    return render(request,"complaint.html")
 
 # Complaint SECTION
 
@@ -92,7 +92,7 @@ def track_Complaint(request):
         except Complaint.DoesNotExist:
             Complaint_data = None
 
-    return render(request, "track_Complaint.html", {"Complaint": Complaint_data})
+    return render(request, "track_complaint.html", {"Complaint": Complaint_data})
 
 
 def Complaint_result(request, Complaint_id):
@@ -126,7 +126,7 @@ def map_Complaint(request):
         "Complaint_json": json.dumps(Complaint_data)
         }
     
-    return render(request, "map_Complaint.html", context)
+    return render(request, "map_complaint.html", context)
 
 def close_Complaint(request, Complaint_id):
 
