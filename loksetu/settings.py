@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-settings.FAST2SMS_API_KEY
+FAST2SMS_API_KEY = "your_api_key"
 
 # --------------------------------------------------
 # SECURITY

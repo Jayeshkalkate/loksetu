@@ -1,333 +1,376 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – FAQ</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .faq-wrapper {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .faq-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-    .faq-header h1 {
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 2.4rem;
-      margin-bottom: 8px;
-    }
-    .faq-header h1 i {
-      margin-right: 12px;
-    }
-    .faq-header p {
-      color: #4a5a72;
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-    }
-
-    /* FAQ Items */
-    .faq-item {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 18px;
-      border-left: 4px solid #1a3c6e;
-      transition: transform 0.15s, box-shadow 0.2s;
-    }
-    .faq-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
-    }
-    .faq-item .q {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    .faq-item .q .q-icon {
-      background: #1a3c6e;
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .faq-item .q h2 {
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 1.1rem;
-      margin: 0;
-    }
-    .faq-item .a {
-      padding-left: 40px;
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .faq-item .a ul {
-      margin: 6px 0 0;
-      padding-left: 20px;
-    }
-    .faq-item .a ul li {
-      padding: 3px 0;
-    }
-
-    /* Sidebar */
-    .sidebar-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-    }
-    .sidebar-card h3 {
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 1.1rem;
-      margin-top: 0;
-      margin-bottom: 14px;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 10px;
-    }
-    .sidebar-card h3 i {
-      margin-right: 10px;
-    }
-    .sidebar-card p {
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .tip-box {
-      background: #e8f0fe;
-      border-radius: 8px;
-      padding: 16px 20px;
-      border-left: 3px solid #1a3c6e;
-      margin-top: 14px;
-    }
-    .tip-box p {
-      margin: 0;
-      font-size: 0.9rem;
-    }
-    .tip-box strong {
-      color: #1a3c6e;
-    }
-
-    .cta-box {
-      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
-      color: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      text-align: center;
-      margin-top: 10px;
-    }
-    .cta-box h4 {
-      margin: 0 0 6px;
-      font-weight: 600;
-    }
-    .cta-box p {
-      color: rgba(255,255,255,0.85);
-      font-size: 0.95rem;
-      margin: 0 0 16px;
-    }
-    .cta-box .btn-cta {
-      display: inline-block;
-      background: #fff;
-      color: #1a3c6e;
-      padding: 10px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.15s;
-    }
-    .cta-box .btn-cta:hover {
-      transform: scale(1.03);
-      color: #1a3c6e;
-    }
-    .cta-box .btn-cta i {
-      margin-right: 8px;
-    }
-
-    @media (max-width: 768px) {
-      .faq-grid {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – FAQ</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
+      }
+      .faq-wrapper {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+      .faq-header {
+        text-align: center;
+        margin-bottom: 35px;
       }
       .faq-header h1 {
-        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a3c6e;
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+      }
+      .faq-header h1 i {
+        margin-right: 12px;
+      }
+      .faq-header p {
+        color: #4a5a72;
+        font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .faq-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+      }
+
+      /* FAQ Items */
+      .faq-item {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 18px;
+        border-left: 4px solid #1a3c6e;
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s;
+      }
+      .faq-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+      .faq-item .q {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .faq-item .q .q-icon {
+        background: #1a3c6e;
+        color: #fff;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .faq-item .q h2 {
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 1.1rem;
+        margin: 0;
       }
       .faq-item .a {
-        padding-left: 0;
-        margin-top: 6px;
+        padding-left: 40px;
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.6;
       }
-    }
-  </style>
-</head>
-<body>
+      .faq-item .a ul {
+        margin: 6px 0 0;
+        padding-left: 20px;
+      }
+      .faq-item .a ul li {
+        padding: 3px 0;
+      }
 
-<div class="faq-wrapper">
+      /* Sidebar */
+      .sidebar-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+      }
+      .sidebar-card h3 {
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 1.1rem;
+        margin-top: 0;
+        margin-bottom: 14px;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 10px;
+      }
+      .sidebar-card h3 i {
+        margin-right: 10px;
+      }
+      .sidebar-card p {
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
 
-  <!-- Header -->
-  <div class="faq-header">
-    <h1><i class="fas fa-question-circle"></i> Frequently Asked Questions</h1>
-    <p>Find answers to the most common questions about the LokSetu platform.</p>
-  </div>
+      .tip-box {
+        background: #e8f0fe;
+        border-radius: 8px;
+        padding: 16px 20px;
+        border-left: 3px solid #1a3c6e;
+        margin-top: 14px;
+      }
+      .tip-box p {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+      .tip-box strong {
+        color: #1a3c6e;
+      }
 
-  <div class="faq-grid">
+      .cta-box {
+        background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+        color: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .cta-box h4 {
+        margin: 0 0 6px;
+        font-weight: 600;
+      }
+      .cta-box p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+        margin: 0 0 16px;
+      }
+      .cta-box .btn-cta {
+        display: inline-block;
+        background: #fff;
+        color: #1a3c6e;
+        padding: 10px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.15s;
+      }
+      .cta-box .btn-cta:hover {
+        transform: scale(1.03);
+        color: #1a3c6e;
+      }
+      .cta-box .btn-cta i {
+        margin-right: 8px;
+      }
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content">
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">1</span>
-          <h2>What is LokSetu?</h2>
-        </div>
-        <div class="a">
-          LokSetu is a comprehensive E‑Governance and Public Service Management Platform designed to enhance transparency, accountability, and citizen engagement in government administration. The platform provides a centralized digital ecosystem where citizens can register complaints, access government schemes, track public development projects, monitor fund utilization, and interact with government authorities through a secure and transparent workflow.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">2</span>
-          <h2>How can I submit a complaint?</h2>
-        </div>
-        <div class="a">
-          To submit a complaint, navigate to the <strong>Submit Complaint</strong> page on the website. Fill in the required information including your personal details, address, complaint title and description, select the appropriate department, and submit the form. You can also attach supporting documents and mark the exact location on the map.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">3</span>
-          <h2>How can I track my complaint?</h2>
-        </div>
-        <div class="a">
-          Once your complaint is submitted, you will receive a unique <strong>Complaint ID</strong>. Use this ID on the <strong>Track Complaint</strong> page to check the current progress and status of your complaint. You will also receive email or SMS updates (if provided) as your complaint moves through the resolution workflow.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">4</span>
-          <h2>Which departments are available on LokSetu?</h2>
-        </div>
-        <div class="a">
-          LokSetu supports complaints related to several government departments, including:
-          <ul>
-            <li>Water Supply Department</li>
-            <li>Electricity Department</li>
-            <li>Roads and Infrastructure</li>
-            <li>Sanitation and Waste Management</li>
-            <li>Health Services</li>
-            <li>Education Services</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">5</span>
-          <h2>How long does it take to resolve a complaint?</h2>
-        </div>
-        <div class="a">
-          The resolution time varies depending on the type of issue and the department responsible. LokSetu helps speed up the process by sending complaints directly to the concerned authorities. Most complaints are acknowledged within <strong>48 hours</strong> and resolved within <strong>7–10 working days</strong>, subject to the complexity of the issue and departmental workload.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="q">
-          <span class="q-icon">6</span>
-          <h2>Who can use LokSetu?</h2>
-        </div>
-        <div class="a">
-          LokSetu is designed for all citizens residing in Maharashtra. The platform is accessible to anyone — from urban residents to rural villagers — who wishes to report public service issues, access government schemes, or track development projects. Users can register with basic details and start using the platform immediately.
-        </div>
-      </div>
-
-      <div class="faq-item" style="border-left-color: #28a745;">
-        <div class="q">
-          <span class="q-icon" style="background:#28a745;">7</span>
-          <h2>Is LokSetu free to use?</h2>
-        </div>
-        <div class="a">
-          Yes, LokSetu is completely <strong>free</strong> for all citizens. The platform is a government initiative designed to make public services more accessible and transparent. There are no charges for submitting complaints, tracking progress, or accessing scheme information.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ===== SIDEBAR ===== -->
-    <div class="sidebar">
-
-      <div class="sidebar-card">
-        <h3><i class="fas fa-life-ring"></i> Help &amp; Support</h3>
+      @media (max-width: 768px) {
+        .faq-grid {
+          grid-template-columns: 1fr;
+        }
+        .faq-header h1 {
+          font-size: 1.8rem;
+        }
+        .faq-item .a {
+          padding-left: 0;
+          margin-top: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="faq-wrapper">
+      <!-- Header -->
+      <div class="faq-header">
+        <h1>
+          <i class="fas fa-question-circle"></i> Frequently Asked Questions
+        </h1>
         <p>
-          LokSetu is designed to help citizens report public service
-          issues quickly and easily. Through this platform, users can
-          submit complaints related to village infrastructure and
-          track their status online.
-        </p>
-        <p>
-          If your question is not answered in the FAQ section,
-          please reach out to the LokSetu support team for assistance.
+          Find answers to the most common questions about the LokSetu platform.
         </p>
       </div>
 
-      <div class="sidebar-card">
-        <h3><i class="fas fa-lightbulb"></i> Quick Tip</h3>
-        <div class="tip-box">
-          <p>
-            <i class="fas fa-id-card" style="color:#1a3c6e;"></i> After submitting a complaint, you will receive a unique
-            <strong>Complaint ID</strong>. Keep this ID safe as it will
-            help you track the progress and updates of your complaint.
-          </p>
+      <div class="faq-grid">
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main-content">
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">1</span>
+              <h2>What is LokSetu?</h2>
+            </div>
+            <div class="a">
+              LokSetu is a comprehensive E‑Governance and Public Service
+              Management Platform designed to enhance transparency,
+              accountability, and citizen engagement in government
+              administration. The platform provides a centralized digital
+              ecosystem where citizens can register complaints, access
+              government schemes, track public development projects, monitor
+              fund utilization, and interact with government authorities through
+              a secure and transparent workflow.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">2</span>
+              <h2>How can I submit a complaint?</h2>
+            </div>
+            <div class="a">
+              To submit a complaint, navigate to the
+              <strong>Submit Complaint</strong> page on the website. Fill in the
+              required information including your personal details, address,
+              complaint title and description, select the appropriate
+              department, and submit the form. You can also attach supporting
+              documents and mark the exact location on the map.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">3</span>
+              <h2>How can I track my complaint?</h2>
+            </div>
+            <div class="a">
+              Once your complaint is submitted, you will receive a unique
+              <strong>Complaint ID</strong>. Use this ID on the
+              <strong>Track Complaint</strong> page to check the current
+              progress and status of your complaint. You will also receive email
+              or SMS updates (if provided) as your complaint moves through the
+              resolution workflow.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">4</span>
+              <h2>Which departments are available on LokSetu?</h2>
+            </div>
+            <div class="a">
+              LokSetu supports complaints related to several government
+              departments, including:
+              <ul>
+                <li>Water Supply Department</li>
+                <li>Electricity Department</li>
+                <li>Roads and Infrastructure</li>
+                <li>Sanitation and Waste Management</li>
+                <li>Health Services</li>
+                <li>Education Services</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">5</span>
+              <h2>How long does it take to resolve a complaint?</h2>
+            </div>
+            <div class="a">
+              The resolution time varies depending on the type of issue and the
+              department responsible. LokSetu helps speed up the process by
+              sending complaints directly to the concerned authorities. Most
+              complaints are acknowledged within <strong>48 hours</strong> and
+              resolved within <strong>7–10 working days</strong>, subject to the
+              complexity of the issue and departmental workload.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="q">
+              <span class="q-icon">6</span>
+              <h2>Who can use LokSetu?</h2>
+            </div>
+            <div class="a">
+              LokSetu is designed for all citizens residing in Maharashtra. The
+              platform is accessible to anyone — from urban residents to rural
+              villagers — who wishes to report public service issues, access
+              government schemes, or track development projects. Users can
+              register with basic details and start using the platform
+              immediately.
+            </div>
+          </div>
+
+          <div class="faq-item" style="border-left-color: #28a745">
+            <div class="q">
+              <span class="q-icon" style="background: #28a745">7</span>
+              <h2>Is LokSetu free to use?</h2>
+            </div>
+            <div class="a">
+              Yes, LokSetu is completely <strong>free</strong> for all citizens.
+              The platform is a government initiative designed to make public
+              services more accessible and transparent. There are no charges for
+              submitting complaints, tracking progress, or accessing scheme
+              information.
+            </div>
+          </div>
         </div>
-        <div class="tip-box" style="border-left-color:#2a5a9a; margin-top:10px;">
-          <p>
-            <i class="fas fa-camera" style="color:#1a3c6e;"></i> <strong>Pro Tip:</strong> Upload clear photos or documents
-            with your complaint to help authorities understand and resolve the issue faster.
-          </p>
+
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+          <div class="sidebar-card">
+            <h3><i class="fas fa-life-ring"></i> Help &amp; Support</h3>
+            <p>
+              LokSetu is designed to help citizens report public service issues
+              quickly and easily. Through this platform, users can submit
+              complaints related to village infrastructure and track their
+              status online.
+            </p>
+            <p>
+              If your question is not answered in the FAQ section, please reach
+              out to the LokSetu support team for assistance.
+            </p>
+          </div>
+
+          <div class="sidebar-card">
+            <h3><i class="fas fa-lightbulb"></i> Quick Tip</h3>
+            <div class="tip-box">
+              <p>
+                <i class="fas fa-id-card" style="color: #1a3c6e"></i> After
+                submitting a complaint, you will receive a unique
+                <strong>Complaint ID</strong>. Keep this ID safe as it will help
+                you track the progress and updates of your complaint.
+              </p>
+            </div>
+            <div
+              class="tip-box"
+              style="border-left-color: #2a5a9a; margin-top: 10px"
+            >
+              <p>
+                <i class="fas fa-camera" style="color: #1a3c6e"></i>
+                <strong>Pro Tip:</strong> Upload clear photos or documents with
+                your complaint to help authorities understand and resolve the
+                issue faster.
+              </p>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="cta-box">
+            <h4>
+              <i class="fas fa-question-circle"></i> Still Have Questions?
+            </h4>
+            <p>Contact our support team for personalized assistance.</p>
+            <a href="{% url 'loksetu:contact' %}" class="btn-cta">
+              <i class="fas fa-envelope"></i> Contact Us
+            </a>
+          </div>
         </div>
       </div>
-
-      <!-- CTA -->
-      <div class="cta-box">
-        <h4><i class="fas fa-question-circle"></i> Still Have Questions?</h4>
-        <p>Contact our support team for personalized assistance.</p>
-        <a href="{% url 'contact' %}" class="btn-cta">
-          <i class="fas fa-envelope"></i> Contact Us
-        </a>
-      </div>
-
     </div>
 
-  </div>
-</div>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

@@ -42,8 +42,5 @@ def document_list(request):
 
     documents = Document.objects.all()
 
-    return render(
-        request,
-        'documents/list.html',
-        {'documents': documents}
-    )
+    return render(request, 'list.html', context)
+    

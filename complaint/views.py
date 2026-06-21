@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 import json
 from django.contrib import messages
-from complaint.models import Complaint
 from django.shortcuts import get_object_or_404
 from .models import ComplaintHistory
+from .models import Complaint
 
 def resolve_complaint(request, complaint_id):
 
@@ -104,7 +104,7 @@ def complaint_result(request, complaint_id):
 
 def map_complaint(request):
 
-    complaints = complaint.objects.exclude(
+    complaints = Complaint.objects.exclude(
         latitude__isnull=True
     ).exclude(
         longitude__isnull=True
