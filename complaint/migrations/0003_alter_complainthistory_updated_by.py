@@ -7,14 +7,19 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
+    # dependencies = [
+    #     ('Complaint', '0002_Complainthistory'),
+    #     migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    # ]
+    
     dependencies = [
-        ('Complaint', '0002_Complainthistory'),
+        ('complaint', '0002_complainthistory'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='Complainthistory',
+            model_name='complainthistory',
             name='updated_by',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
         ),
