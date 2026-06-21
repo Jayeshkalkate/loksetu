@@ -1,33 +1,21 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container mt-4">
+  <h2 class="mb-4">🏛 District Officer Dashboard</h2>
 
-    <h2 class="mb-4">
-        🏛 District Officer Dashboard
-    </h2>
+  <div class="alert alert-warning">Welcome {{ request.user.first_name }}</div>
 
-    <div class="alert alert-warning">
-        Welcome {{ request.user.first_name }}
+  <div class="card shadow">
+    <div class="card-body">
+      <h4>District Overview</h4>
+
+      <ul>
+        <li>Total Complaints : {{ total_Complaints|default:"0" }}</li>
+        <li>Pending : {{ pending_Complaints|default:"0" }}</li>
+        <li>Resolved : {{ resolved_Complaints|default:"0" }}</li>
+      </ul>
     </div>
-
-    <div class="card shadow">
-
-        <div class="card-body">
-
-            <h4>District Overview</h4>
-
-            <ul>
-                <li>Total Complaints : {{ total_complaints|default:"0" }}</li>
-                <li>Pending : {{ pending_complaints|default:"0" }}</li>
-                <li>Resolved : {{ resolved_complaints|default:"0" }}</li>
-            </ul>
-
-        </div>
-
-    </div>
-
+  </div>
 </div>
 
 {% endblock %}

@@ -1,213 +1,261 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – Complaint Submitted</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static 'css/complaint_result.css' %}" type="text/css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – Complaint Submitted</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/Complaint_result.css' %}"
+      type="text/css"
+    />
 
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .result-container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-      padding: 30px 35px 40px;
-      text-align: center;
-    }
-    .success-icon {
-      font-size: 4rem;
-      color: #28a745;
-      background: #e8f5e9;
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      display: inline-block;
-    }
-    .result-container h1 {
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 2.2rem;
-      margin: 10px 0 8px;
-    }
-    .result-container .subhead {
-      color: #4a5a72;
-      font-size: 1.1rem;
-      margin-bottom: 25px;
-    }
-    .complaint-summary {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 20px 25px;
-      text-align: left;
-      border-left: 4px solid #1a3c6e;
-      margin: 20px 0;
-    }
-    .complaint-summary .row {
-      display: flex;
-      padding: 8px 0;
-      border-bottom: 1px solid #edf2f7;
-    }
-    .complaint-summary .row:last-child {
-      border-bottom: none;
-    }
-    .complaint-summary .label {
-      font-weight: 500;
-      color: #2c3e50;
-      width: 140px;
-      flex-shrink: 0;
-    }
-    .complaint-summary .value {
-      color: #1a2a3a;
-      font-weight: 500;
-    }
-    .complaint-id-box {
-      background: #1a3c6e;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 40px;
-      display: inline-block;
-      font-weight: 600;
-      font-size: 1.2rem;
-      margin: 10px 0 20px;
-      letter-spacing: 1px;
-    }
-    .action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin: 25px 0 10px;
-    }
-    .action-btn {
-      display: block;
-      padding: 14px;
-      border-radius: 8px;
-      background: #e8f0fe;
-      color: #1a3c6e;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-    .action-btn:hover {
-      background: #d0dff0;
-      color: #1a3c6e;
-    }
-    .action-btn.primary {
-      background: #1a3c6e;
-      color: white;
-    }
-    .action-btn.primary:hover {
-      background: #14315a;
-      color: white;
-    }
-    .action-btn i {
-      margin-right: 8px;
-    }
-    .footer-note {
-      margin-top: 30px;
-      color: #6c7a8a;
-      font-size: 0.9rem;
-      border-top: 1px solid #e9edf4;
-      padding-top: 20px;
-    }
-    @media (max-width: 768px) {
+    <style>
+      body {
+        background: #f4f7fc;
+      }
       .result-container {
-        padding: 20px 15px;
+        max-width: 800px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        padding: 30px 35px 40px;
+        text-align: center;
       }
-      .complaint-summary .row {
-        flex-wrap: wrap;
+      .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        background: #e8f5e9;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: inline-block;
       }
-      .complaint-summary .label {
-        width: 100%;
-        margin-bottom: 2px;
+      .result-container h1 {
+        font-weight: 700;
+        color: #1a3c6e;
+        font-size: 2.2rem;
+        margin: 10px 0 8px;
+      }
+      .result-container .subhead {
+        color: #4a5a72;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+      }
+      .Complaint-summary {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px 25px;
+        text-align: left;
+        border-left: 4px solid #1a3c6e;
+        margin: 20px 0;
+      }
+      .Complaint-summary .row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #edf2f7;
+      }
+      .Complaint-summary .row:last-child {
+        border-bottom: none;
+      }
+      .Complaint-summary .label {
+        font-weight: 500;
+        color: #2c3e50;
+        width: 140px;
+        flex-shrink: 0;
+      }
+      .Complaint-summary .value {
+        color: #1a2a3a;
+        font-weight: 500;
+      }
+      .Complaint-id-box {
+        background: #1a3c6e;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 40px;
+        display: inline-block;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin: 10px 0 20px;
+        letter-spacing: 1px;
       }
       .action-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 25px 0 10px;
       }
-    }
-  </style>
-</head>
-<body>
+      .action-btn {
+        display: block;
+        padding: 14px;
+        border-radius: 8px;
+        background: #e8f0fe;
+        color: #1a3c6e;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+      .action-btn:hover {
+        background: #d0dff0;
+        color: #1a3c6e;
+      }
+      .action-btn.primary {
+        background: #1a3c6e;
+        color: white;
+      }
+      .action-btn.primary:hover {
+        background: #14315a;
+        color: white;
+      }
+      .action-btn i {
+        margin-right: 8px;
+      }
+      .footer-note {
+        margin-top: 30px;
+        color: #6c7a8a;
+        font-size: 0.9rem;
+        border-top: 1px solid #e9edf4;
+        padding-top: 20px;
+      }
+      @media (max-width: 768px) {
+        .result-container {
+          padding: 20px 15px;
+        }
+        .Complaint-summary .row {
+          flex-wrap: wrap;
+        }
+        .Complaint-summary .label {
+          width: 100%;
+          margin-bottom: 2px;
+        }
+        .action-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="result-container">
+      <!-- Success Icon -->
+      <div class="success-icon">✅</div>
 
-<div class="result-container">
+      <h1>Complaint Submitted Successfully</h1>
+      <p class="subhead">
+        Your grievance has been recorded in the LokSetu system and forwarded to
+        the concerned department.
+      </p>
 
-  <!-- Success Icon -->
-  <div class="success-icon">✅</div>
+      <!-- Complaint ID -->
+      <div class="Complaint-id-box">
+        <i class="fas fa-ticket-alt me-2"></i> Complaint #{{
+        Complaint.Complaint_id }}
+      </div>
 
-  <h1>Complaint Submitted Successfully</h1>
-  <p class="subhead">Your grievance has been recorded in the LokSetu system and forwarded to the concerned department.</p>
+      <!-- Summary -->
+      <div class="Complaint-summary">
+        <div class="row">
+          <span class="label">Title</span>
+          <span class="value">{{ Complaint.title }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Department</span>
+          <span class="value"
+            >{{ Complaint.department|default:"Not Assigned Yet" }}</span
+          >
+        </div>
+        <div class="row">
+          <span class="label">Status</span>
+          <span class="value"
+            ><span style="color: #ffc107; font-weight: 600"
+              >⏳ {{ Complaint.status }}</span
+            ></span
+          >
+        </div>
+        <div class="row">
+          <span class="label">Submitted On</span>
+          <span class="value"
+            >{{ Complaint.submitted_date|date:"d M Y, h:i A" }}</span
+          >
+        </div>
+        <div class="row">
+          <span class="label">Tracking ID</span>
+          <span class="value" style="font-family: monospace"
+            >{{ Complaint.tracking_id }}</span
+          >
+        </div>
+      </div>
 
-  <!-- Complaint ID -->
-  <div class="complaint-id-box">
-    <i class="fas fa-ticket-alt me-2"></i> Complaint #{{ complaint.complaint_id }}
-  </div>
+      <!-- Next Steps -->
+      <div
+        style="
+          background: #e8f0fe;
+          border-radius: 8px;
+          padding: 15px 20px;
+          text-align: left;
+          margin: 20px 0;
+        "
+      >
+        <h4 style="color: #1a3c6e; font-weight: 600; margin-bottom: 8px">
+          <i class="fas fa-info-circle"></i> What Happens Next?
+        </h4>
+        <ul style="list-style: none; padding-left: 0; color: #2c3e50">
+          <li style="padding: 4px 0">
+            <i class="fas fa-check-circle" style="color: #28a745"></i> Your
+            Complaint will be reviewed by the designated department.
+          </li>
+          <li style="padding: 4px 0">
+            <i class="fas fa-check-circle" style="color: #28a745"></i> You will
+            receive updates via SMS/Email (if provided).
+          </li>
+          <li style="padding: 4px 0">
+            <i class="fas fa-check-circle" style="color: #28a745"></i> You can
+            track progress anytime using your Complaint ID.
+          </li>
+          <li style="padding: 4px 0">
+            <i class="fas fa-check-circle" style="color: #28a745"></i> Average
+            resolution time: <strong>7–10 working days</strong>.
+          </li>
+        </ul>
+      </div>
 
-  <!-- Summary -->
-  <div class="complaint-summary">
-    <div class="row">
-      <span class="label">Title</span>
-      <span class="value">{{ complaint.title }}</span>
+      <!-- Action Buttons -->
+      <div class="action-grid">
+        <a
+          href="{% url 'track_Complaint' %}?id={{ Complaint.Complaint_id }}"
+          class="action-btn primary"
+        >
+          <i class="fas fa-search"></i> Track Complaint
+        </a>
+        <a href="{% url 'Complaint_form' %}" class="action-btn">
+          <i class="fas fa-plus-circle"></i> File New Complaint
+        </a>
+        <a href="#" class="action-btn" onclick="window.print()">
+          <i class="fas fa-print"></i> Print Receipt
+        </a>
+        <a href="{% url 'homepage' %}" class="action-btn">
+          <i class="fas fa-home"></i> Back to Home
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-note">
+        <i class="fas fa-shield-alt"></i> Your Complaint data is secure and will
+        be handled confidentially.<br />
+        © 2025 LokSetu · महाराष्ट्र शासन तक्रार प्रणाली · Government of
+        Maharashtra
+      </div>
     </div>
-    <div class="row">
-      <span class="label">Department</span>
-      <span class="value">{{ complaint.department|default:"Not Assigned Yet" }}</span>
-    </div>
-    <div class="row">
-      <span class="label">Status</span>
-      <span class="value"><span style="color:#ffc107; font-weight:600;">⏳ {{ complaint.status }}</span></span>
-    </div>
-    <div class="row">
-      <span class="label">Submitted On</span>
-      <span class="value">{{ complaint.submitted_date|date:"d M Y, h:i A" }}</span>
-    </div>
-    <div class="row">
-      <span class="label">Tracking ID</span>
-      <span class="value" style="font-family: monospace;">{{ complaint.tracking_id }}</span>
-    </div>
-  </div>
 
-  <!-- Next Steps -->
-  <div style="background:#e8f0fe; border-radius:8px; padding:15px 20px; text-align:left; margin:20px 0;">
-    <h4 style="color:#1a3c6e; font-weight:600; margin-bottom:8px;"><i class="fas fa-info-circle"></i> What Happens Next?</h4>
-    <ul style="list-style:none; padding-left:0; color:#2c3e50;">
-      <li style="padding:4px 0;"><i class="fas fa-check-circle" style="color:#28a745;"></i> Your complaint will be reviewed by the designated department.</li>
-      <li style="padding:4px 0;"><i class="fas fa-check-circle" style="color:#28a745;"></i> You will receive updates via SMS/Email (if provided).</li>
-      <li style="padding:4px 0;"><i class="fas fa-check-circle" style="color:#28a745;"></i> You can track progress anytime using your Complaint ID.</li>
-      <li style="padding:4px 0;"><i class="fas fa-check-circle" style="color:#28a745;"></i> Average resolution time: <strong>7–10 working days</strong>.</li>
-    </ul>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="action-grid">
-    <a href="{% url 'track_complaint' %}?id={{ complaint.complaint_id }}" class="action-btn primary">
-      <i class="fas fa-search"></i> Track Complaint
-    </a>
-    <a href="{% url 'complaint_form' %}" class="action-btn">
-      <i class="fas fa-plus-circle"></i> File New Complaint
-    </a>
-    <a href="#" class="action-btn" onclick="window.print();">
-      <i class="fas fa-print"></i> Print Receipt
-    </a>
-    <a href="{% url 'homepage' %}" class="action-btn">
-      <i class="fas fa-home"></i> Back to Home
-    </a>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer-note">
-    <i class="fas fa-shield-alt"></i> Your complaint data is secure and will be handled confidentially.<br>
-    © 2025 LokSetu · महाराष्ट्र शासन तक्रार प्रणाली · Government of Maharashtra
-  </div>
-</div>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

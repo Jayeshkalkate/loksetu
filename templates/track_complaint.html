@@ -1,451 +1,508 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – Track Complaint</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .track-wrapper {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .track-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-    .track-header h1 {
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 2.4rem;
-      margin-bottom: 8px;
-    }
-    .track-header h1 i {
-      margin-right: 12px;
-      color: #1a3c6e;
-    }
-    .track-header p {
-      color: #4a5a72;
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .track-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-    }
-
-    /* Main Content */
-    .track-card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 28px 30px;
-      border: 1px solid #e9edf4;
-    }
-    .track-card .form-group {
-      margin-bottom: 16px;
-    }
-    .track-card .form-group label {
-      display: block;
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-    .track-card .form-group label i {
-      margin-right: 6px;
-    }
-    .track-card .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid #d0d7de;
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      background: #f8fafc;
-    }
-    .track-card .form-group input:focus {
-      border-color: #1a3c6e;
-      box-shadow: 0 0 0 4px rgba(26, 60, 110, 0.10);
-      outline: none;
-    }
-    .track-card .btn-track {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 32px;
-      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
-      border: none;
-      border-radius: 40px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.2s;
-    }
-    .track-card .btn-track:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(26, 60, 110, 0.3);
-    }
-
-    /* Complaint Result */
-    .result-card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 24px 28px;
-      margin-top: 24px;
-      border: 1px solid #e9edf4;
-      border-left: 5px solid #1a3c6e;
-    }
-    .result-card .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-    }
-    .result-card .result-header h3 {
-      font-weight: 700;
-      color: #1a3c6e;
-      margin: 0;
-      font-size: 1.3rem;
-    }
-    .result-card .result-header .complaint-id {
-      background: #e8f0fe;
-      color: #1a3c6e;
-      padding: 4px 16px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-    .result-card .detail-row {
-      display: flex;
-      padding: 10px 0;
-      border-bottom: 1px solid #f0f2f5;
-    }
-    .result-card .detail-row:last-child {
-      border-bottom: none;
-    }
-    .result-card .detail-row .label {
-      font-weight: 500;
-      color: #2c3e50;
-      width: 140px;
-      flex-shrink: 0;
-    }
-    .result-card .detail-row .value {
-      color: #1a2a3a;
-    }
-
-    /* Status Badges */
-    .status-badge {
-      display: inline-block;
-      padding: 4px 18px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: capitalize;
-    }
-    .status-badge.pending {
-      background: #fde8e8;
-      color: #dc3545;
-    }
-    .status-badge.pending i {
-      margin-right: 6px;
-    }
-    .status-badge.progress {
-      background: #fff3e0;
-      color: #fd7e14;
-    }
-    .status-badge.progress i {
-      margin-right: 6px;
-    }
-    .status-badge.resolved {
-      background: #e8f5e9;
-      color: #28a745;
-    }
-    .status-badge.resolved i {
-      margin-right: 6px;
-    }
-    .status-badge.rejected {
-      background: #f3e8ff;
-      color: #6f42c1;
-    }
-    .status-badge.rejected i {
-      margin-right: 6px;
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid #e9edf4;
-    }
-    .quick-actions .btn-action {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 20px;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-    .btn-action.primary {
-      background: #1a3c6e;
-      color: #fff;
-    }
-    .btn-action.primary:hover {
-      background: #14315a;
-      transform: translateY(-2px);
-    }
-    .btn-action.secondary {
-      background: #e8f0fe;
-      color: #1a3c6e;
-    }
-    .btn-action.secondary:hover {
-      background: #d4e0f5;
-      transform: translateY(-2px);
-    }
-    .btn-action.success {
-      background: #e8f5e9;
-      color: #28a745;
-    }
-    .btn-action.success:hover {
-      background: #d4edda;
-      transform: translateY(-2px);
-    }
-
-    /* Sidebar */
-    .sidebar-card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      border: 1px solid #e9edf4;
-    }
-    .sidebar-card h3 {
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 1.1rem;
-      margin-top: 0;
-      margin-bottom: 14px;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 10px;
-    }
-    .sidebar-card h3 i {
-      margin-right: 8px;
-    }
-    .sidebar-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .sidebar-card ul li {
-      padding: 6px 0;
-      border-bottom: 1px solid #f0f2f5;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #2c3e50;
-      font-size: 0.95rem;
-    }
-    .sidebar-card ul li:last-child {
-      border-bottom: none;
-    }
-    .sidebar-card ul li i {
-      color: #1a3c6e;
-      width: 20px;
-    }
-    .sidebar-card p {
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .sidebar-card .testimonial {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 14px 16px;
-      border-left: 3px solid #1a3c6e;
-      font-style: italic;
-      color: #2c3e50;
-      font-size: 0.95rem;
-      margin-top: 10px;
-    }
-    .sidebar-card .testimonial span {
-      display: block;
-      font-style: normal;
-      font-weight: 500;
-      color: #1a3c6e;
-      margin-top: 4px;
-    }
-
-    @media (max-width: 768px) {
-      .track-grid {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – Track Complaint</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
+      }
+      .track-wrapper {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+      .track-header {
+        text-align: center;
+        margin-bottom: 35px;
       }
       .track-header h1 {
-        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a3c6e;
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+      }
+      .track-header h1 i {
+        margin-right: 12px;
+        color: #1a3c6e;
+      }
+      .track-header p {
+        color: #4a5a72;
+        font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .track-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+      }
+
+      /* Main Content */
+      .track-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 28px 30px;
+        border: 1px solid #e9edf4;
+      }
+      .track-card .form-group {
+        margin-bottom: 16px;
+      }
+      .track-card .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+      }
+      .track-card .form-group label i {
+        margin-right: 6px;
+      }
+      .track-card .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px solid #d0d7de;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        background: #f8fafc;
+      }
+      .track-card .form-group input:focus {
+        border-color: #1a3c6e;
+        box-shadow: 0 0 0 4px rgba(26, 60, 110, 0.1);
+        outline: none;
+      }
+      .track-card .btn-track {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 32px;
+        background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+        border: none;
+        border-radius: 40px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s;
+      }
+      .track-card .btn-track:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(26, 60, 110, 0.3);
+      }
+
+      /* Complaint Result */
+      .result-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 24px 28px;
+        margin-top: 24px;
+        border: 1px solid #e9edf4;
+        border-left: 5px solid #1a3c6e;
+      }
+      .result-card .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+      }
+      .result-card .result-header h3 {
+        font-weight: 700;
+        color: #1a3c6e;
+        margin: 0;
+        font-size: 1.3rem;
+      }
+      .result-card .result-header .Complaint-id {
+        background: #e8f0fe;
+        color: #1a3c6e;
+        padding: 4px 16px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
       }
       .result-card .detail-row {
-        flex-wrap: wrap;
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f2f5;
+      }
+      .result-card .detail-row:last-child {
+        border-bottom: none;
       }
       .result-card .detail-row .label {
-        width: 100%;
-        margin-bottom: 2px;
+        font-weight: 500;
+        color: #2c3e50;
+        width: 140px;
+        flex-shrink: 0;
       }
-    }
-  </style>
-</head>
-<body>
+      .result-card .detail-row .value {
+        color: #1a2a3a;
+      }
 
-<div class="track-wrapper">
+      /* Status Badges */
+      .status-badge {
+        display: inline-block;
+        padding: 4px 18px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: capitalize;
+      }
+      .status-badge.pending {
+        background: #fde8e8;
+        color: #dc3545;
+      }
+      .status-badge.pending i {
+        margin-right: 6px;
+      }
+      .status-badge.progress {
+        background: #fff3e0;
+        color: #fd7e14;
+      }
+      .status-badge.progress i {
+        margin-right: 6px;
+      }
+      .status-badge.resolved {
+        background: #e8f5e9;
+        color: #28a745;
+      }
+      .status-badge.resolved i {
+        margin-right: 6px;
+      }
+      .status-badge.rejected {
+        background: #f3e8ff;
+        color: #6f42c1;
+      }
+      .status-badge.rejected i {
+        margin-right: 6px;
+      }
 
-  <div class="track-header">
-    <h1><i class="fas fa-search"></i> Track Your Complaint</h1>
-    <p>Enter your unique Complaint ID to check the current status and progress of your grievance.</p>
-  </div>
+      /* Quick Actions */
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #e9edf4;
+      }
+      .quick-actions .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 20px;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .btn-action.primary {
+        background: #1a3c6e;
+        color: #fff;
+      }
+      .btn-action.primary:hover {
+        background: #14315a;
+        transform: translateY(-2px);
+      }
+      .btn-action.secondary {
+        background: #e8f0fe;
+        color: #1a3c6e;
+      }
+      .btn-action.secondary:hover {
+        background: #d4e0f5;
+        transform: translateY(-2px);
+      }
+      .btn-action.success {
+        background: #e8f5e9;
+        color: #28a745;
+      }
+      .btn-action.success:hover {
+        background: #d4edda;
+        transform: translateY(-2px);
+      }
 
-  <div class="track-grid">
+      /* Sidebar */
+      .sidebar-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        border: 1px solid #e9edf4;
+      }
+      .sidebar-card h3 {
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 1.1rem;
+        margin-top: 0;
+        margin-bottom: 14px;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 10px;
+      }
+      .sidebar-card h3 i {
+        margin-right: 8px;
+      }
+      .sidebar-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .sidebar-card ul li {
+        padding: 6px 0;
+        border-bottom: 1px solid #f0f2f5;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #2c3e50;
+        font-size: 0.95rem;
+      }
+      .sidebar-card ul li:last-child {
+        border-bottom: none;
+      }
+      .sidebar-card ul li i {
+        color: #1a3c6e;
+        width: 20px;
+      }
+      .sidebar-card p {
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .sidebar-card .testimonial {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 14px 16px;
+        border-left: 3px solid #1a3c6e;
+        font-style: italic;
+        color: #2c3e50;
+        font-size: 0.95rem;
+        margin-top: 10px;
+      }
+      .sidebar-card .testimonial span {
+        display: block;
+        font-style: normal;
+        font-weight: 500;
+        color: #1a3c6e;
+        margin-top: 4px;
+      }
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content">
-
-      <!-- Search Form -->
-      <div class="track-card">
-        <form method="post" action="" class="message">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="complaint_id"><i class="fas fa-ticket-alt"></i> Complaint ID</label>
-            <input type="text" id="complaint_id" name="complaint_id" placeholder="e.g., CMP-2024-1023" required />
-          </div>
-          <button type="submit" class="btn-track">
-            <i class="fas fa-arrow-right"></i> Track Complaint
-          </button>
-        </form>
-      </div>
-
-      <!-- Complaint Result -->
-      {% if complaint %}
-      <div class="result-card">
-        <div class="result-header">
-          <h3><i class="fas fa-file-alt"></i> Complaint Details</h3>
-          <span class="complaint-id"><i class="fas fa-hashtag"></i> {{ complaint.complaint_id }}</span>
-        </div>
-
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-heading"></i> Title</span>
-          <span class="value">{{ complaint.title|default:"N/A" }}</span>
-        </div>
-
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-building"></i> Department</span>
-          <span class="value">{{ complaint.department|default:"Not Assigned" }}</span>
-        </div>
-
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-align-left"></i> Description</span>
-          <span class="value">{{ complaint.description|truncatechars:200 }}</span>
-        </div>
-
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-flag"></i> Status</span>
-          <span class="value">
-            {% if complaint.status == "Pending" %}
-            <span class="status-badge pending"><i class="fas fa-clock"></i> Pending Review</span>
-            {% elif complaint.status == "In Progress" %}
-            <span class="status-badge progress"><i class="fas fa-spinner fa-pulse"></i> In Progress</span>
-            {% elif complaint.status == "Resolved" %}
-            <span class="status-badge resolved"><i class="fas fa-check-circle"></i> Resolved</span>
-            {% else %}
-            <span class="status-badge rejected"><i class="fas fa-times-circle"></i> Rejected</span>
-            {% endif %}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-calendar-alt"></i> Submitted On</span>
-          <span class="value">{{ complaint.created_at|date:"d M Y, h:i A" }}</span>
-        </div>
-
-        {% if complaint.resolved_at %}
-        <div class="detail-row">
-          <span class="label"><i class="fas fa-check-circle"></i> Resolved On</span>
-          <span class="value">{{ complaint.resolved_at|date:"d M Y, h:i A" }}</span>
-        </div>
-        {% endif %}
-
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-          <a href="{% url 'complaint' %}" class="btn-action primary">
-            <i class="fas fa-plus-circle"></i> New Complaint
-          </a>
-          <a href="{% url 'map_complaint' %}" class="btn-action secondary">
-            <i class="fas fa-map-marked-alt"></i> View Map
-          </a>
-          {% if complaint.status != "Resolved" %}
-          <a href="#" class="btn-action success" onclick="alert('An update request has been sent to the department.');">
-            <i class="fas fa-bell"></i> Request Update
-          </a>
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
-
-    </div>
-
-    <!-- ===== SIDEBAR ===== -->
-    <div class="sidebar">
-
-      <div class="sidebar-card">
-        <h3><i class="fas fa-info-circle"></i> How to Track</h3>
-        <ul>
-          <li><i class="fas fa-ticket-alt"></i> Enter your Complaint ID</li>
-          <li><i class="fas fa-eye"></i> View complaint status</li>
-          <li><i class="fas fa-building"></i> Check department updates</li>
-          <li><i class="fas fa-bell"></i> Get resolution notifications</li>
-        </ul>
-        <p style="margin-top:12px; font-size:0.9rem; color:#6c7a8a;">
-          <i class="fas fa-question-circle" style="color:#1a3c6e;"></i>
-          Don't have a Complaint ID? <a href="{% url 'complaint' %}" style="color:#1a3c6e; font-weight:500;">File a complaint</a> now.
+      @media (max-width: 768px) {
+        .track-grid {
+          grid-template-columns: 1fr;
+        }
+        .track-header h1 {
+          font-size: 1.8rem;
+        }
+        .result-card .detail-row {
+          flex-wrap: wrap;
+        }
+        .result-card .detail-row .label {
+          width: 100%;
+          margin-bottom: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="track-wrapper">
+      <div class="track-header">
+        <h1><i class="fas fa-search"></i> Track Your Complaint</h1>
+        <p>
+          Enter your unique Complaint ID to check the current status and
+          progress of your grievance.
         </p>
       </div>
 
-      <div class="sidebar-card">
-        <h3><i class="fas fa-quote-left"></i> Citizen Feedback</h3>
-        <div class="testimonial">
-          “LokSetu made it easy to report street light problems in our
-          village. The issue was resolved quickly.”
-          <span>— Village Resident</span>
+      <div class="track-grid">
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main-content">
+          <!-- Search Form -->
+          <div class="track-card">
+            <form method="post" action="" class="message">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="Complaint_id"
+                  ><i class="fas fa-ticket-alt"></i> Complaint ID</label
+                >
+                <input
+                  type="text"
+                  id="Complaint_id"
+                  name="Complaint_id"
+                  placeholder="e.g., CMP-2024-1023"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn-track">
+                <i class="fas fa-arrow-right"></i> Track Complaint
+              </button>
+            </form>
+          </div>
+
+          <!-- Complaint Result -->
+          {% if Complaint %}
+          <div class="result-card">
+            <div class="result-header">
+              <h3><i class="fas fa-file-alt"></i> Complaint Details</h3>
+              <span class="Complaint-id"
+                ><i class="fas fa-hashtag"></i> {{ Complaint.Complaint_id
+                }}</span
+              >
+            </div>
+
+            <div class="detail-row">
+              <span class="label"><i class="fas fa-heading"></i> Title</span>
+              <span class="value">{{ Complaint.title|default:"N/A" }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label"
+                ><i class="fas fa-building"></i> Department</span
+              >
+              <span class="value"
+                >{{ Complaint.department|default:"Not Assigned" }}</span
+              >
+            </div>
+
+            <div class="detail-row">
+              <span class="label"
+                ><i class="fas fa-align-left"></i> Description</span
+              >
+              <span class="value"
+                >{{ Complaint.description|truncatechars:200 }}</span
+              >
+            </div>
+
+            <div class="detail-row">
+              <span class="label"><i class="fas fa-flag"></i> Status</span>
+              <span class="value">
+                {% if Complaint.status == "Pending" %}
+                <span class="status-badge pending"
+                  ><i class="fas fa-clock"></i> Pending Review</span
+                >
+                {% elif Complaint.status == "In Progress" %}
+                <span class="status-badge progress"
+                  ><i class="fas fa-spinner fa-pulse"></i> In Progress</span
+                >
+                {% elif Complaint.status == "Resolved" %}
+                <span class="status-badge resolved"
+                  ><i class="fas fa-check-circle"></i> Resolved</span
+                >
+                {% else %}
+                <span class="status-badge rejected"
+                  ><i class="fas fa-times-circle"></i> Rejected</span
+                >
+                {% endif %}
+              </span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label"
+                ><i class="fas fa-calendar-alt"></i> Submitted On</span
+              >
+              <span class="value"
+                >{{ Complaint.created_at|date:"d M Y, h:i A" }}</span
+              >
+            </div>
+
+            {% if Complaint.resolved_at %}
+            <div class="detail-row">
+              <span class="label"
+                ><i class="fas fa-check-circle"></i> Resolved On</span
+              >
+              <span class="value"
+                >{{ Complaint.resolved_at|date:"d M Y, h:i A" }}</span
+              >
+            </div>
+            {% endif %}
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+              <a href="{% url 'Complaint' %}" class="btn-action primary">
+                <i class="fas fa-plus-circle"></i> New Complaint
+              </a>
+              <a href="{% url 'map_Complaint' %}" class="btn-action secondary">
+                <i class="fas fa-map-marked-alt"></i> View Map
+              </a>
+              {% if Complaint.status != "Resolved" %}
+              <a
+                href="#"
+                class="btn-action success"
+                onclick="
+                  alert('An update request has been sent to the department.')
+                "
+              >
+                <i class="fas fa-bell"></i> Request Update
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
         </div>
-        <div class="testimonial" style="border-left-color:#2a5a9a; margin-top:10px;">
-          “I tracked my water supply complaint online and received regular
-          updates until it was fixed. Very transparent process!”
-          <span>— Citizen, Pune</span>
+
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+          <div class="sidebar-card">
+            <h3><i class="fas fa-info-circle"></i> How to Track</h3>
+            <ul>
+              <li><i class="fas fa-ticket-alt"></i> Enter your Complaint ID</li>
+              <li><i class="fas fa-eye"></i> View Complaint status</li>
+              <li><i class="fas fa-building"></i> Check department updates</li>
+              <li><i class="fas fa-bell"></i> Get resolution notifications</li>
+            </ul>
+            <p style="margin-top: 12px; font-size: 0.9rem; color: #6c7a8a">
+              <i class="fas fa-question-circle" style="color: #1a3c6e"></i>
+              Don't have a Complaint ID?
+              <a
+                href="{% url 'Complaint' %}"
+                style="color: #1a3c6e; font-weight: 500"
+                >File a Complaint</a
+              >
+              now.
+            </p>
+          </div>
+
+          <div class="sidebar-card">
+            <h3><i class="fas fa-quote-left"></i> Citizen Feedback</h3>
+            <div class="testimonial">
+              “LokSetu made it easy to report street light problems in our
+              village. The issue was resolved quickly.”
+              <span>— Village Resident</span>
+            </div>
+            <div
+              class="testimonial"
+              style="border-left-color: #2a5a9a; margin-top: 10px"
+            >
+              “I tracked my water supply Complaint online and received regular
+              updates until it was fixed. Very transparent process!”
+              <span>— Citizen, Pune</span>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
 
-  </div>
-</div>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

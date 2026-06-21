@@ -139,7 +139,7 @@ class Complaint(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-        related_name='complaints'
+        related_name='Complaints'
     )
 
     user_name = models.CharField(max_length=200)

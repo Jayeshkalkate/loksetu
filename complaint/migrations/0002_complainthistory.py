@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('complaint', '0001_initial'),
+        ('Complaint', '0001_initial'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(max_length=50)),
                 ('updated_by', models.CharField(default='System', max_length=100)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('complaint', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='history', to='complaint.complaint')),
+                ('Complaint', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='history', to='Complaint.Complaint')),
             ],
         ),
     ]

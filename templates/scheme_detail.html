@@ -1,320 +1,362 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – {{ scheme.title }}</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="{% static 'css/scheme_detail.css' %}" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .scheme-wrapper {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .scheme-card {
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-      overflow: hidden;
-    }
-    .scheme-card .scheme-header {
-      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
-      padding: 24px 32px;
-      color: #fff;
-    }
-    .scheme-card .scheme-header .breadcrumb-nav {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 8px;
-    }
-    .scheme-card .scheme-header .breadcrumb-nav a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-    }
-    .scheme-card .scheme-header .breadcrumb-nav a:hover {
-      color: #fff;
-      text-decoration: underline;
-    }
-    .scheme-card .scheme-header .breadcrumb-nav .sep {
-      margin: 0 6px;
-      color: rgba(255,255,255,0.4);
-    }
-    .scheme-card .scheme-header h2 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin: 0;
-    }
-    .scheme-card .scheme-header .scheme-category {
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      padding: 4px 16px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin-top: 6px;
-    }
-    .scheme-card .scheme-body {
-      padding: 28px 32px 32px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – {{ scheme.title }}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/scheme_detail.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
+      }
+      .scheme-wrapper {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+      .scheme-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+      .scheme-card .scheme-header {
+        background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+        padding: 24px 32px;
+        color: #fff;
+      }
+      .scheme-card .scheme-header .breadcrumb-nav {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 8px;
+      }
+      .scheme-card .scheme-header .breadcrumb-nav a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+      }
+      .scheme-card .scheme-header .breadcrumb-nav a:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+      .scheme-card .scheme-header .breadcrumb-nav .sep {
+        margin: 0 6px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .scheme-card .scheme-header h2 {
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin: 0;
+      }
+      .scheme-card .scheme-header .scheme-category {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 4px 16px;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-top: 6px;
+      }
+      .scheme-card .scheme-body {
+        padding: 28px 32px 32px;
+      }
 
-    .scheme-image {
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      background: #f8fafc;
-      border: 1px solid #e9edf4;
-    }
-    .scheme-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-      max-height: 400px;
-      object-fit: cover;
-    }
+      .scheme-image {
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        background: #f8fafc;
+        border: 1px solid #e9edf4;
+      }
+      .scheme-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-height: 400px;
+        object-fit: cover;
+      }
 
-    .scheme-section {
-      margin-bottom: 24px;
-    }
-    .scheme-section:last-child {
-      margin-bottom: 0;
-    }
-    .scheme-section h5 {
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 1.1rem;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .scheme-section h5 i {
-      color: #2a5a9a;
-      font-size: 1.1rem;
-    }
-    .scheme-section p {
-      color: #2c3e50;
-      font-size: 1rem;
-      line-height: 1.7;
-      margin: 0;
-    }
-    .scheme-section .meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .scheme-section .meta-item {
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 12px 16px;
-      border: 1px solid #e9edf4;
-    }
-    .scheme-section .meta-item .label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6c7a8a;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .scheme-section .meta-item .value {
-      font-weight: 600;
-      color: #1a2a3a;
-      font-size: 1rem;
-      margin-top: 2px;
-    }
+      .scheme-section {
+        margin-bottom: 24px;
+      }
+      .scheme-section:last-child {
+        margin-bottom: 0;
+      }
+      .scheme-section h5 {
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .scheme-section h5 i {
+        color: #2a5a9a;
+        font-size: 1.1rem;
+      }
+      .scheme-section p {
+        color: #2c3e50;
+        font-size: 1rem;
+        line-height: 1.7;
+        margin: 0;
+      }
+      .scheme-section .meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .scheme-section .meta-item {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 12px 16px;
+        border: 1px solid #e9edf4;
+      }
+      .scheme-section .meta-item .label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6c7a8a;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .scheme-section .meta-item .value {
+        font-weight: 600;
+        color: #1a2a3a;
+        font-size: 1rem;
+        margin-top: 2px;
+      }
 
-    .scheme-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid #e9edf4;
-    }
-    .btn-scheme {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    .btn-scheme.primary {
-      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
-      color: #fff;
-    }
-    .btn-scheme.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(26,60,110,0.3);
-    }
-    .btn-scheme.secondary {
-      background: #f0f4fa;
-      color: #1a3c6e;
-    }
-    .btn-scheme.secondary:hover {
-      background: #d4e0f5;
-      transform: translateY(-2px);
-    }
-    .btn-scheme.success {
-      background: #28a745;
-      color: #fff;
-    }
-    .btn-scheme.success:hover {
-      background: #218838;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(40,167,69,0.3);
-    }
+      .scheme-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e9edf4;
+      }
+      .btn-scheme {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+      .btn-scheme.primary {
+        background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+        color: #fff;
+      }
+      .btn-scheme.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(26, 60, 110, 0.3);
+      }
+      .btn-scheme.secondary {
+        background: #f0f4fa;
+        color: #1a3c6e;
+      }
+      .btn-scheme.secondary:hover {
+        background: #d4e0f5;
+        transform: translateY(-2px);
+      }
+      .btn-scheme.success {
+        background: #28a745;
+        color: #fff;
+      }
+      .btn-scheme.success:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
+      }
 
-    /* Level badge */
-    .level-badge {
-      display: inline-block;
-      padding: 2px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-    .level-badge.state { background: #e8f0fe; color: #1a3c6e; }
-    .level-badge.district { background: #fff3e0; color: #fd7e14; }
-    .level-badge.taluka { background: #f3e8ff; color: #6f42c1; }
-    .level-badge.village { background: #e8f5e9; color: #28a745; }
-    .level-badge.central { background: #fde8e8; color: #dc3545; }
+      /* Level badge */
+      .level-badge {
+        display: inline-block;
+        padding: 2px 14px;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .level-badge.state {
+        background: #e8f0fe;
+        color: #1a3c6e;
+      }
+      .level-badge.district {
+        background: #fff3e0;
+        color: #fd7e14;
+      }
+      .level-badge.taluka {
+        background: #f3e8ff;
+        color: #6f42c1;
+      }
+      .level-badge.village {
+        background: #e8f5e9;
+        color: #28a745;
+      }
+      .level-badge.central {
+        background: #fde8e8;
+        color: #dc3545;
+      }
 
-    @media (max-width: 768px) {
-      .scheme-card .scheme-header { padding: 18px 20px; }
-      .scheme-card .scheme-header h2 { font-size: 1.4rem; }
-      .scheme-card .scheme-body { padding: 20px; }
-      .scheme-section .meta-grid { grid-template-columns: 1fr; }
-      .scheme-actions { flex-direction: column; }
-      .btn-scheme { justify-content: center; }
-    }
-  </style>
-</head>
-<body>
-
-<div class="scheme-wrapper">
-
-  <div class="scheme-card">
-
-    <!-- Header -->
-    <div class="scheme-header">
-      <div class="breadcrumb-nav">
-        <a href="{% url 'homepage' %}"><i class="fas fa-home"></i> Home</a>
-        <span class="sep">›</span>
-        <a href="{% url 'schemes' %}">Schemes</a>
-        <span class="sep">›</span>
-        <span style="color:#fff;">{{ scheme.title|truncatechars:40 }}</span>
-      </div>
-      <h2>{{ scheme.title }}</h2>
-      <div>
-        <span class="scheme-category"><i class="fas fa-tag"></i> {{ scheme.category|default:"General" }}</span>
-        <span class="level-badge {{ scheme.level|lower }}"><i class="fas fa-layer-group"></i> {{ scheme.level|default:"State" }}</span>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div class="scheme-body">
-
-      <!-- Image -->
-      {% if scheme.image %}
-      <div class="scheme-image">
-        <img src="{{ scheme.image.url }}" alt="{{ scheme.title }}" />
-      </div>
-      {% endif %}
-
-      <!-- Description -->
-      <div class="scheme-section">
-        <h5><i class="fas fa-info-circle"></i> Description</h5>
-        <p>{{ scheme.description|linebreaks|default:"No description available." }}</p>
-      </div>
-
-      <!-- Meta Grid -->
-      <div class="scheme-section">
-        <div class="meta-grid">
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-layer-group"></i> Level</div>
-            <div class="value">{{ scheme.level|default:"State" }}</div>
+      @media (max-width: 768px) {
+        .scheme-card .scheme-header {
+          padding: 18px 20px;
+        }
+        .scheme-card .scheme-header h2 {
+          font-size: 1.4rem;
+        }
+        .scheme-card .scheme-body {
+          padding: 20px;
+        }
+        .scheme-section .meta-grid {
+          grid-template-columns: 1fr;
+        }
+        .scheme-actions {
+          flex-direction: column;
+        }
+        .btn-scheme {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scheme-wrapper">
+      <div class="scheme-card">
+        <!-- Header -->
+        <div class="scheme-header">
+          <div class="breadcrumb-nav">
+            <a href="{% url 'homepage' %}"><i class="fas fa-home"></i> Home</a>
+            <span class="sep">›</span>
+            <a href="{% url 'schemes' %}">Schemes</a>
+            <span class="sep">›</span>
+            <span style="color: #fff">{{ scheme.title|truncatechars:40 }}</span>
           </div>
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-tag"></i> Category</div>
-            <div class="value">{{ scheme.category|default:"General" }}</div>
+          <h2>{{ scheme.title }}</h2>
+          <div>
+            <span class="scheme-category"
+              ><i class="fas fa-tag"></i> {{ scheme.category|default:"General"
+              }}</span
+            >
+            <span class="level-badge {{ scheme.level|lower }}"
+              ><i class="fas fa-layer-group"></i> {{
+              scheme.level|default:"State" }}</span
+            >
           </div>
-          {% if scheme.state %}
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-map-marker-alt"></i> State</div>
-            <div class="value">{{ scheme.state }}</div>
-          </div>
-          {% endif %}
-          {% if scheme.district %}
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-map-pin"></i> District</div>
-            <div class="value">{{ scheme.district }}</div>
-          </div>
-          {% endif %}
-          {% if scheme.taluka %}
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-city"></i> Taluka</div>
-            <div class="value">{{ scheme.taluka }}</div>
-          </div>
-          {% endif %}
-          {% if scheme.village %}
-          <div class="meta-item">
-            <div class="label"><i class="fas fa-home"></i> Village</div>
-            <div class="value">{{ scheme.village }}</div>
+        </div>
+
+        <!-- Body -->
+        <div class="scheme-body">
+          <!-- Image -->
+          {% if scheme.image %}
+          <div class="scheme-image">
+            <img src="{{ scheme.image.url }}" alt="{{ scheme.title }}" />
           </div>
           {% endif %}
+
+          <!-- Description -->
+          <div class="scheme-section">
+            <h5><i class="fas fa-info-circle"></i> Description</h5>
+            <p>
+              {{ scheme.description|linebreaks|default:"No description
+              available." }}
+            </p>
+          </div>
+
+          <!-- Meta Grid -->
+          <div class="scheme-section">
+            <div class="meta-grid">
+              <div class="meta-item">
+                <div class="label">
+                  <i class="fas fa-layer-group"></i> Level
+                </div>
+                <div class="value">{{ scheme.level|default:"State" }}</div>
+              </div>
+              <div class="meta-item">
+                <div class="label"><i class="fas fa-tag"></i> Category</div>
+                <div class="value">{{ scheme.category|default:"General" }}</div>
+              </div>
+              {% if scheme.state %}
+              <div class="meta-item">
+                <div class="label">
+                  <i class="fas fa-map-marker-alt"></i> State
+                </div>
+                <div class="value">{{ scheme.state }}</div>
+              </div>
+              {% endif %} {% if scheme.district %}
+              <div class="meta-item">
+                <div class="label"><i class="fas fa-map-pin"></i> District</div>
+                <div class="value">{{ scheme.district }}</div>
+              </div>
+              {% endif %} {% if scheme.taluka %}
+              <div class="meta-item">
+                <div class="label"><i class="fas fa-city"></i> Taluka</div>
+                <div class="value">{{ scheme.taluka }}</div>
+              </div>
+              {% endif %} {% if scheme.village %}
+              <div class="meta-item">
+                <div class="label"><i class="fas fa-home"></i> Village</div>
+                <div class="value">{{ scheme.village }}</div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Eligibility -->
+          {% if scheme.eligibility %}
+          <div class="scheme-section">
+            <h5><i class="fas fa-user-check"></i> Eligibility Criteria</h5>
+            <p>{{ scheme.eligibility|linebreaks }}</p>
+          </div>
+          {% endif %}
+
+          <!-- Benefits -->
+          {% if scheme.benefits %}
+          <div class="scheme-section">
+            <h5><i class="fas fa-gift"></i> Benefits</h5>
+            <p>{{ scheme.benefits|linebreaks }}</p>
+          </div>
+          {% endif %}
+
+          <!-- Actions -->
+          <div class="scheme-actions">
+            <a href="{% url 'schemes' %}" class="btn-scheme secondary">
+              <i class="fas fa-arrow-left"></i> Back to Schemes
+            </a>
+            {% if scheme.official_link %}
+            <a
+              href="{{ scheme.official_link }}"
+              target="_blank"
+              class="btn-scheme success"
+            >
+              <i class="fas fa-external-link-alt"></i> Apply Now
+            </a>
+            {% else %}
+            <a href="{% url 'Complaint' %}" class="btn-scheme primary">
+              <i class="fas fa-pen"></i> File a Complaint
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
-
-      <!-- Eligibility -->
-      {% if scheme.eligibility %}
-      <div class="scheme-section">
-        <h5><i class="fas fa-user-check"></i> Eligibility Criteria</h5>
-        <p>{{ scheme.eligibility|linebreaks }}</p>
-      </div>
-      {% endif %}
-
-      <!-- Benefits -->
-      {% if scheme.benefits %}
-      <div class="scheme-section">
-        <h5><i class="fas fa-gift"></i> Benefits</h5>
-        <p>{{ scheme.benefits|linebreaks }}</p>
-      </div>
-      {% endif %}
-
-      <!-- Actions -->
-      <div class="scheme-actions">
-        <a href="{% url 'schemes' %}" class="btn-scheme secondary">
-          <i class="fas fa-arrow-left"></i> Back to Schemes
-        </a>
-        {% if scheme.official_link %}
-        <a href="{{ scheme.official_link }}" target="_blank" class="btn-scheme success">
-          <i class="fas fa-external-link-alt"></i> Apply Now
-        </a>
-        {% else %}
-        <a href="{% url 'complaint' %}" class="btn-scheme primary">
-          <i class="fas fa-pen"></i> File a Complaint
-        </a>
-        {% endif %}
-      </div>
-
     </div>
-  </div>
 
-</div>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="{% static 'js/script.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

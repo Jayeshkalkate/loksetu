@@ -12,10 +12,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='complaint',
+            name='Complaint',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('complaint_id', models.CharField(blank=True, max_length=20, unique=True)),
+                ('Complaint_id', models.CharField(blank=True, max_length=20, unique=True)),
                 ('full_name', models.CharField(max_length=100)),
                 ('phone', models.CharField(max_length=10)),
                 ('email', models.EmailField(blank=True, max_length=254, null=True)),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('issue_location', models.CharField(max_length=200)),
                 ('issue_date', models.DateField()),
-                ('evidence', models.FileField(blank=True, null=True, upload_to='complaint/')),
+                ('evidence', models.FileField(blank=True, null=True, upload_to='Complaint/')),
                 ('latitude', models.FloatField(blank=True, null=True)),
                 ('longitude', models.FloatField(blank=True, null=True)),
                 ('status', models.CharField(choices=[('Pending', 'Pending'), ('In Progress', 'In Progress'), ('Resolved', 'Resolved'), ('Rejected', 'Rejected')], default='Pending', max_length=20)),

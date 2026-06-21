@@ -4,9 +4,8 @@ from django.dispatch import receiver
 from complaint.models import Complaint
 from .models import AuditLog
 
-
 @receiver(post_save, sender=Complaint)
-def complaint_audit(sender, instance, created, **kwargs):
+def Complaint_audit(sender, instance, created, **kwargs):
 
     action = "Created" if created else "Updated"
 
@@ -14,5 +13,6 @@ def complaint_audit(sender, instance, created, **kwargs):
         user=None,
         action=action,
         model_name="Complaint",
-        object_id=instance.complaint_id
+        object_id=instance.Complaint_id
     )
+    

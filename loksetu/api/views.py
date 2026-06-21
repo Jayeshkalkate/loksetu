@@ -1,13 +1,10 @@
 from rest_framework import generics
-
 from account.models import Citizen
 from complaint.models import Complaint
 from schemes.models import Scheme
 from funds.models import Fund, Project
-
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
 from .serializers import (
     CitizenSerializer,
     ComplaintSerializer,
@@ -45,7 +42,7 @@ class ComplaintAPIView(generics.ListCreateAPIView):
     ]
 
     ordering_fields = [
-        'complaint_id'
+        'Complaint_id'
     ]
 
 

@@ -1,20 +1,19 @@
 from django.contrib import admin
-from .models import Complaint
-from .models import ComplaintHistory
+from .models import Complaint, ComplaintHistory
 
 admin.site.register(ComplaintHistory)
 
-class complaintAdmin(admin.ModelAdmin):
+class ComplaintAdmin(admin.ModelAdmin):
 
     list_display = (
-        "complaint_id",
+        "Complaint_id",
         "title",
         "department",
         "district",
         "status",
         "is_read",
         "created_at"
-        )
+    )
 
     list_filter = (
         "status",
@@ -29,6 +28,4 @@ class complaintAdmin(admin.ModelAdmin):
         "phone"
     )
 
-
-admin.site.register(Complaint, complaintAdmin)
-
+admin.site.register(Complaint, ComplaintAdmin)

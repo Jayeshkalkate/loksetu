@@ -1,352 +1,411 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – Government Departments</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .dept-wrapper {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .dept-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-    .dept-header h1 {
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 2.4rem;
-      margin-bottom: 8px;
-    }
-    .dept-header h1 i {
-      margin-right: 12px;
-    }
-    .dept-header p {
-      color: #4a5a72;
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .dept-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-    }
-
-    /* Department Cards */
-    .dept-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 20px;
-      border-left: 4px solid #1a3c6e;
-      transition: transform 0.15s, box-shadow 0.2s;
-      display: flex;
-      align-items: flex-start;
-      gap: 18px;
-    }
-    .dept-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
-    }
-    .dept-card .icon {
-      width: 64px;
-      height: 64px;
-      flex-shrink: 0;
-      background: #e8f0fe;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: #1a3c6e;
-    }
-    .dept-card .icon img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-    }
-    .dept-card .info h3 {
-      margin: 0 0 4px;
-      font-weight: 600;
-      color: #1a2a3a;
-      font-size: 1.15rem;
-    }
-    .dept-card .info p {
-      margin: 0 0 8px;
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    .dept-card .info .dept-tag {
-      display: inline-block;
-      background: #e8f0fe;
-      color: #1a3c6e;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.3px;
-    }
-
-    .section-heading {
-      font-weight: 600;
-      color: #1a3c6e;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 10px;
-      margin: 30px 0 18px;
-      font-size: 1.3rem;
-    }
-    .section-heading i {
-      margin-right: 10px;
-    }
-
-    /* Sidebar */
-    .sidebar-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-    }
-    .sidebar-card h3 {
-      font-weight: 600;
-      color: #1a3c6e;
-      font-size: 1.1rem;
-      margin-top: 0;
-      margin-bottom: 14px;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 10px;
-    }
-    .sidebar-card h3 i {
-      margin-right: 10px;
-    }
-    .sidebar-card p {
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .sidebar-card .testimonial {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 14px 18px;
-      border-left: 3px solid #1a3c6e;
-      font-style: italic;
-      margin: 10px 0;
-    }
-    .sidebar-card .testimonial span {
-      display: block;
-      font-style: normal;
-      font-weight: 500;
-      color: #1a2a3a;
-      margin-top: 6px;
-    }
-
-    .cta-box {
-      background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
-      color: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      text-align: center;
-      margin-top: 10px;
-    }
-    .cta-box h4 {
-      margin: 0 0 6px;
-      font-weight: 600;
-    }
-    .cta-box p {
-      color: rgba(255,255,255,0.85);
-      font-size: 0.95rem;
-      margin: 0 0 16px;
-    }
-    .cta-box .btn-cta {
-      display: inline-block;
-      background: #fff;
-      color: #1a3c6e;
-      padding: 10px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.15s;
-    }
-    .cta-box .btn-cta:hover {
-      transform: scale(1.03);
-      color: #1a3c6e;
-    }
-    .cta-box .btn-cta i {
-      margin-right: 8px;
-    }
-
-    @media (max-width: 768px) {
-      .dept-grid {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – Government Departments</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
       }
-      .dept-card {
-        flex-wrap: wrap;
+      .dept-wrapper {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
       }
-      .dept-card .icon {
-        width: 52px;
-        height: 52px;
-        font-size: 1.5rem;
-      }
-      .dept-card .icon img {
-        width: 36px;
-        height: 36px;
+      .dept-header {
+        text-align: center;
+        margin-bottom: 35px;
       }
       .dept-header h1 {
-        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a3c6e;
+        font-size: 2.4rem;
+        margin-bottom: 8px;
       }
-    }
-  </style>
-</head>
-<body>
+      .dept-header h1 i {
+        margin-right: 12px;
+      }
+      .dept-header p {
+        color: #4a5a72;
+        font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
+      }
 
-<div class="dept-wrapper">
+      .dept-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+      }
 
-  <!-- Header -->
-  <div class="dept-header">
-    <h1><i class="fas fa-building"></i> Government Departments</h1>
-    <p>LokSetu connects citizens with the right department for faster grievance resolution and transparent public service delivery.</p>
-  </div>
+      /* Department Cards */
+      .dept-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        border-left: 4px solid #1a3c6e;
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s;
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+      }
+      .dept-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+      .dept-card .icon {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+        background: #e8f0fe;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #1a3c6e;
+      }
+      .dept-card .icon img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+      }
+      .dept-card .info h3 {
+        margin: 0 0 4px;
+        font-weight: 600;
+        color: #1a2a3a;
+        font-size: 1.15rem;
+      }
+      .dept-card .info p {
+        margin: 0 0 8px;
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+      .dept-card .info .dept-tag {
+        display: inline-block;
+        background: #e8f0fe;
+        color: #1a3c6e;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 12px;
+        border-radius: 20px;
+        letter-spacing: 0.3px;
+      }
 
-  <div class="dept-grid">
+      .section-heading {
+        font-weight: 600;
+        color: #1a3c6e;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 10px;
+        margin: 30px 0 18px;
+        font-size: 1.3rem;
+      }
+      .section-heading i {
+        margin-right: 10px;
+      }
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content">
+      /* Sidebar */
+      .sidebar-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+      }
+      .sidebar-card h3 {
+        font-weight: 600;
+        color: #1a3c6e;
+        font-size: 1.1rem;
+        margin-top: 0;
+        margin-bottom: 14px;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 10px;
+      }
+      .sidebar-card h3 i {
+        margin-right: 10px;
+      }
+      .sidebar-card p {
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .sidebar-card .testimonial {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 14px 18px;
+        border-left: 3px solid #1a3c6e;
+        font-style: italic;
+        margin: 10px 0;
+      }
+      .sidebar-card .testimonial span {
+        display: block;
+        font-style: normal;
+        font-weight: 500;
+        color: #1a2a3a;
+        margin-top: 6px;
+      }
 
-      <!-- Public Utilities -->
-      <h2 class="section-heading"><i class="fas fa-water"></i> Public Utility Services</h2>
+      .cta-box {
+        background: linear-gradient(135deg, #1a3c6e 0%, #2a5a9a 100%);
+        color: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .cta-box h4 {
+        margin: 0 0 6px;
+        font-weight: 600;
+      }
+      .cta-box p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+        margin: 0 0 16px;
+      }
+      .cta-box .btn-cta {
+        display: inline-block;
+        background: #fff;
+        color: #1a3c6e;
+        padding: 10px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.15s;
+      }
+      .cta-box .btn-cta:hover {
+        transform: scale(1.03);
+        color: #1a3c6e;
+      }
+      .cta-box .btn-cta i {
+        margin-right: 8px;
+      }
 
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/water.png' %}" alt="Water Supply" />
-        </div>
-        <div class="info">
-          <h3>Water Supply Department</h3>
-          <p>Responsible for managing drinking water supply, pipeline maintenance, and water distribution across villages and towns.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 48 hrs</span>
-        </div>
+      @media (max-width: 768px) {
+        .dept-grid {
+          grid-template-columns: 1fr;
+        }
+        .dept-card {
+          flex-wrap: wrap;
+        }
+        .dept-card .icon {
+          width: 52px;
+          height: 52px;
+          font-size: 1.5rem;
+        }
+        .dept-card .icon img {
+          width: 36px;
+          height: 36px;
+        }
+        .dept-header h1 {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dept-wrapper">
+      <!-- Header -->
+      <div class="dept-header">
+        <h1><i class="fas fa-building"></i> Government Departments</h1>
+        <p>
+          LokSetu connects citizens with the right department for faster
+          grievance resolution and transparent public service delivery.
+        </p>
       </div>
 
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/electricity.png' %}" alt="Electricity" />
+      <div class="dept-grid">
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main-content">
+          <!-- Public Utilities -->
+          <h2 class="section-heading">
+            <i class="fas fa-water"></i> Public Utility Services
+          </h2>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img src="{% static 'images/water.png' %}" alt="Water Supply" />
+            </div>
+            <div class="info">
+              <h3>Water Supply Department</h3>
+              <p>
+                Responsible for managing drinking water supply, pipeline
+                maintenance, and water distribution across villages and towns.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 48 hrs</span
+              >
+            </div>
+          </div>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img
+                src="{% static 'images/electricity.png' %}"
+                alt="Electricity"
+              />
+            </div>
+            <div class="info">
+              <h3>Electricity Department</h3>
+              <p>
+                Handles electricity services including power supply, street
+                lighting maintenance, and repair of damaged electrical
+                infrastructure.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 36 hrs</span
+              >
+            </div>
+          </div>
+
+          <!-- Infrastructure -->
+          <h2 class="section-heading">
+            <i class="fas fa-road"></i> Infrastructure &amp; Development
+          </h2>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img
+                src="{% static 'images/road.png' %}"
+                alt="Road Infrastructure"
+              />
+            </div>
+            <div class="info">
+              <h3>Road &amp; Infrastructure Department</h3>
+              <p>
+                Responsible for construction and maintenance of roads, bridges,
+                drainage systems, and other infrastructure facilities.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 72 hrs</span
+              >
+            </div>
+          </div>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img
+                src="{% static 'images/sanitation.png' %}"
+                alt="Sanitation"
+              />
+            </div>
+            <div class="info">
+              <h3>Sanitation Department</h3>
+              <p>
+                Manages village cleanliness, garbage collection, drainage
+                systems, and public sanitation services.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 48 hrs</span
+              >
+            </div>
+          </div>
+
+          <!-- Social Services -->
+          <h2 class="section-heading">
+            <i class="fas fa-heart"></i> Social &amp; Community Services
+          </h2>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img
+                src="{% static 'images/health.png' %}"
+                alt="Health Department"
+              />
+            </div>
+            <div class="info">
+              <h3>Health Department</h3>
+              <p>
+                Responsible for public healthcare services including hospitals,
+                health centers, vaccination programs, and medical facilities.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 24 hrs</span
+              >
+            </div>
+          </div>
+
+          <div class="dept-card">
+            <div class="icon">
+              <img
+                src="{% static 'images/education.png' %}"
+                alt="Education Department"
+              />
+            </div>
+            <div class="info">
+              <h3>Education Department</h3>
+              <p>
+                Oversees schools, educational infrastructure, teacher
+                management, and development of learning facilities within
+                villages.
+              </p>
+              <span class="dept-tag"
+                ><i class="fas fa-clock"></i> Avg. Response: 72 hrs</span
+              >
+            </div>
+          </div>
         </div>
-        <div class="info">
-          <h3>Electricity Department</h3>
-          <p>Handles electricity services including power supply, street lighting maintenance, and repair of damaged electrical infrastructure.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 36 hrs</span>
+
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+          <div class="sidebar-card">
+            <h3><i class="fas fa-info-circle"></i> About Departments</h3>
+            <p>
+              LokSetu connects citizens directly with the appropriate government
+              departments responsible for resolving public service issues. By
+              selecting the correct department, Complaints can be processed
+              faster and handled efficiently.
+            </p>
+            <p>
+              The platform improves transparency in public service management
+              and helps authorities respond quickly to problems reported by
+              citizens across villages and towns.
+            </p>
+          </div>
+
+          <div class="sidebar-card">
+            <h3><i class="fas fa-quote-left"></i> Citizen Feedback</h3>
+            <div class="testimonial">
+              “LokSetu helped us report a street light problem in our village
+              easily. The Complaint was forwarded to the electricity department
+              and the issue was resolved quickly.”
+              <span>— Citizen of Maharashtra</span>
+            </div>
+            <div class="testimonial" style="border-left-color: #2a5a9a">
+              “I filed a Complaint about water shortage through LokSetu. The
+              water supply department fixed the pipeline within 48 hours. Very
+              efficient!”
+              <span>— Village Resident, Pune</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="cta-box">
+            <h4><i class="fas fa-exclamation-circle"></i> Report an Issue</h4>
+            <p>
+              Submit a Complaint to the concerned department and track its
+              progress.
+            </p>
+            <a href="{% url 'Complaint' %}" class="btn-cta">
+              <i class="fas fa-pen"></i> File a Complaint
+            </a>
+          </div>
         </div>
       </div>
-
-      <!-- Infrastructure -->
-      <h2 class="section-heading"><i class="fas fa-road"></i> Infrastructure &amp; Development</h2>
-
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/road.png' %}" alt="Road Infrastructure" />
-        </div>
-        <div class="info">
-          <h3>Road &amp; Infrastructure Department</h3>
-          <p>Responsible for construction and maintenance of roads, bridges, drainage systems, and other infrastructure facilities.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 72 hrs</span>
-        </div>
-      </div>
-
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/sanitation.png' %}" alt="Sanitation" />
-        </div>
-        <div class="info">
-          <h3>Sanitation Department</h3>
-          <p>Manages village cleanliness, garbage collection, drainage systems, and public sanitation services.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 48 hrs</span>
-        </div>
-      </div>
-
-      <!-- Social Services -->
-      <h2 class="section-heading"><i class="fas fa-heart"></i> Social &amp; Community Services</h2>
-
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/health.png' %}" alt="Health Department" />
-        </div>
-        <div class="info">
-          <h3>Health Department</h3>
-          <p>Responsible for public healthcare services including hospitals, health centers, vaccination programs, and medical facilities.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 24 hrs</span>
-        </div>
-      </div>
-
-      <div class="dept-card">
-        <div class="icon">
-          <img src="{% static 'images/education.png' %}" alt="Education Department" />
-        </div>
-        <div class="info">
-          <h3>Education Department</h3>
-          <p>Oversees schools, educational infrastructure, teacher management, and development of learning facilities within villages.</p>
-          <span class="dept-tag"><i class="fas fa-clock"></i> Avg. Response: 72 hrs</span>
-        </div>
-      </div>
-
     </div>
 
-    <!-- ===== SIDEBAR ===== -->
-    <div class="sidebar">
-
-      <div class="sidebar-card">
-        <h3><i class="fas fa-info-circle"></i> About Departments</h3>
-        <p>
-          LokSetu connects citizens directly with the appropriate government
-          departments responsible for resolving public service issues. By selecting
-          the correct department, complaints can be processed faster and handled
-          efficiently.
-        </p>
-        <p>
-          The platform improves transparency in public service management and
-          helps authorities respond quickly to problems reported by citizens
-          across villages and towns.
-        </p>
-      </div>
-
-      <div class="sidebar-card">
-        <h3><i class="fas fa-quote-left"></i> Citizen Feedback</h3>
-        <div class="testimonial">
-          “LokSetu helped us report a street light problem in our village easily.
-          The complaint was forwarded to the electricity department and the issue
-          was resolved quickly.”
-          <span>— Citizen of Maharashtra</span>
-        </div>
-        <div class="testimonial" style="border-left-color: #2a5a9a;">
-          “I filed a complaint about water shortage through LokSetu. The water
-          supply department fixed the pipeline within 48 hours. Very efficient!”
-          <span>— Village Resident, Pune</span>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="cta-box">
-        <h4><i class="fas fa-exclamation-circle"></i> Report an Issue</h4>
-        <p>Submit a complaint to the concerned department and track its progress.</p>
-        <a href="{% url 'complaint' %}" class="btn-cta">
-          <i class="fas fa-pen"></i> File a Complaint
-        </a>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

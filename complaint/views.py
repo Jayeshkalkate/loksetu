@@ -2,44 +2,43 @@ from django.shortcuts import render, redirect
 import json
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from .models import ComplaintHistory
-from .models import Complaint
+from .models import Complaint, ComplaintHistory
 
-def resolve_complaint(request, complaint_id):
+def resolve_Complaint(request, Complaint_id):
 
-    c = get_object_or_404(complaint, complaint_id=complaint_id)
+    c = get_object_or_404(Complaint, Complaint_id=Complaint_id)
 
     c.status = "Resolved"
     c.save()
     
     ComplaintHistory.objects.create(
-        complaint=c,
+        Complaint=c,
         status="Resolved",
         updated_by="State Admin"
     )
 
     return redirect("state_admin_dashboard")
 
-def mark_complaint_read(request, complaint_id):
+def mark_Complaint_read(request, Complaint_id):
 
-    c = get_object_or_404(complaint, complaint_id=complaint_id)
+    c = get_object_or_404(Complaint, Complaint_id=Complaint_id)
 
     c.status = "Assigned"
     c.save()
     
     ComplaintHistory.objects.create(
-        complaint=c,
+        Complaint=c,
         status="Assigned",
         updated_by="State Admin"
     )
 
     return redirect("state_admin_dashboard")
 
-def complaint_view(request):
+def Complaint_view(request):
 
     if request.method == "POST":
 
-        c = complaint.objects.create(
+        c = Complaint.objects.create(
 
             full_name=request.POST.get('full_name'),
             phone=request.POST.get('phone'),
@@ -70,52 +69,52 @@ def complaint_view(request):
         )
         
         ComplaintHistory.objects.create(
-            complaint=c,
+            Complaint=c,
             status="Submitted",
             updated_by="Citizen"
         )
 
-        return redirect('complaint_result', complaint_id=c.complaint_id)
+        return redirect('Complaint_result', Complaint_id=c.Complaint_id)
 
-    return render(request,"complaint.html")
+    return render(request,"Complaint.html")
 
-# complaint SECTION
+# Complaint SECTION
 
-def track_complaint(request):
+def track_Complaint(request):
 
-    complaint_data = None
+    Complaint_data = None
 
     if request.method == "POST":
-        complaint_id = request.POST.get("complaint_id")
+        Complaint_id = request.POST.get("Complaint_id")
 
         try:
-            complaint_data = complaint.objects.get(complaint_id=complaint_id)
-        except complaint.DoesNotExist:
-            complaint_data = None
+            Complaint_data = Complaint.objects.get(Complaint_id=Complaint_id)
+        except Complaint.DoesNotExist:
+            Complaint_data = None
 
-    return render(request, "track_complaint.html", {"Complaint": complaint_data})
+    return render(request, "track_Complaint.html", {"Complaint": Complaint_data})
 
 
-def complaint_result(request, complaint_id):
+def Complaint_result(request, Complaint_id):
 
-    c = complaint.objects.get(complaint_id=complaint_id)
+    c = Complaint.objects.get(Complaint_id=Complaint_id)
 
-    return render(request, "complaint_result.html", {"Complaint": c})
+    return render(request, "Complaint_result.html", {"Complaint": c})
 
-def map_complaint(request):
+def map_Complaint(request):
 
-    complaints = Complaint.objects.exclude(
+    Complaints = Complaint.objects.exclude(
         latitude__isnull=True
     ).exclude(
         longitude__isnull=True
     )
 
-    complaint_data = []
+    Complaint_data = []
 
-    for c in complaints:
-        complaint_data.append({
+    for c in Complaints:
+        Complaint_data.append({
             "id": c.id,
-            "complaint_id": c.complaint_id,
+            "Complaint_id": c.Complaint_id,
             "department": c.department,
             "status": c.status,
             "description": c.description,
@@ -124,45 +123,45 @@ def map_complaint(request):
         })
 
     context = {
-        "complaint_json": json.dumps(complaint_data)
+        "Complaint_json": json.dumps(Complaint_data)
         }
     
-    return render(request, "map_complaint.html", context)
+    return render(request, "map_Complaint.html", context)
 
-def close_complaint(request, complaint_id):
+def close_Complaint(request, Complaint_id):
 
     c = get_object_or_404(
-        complaint,
-        complaint_id=complaint_id
+        Complaint,
+        Complaint_id=Complaint_id
     )
 
     c.status = "Closed"
     c.save()
 
     ComplaintHistory.objects.create(
-        complaint=c,
+        Complaint=c,
         status="Closed",
         updated_by="Admin"
     )
 
     return redirect("state_admin_dashboard")
 
-def complaint_detail(request, complaint_id):
+def Complaint_detail(request, Complaint_id):
 
     c = get_object_or_404(
-        complaint,
-        complaint_id=complaint_id
+        Complaint,
+        Complaint_id=Complaint_id
     )
 
     history = c.history.all().order_by("timestamp")
 
     context = {
-        "complaint": c,
+        "Complaint": c,
         "history": history
     }
 
     return render(
         request,
-        "complaint_detail.html",
+        "Complaint_detail.html",
         context
     )

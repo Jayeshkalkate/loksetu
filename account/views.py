@@ -279,12 +279,12 @@ def password_reset_complete(request):
 @role_required(["super_admin"])
 def super_admin_dashboard(request):
 
-    complaints = Complaint.objects.all().order_by("-created_at")[:20]
+    Complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
     total = Complaint.objects.count()
-    pending = complaint.objects.filter(status="Pending").count()
-    progress = complaint.objects.filter(status="In Progress").count()
-    resolved = complaint.objects.filter(status="Resolved").count()
+    pending = Complaint.objects.filter(status="Pending").count()
+    progress = Complaint.objects.filter(status="In Progress").count()
+    resolved = Complaint.objects.filter(status="Resolved").count()
 
     # ✅ Added status_chart as per instructions
     status_chart = {
@@ -294,7 +294,7 @@ def super_admin_dashboard(request):
     }
 
     # district summary
-    districts = complaint.objects.values("district").annotate(total=Count("id"))
+    districts = Complaint.objects.values("district").annotate(total=Count("id"))
 
     district_data = []
 
@@ -303,13 +303,13 @@ def super_admin_dashboard(request):
 
         district_data.append({
             "district": district,
-            "total": complaint.objects.filter(district=district).count(),
-            "pending": complaint.objects.filter(district=district, status="Pending").count(),
-            "resolved": complaint.objects.filter(district=district, status="Resolved").count(),
+            "total": Complaint.objects.filter(district=district).count(),
+            "pending": Complaint.objects.filter(district=district, status="Pending").count(),
+            "resolved": Complaint.objects.filter(district=district, status="Resolved").count(),
         })
 
     # department summary
-    departments = complaint.objects.values("department").annotate(total=Count("id"))
+    departments = Complaint.objects.values("department").annotate(total=Count("id"))
 
     department_data = []
 
@@ -318,20 +318,20 @@ def super_admin_dashboard(request):
 
         department_data.append({
             "department": dep,
-            "total": complaint.objects.filter(department=dep).count(),
-            "pending": complaint.objects.filter(department=dep, status="Pending").count(),
-            "resolved": complaint.objects.filter(department=dep, status="Resolved").count(),
+            "total": Complaint.objects.filter(department=dep).count(),
+            "pending": Complaint.objects.filter(department=dep, status="Pending").count(),
+            "resolved": Complaint.objects.filter(department=dep, status="Resolved").count(),
         })
 
     # pending schemes
     pending_schemes = Scheme.objects.filter(is_verified=False)
 
     context = {
-        "complaints": complaints,
-        "total_complaints": total,
-        "pending_complaints": pending,
-        "progress_complaints": progress,
-        "resolved_complaints": resolved,
+        "Complaints": Complaints,
+        "total_Complaints": total,
+        "pending_Complaints": pending,
+        "progress_Complaints": progress,
+        "resolved_Complaints": resolved,
         "district_data": district_data,
         "department_data": department_data,
         "pending_schemes": pending_schemes,
@@ -356,17 +356,17 @@ def state_dashboard(request):
     if profile.role != "state_officer":
         return redirect("homepage")
 
-    complaints = Complaint.objects.all().order_by("-created_at")[:20]
+    Complaints = Complaint.objects.all().order_by("-created_at")[:20]
 
     total = Complaint.objects.count()
 
-    pending = complaint.objects.filter(status="Pending").count()
+    pending = Complaint.objects.filter(status="Pending").count()
 
-    progress = complaint.objects.filter(status="In Progress").count()
+    progress = Complaint.objects.filter(status="In Progress").count()
 
-    resolved = complaint.objects.filter(status="Resolved").count()
+    resolved = Complaint.objects.filter(status="Resolved").count()
 
-    districts = complaint.objects.values("district").annotate(total=Count("id"))
+    districts = Complaint.objects.values("district").annotate(total=Count("id"))
 
     district_data = []
 
@@ -375,20 +375,20 @@ def state_dashboard(request):
 
         district_data.append({
             "district": district,
-            "total": complaint.objects.filter(district=district).count(),
-            "pending": complaint.objects.filter(district=district, status="Pending").count(),
-            "resolved": complaint.objects.filter(district=district, status="Resolved").count(),
+            "total": Complaint.objects.filter(district=district).count(),
+            "pending": Complaint.objects.filter(district=district, status="Pending").count(),
+            "resolved": Complaint.objects.filter(district=district, status="Resolved").count(),
         })
 
     # pending schemes
     pending_schemes = Scheme.objects.filter(is_verified=False)
 
     context = {
-        "complaints": complaints,
-        "total_complaints": total,
-        "pending_complaints": pending,
-        "progress_complaints": progress,
-        "resolved_complaints": resolved,
+        "Complaints": Complaints,
+        "total_Complaints": total,
+        "pending_Complaints": pending,
+        "progress_Complaints": progress,
+        "resolved_Complaints": resolved,
         "district_data": district_data,
         "pending_schemes": pending_schemes
     }

@@ -1,328 +1,386 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – {{ project.name }}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .project-wrapper {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .project-header {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 24px 30px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .project-header h2 {
-      font-weight: 700;
-      color: #1a3c6e;
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    .project-header .status-badge {
-      padding: 6px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: capitalize;
-    }
-    .status-badge.completed { background: #e8f5e9; color: #28a745; }
-    .status-badge.ongoing { background: #fff3e0; color: #fd7e14; }
-    .status-badge.pending { background: #fde8e8; color: #dc3545; }
-    .status-badge.planned { background: #e8f0fe; color: #1a3c6e; }
-
-    /* Stats Row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 16px 20px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      text-align: center;
-    }
-    .stat-card .stat-value {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #1a3c6e;
-    }
-    .stat-card .stat-label {
-      font-size: 0.85rem;
-      color: #6c7a8a;
-      font-weight: 500;
-    }
-    .stat-card .stat-icon {
-      font-size: 1.8rem;
-      color: #2a5a9a;
-      opacity: 0.3;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    }
-    .progress-container .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 500;
-      color: #2c3e50;
-      margin-bottom: 6px;
-    }
-    .progress-container .progress {
-      height: 12px;
-      border-radius: 20px;
-      background: #e9edf4;
-    }
-    .progress-container .progress .progress-bar {
-      border-radius: 20px;
-      background: linear-gradient(90deg, #1a3c6e, #2a5a9a);
-    }
-
-    /* Section Cards */
-    .section-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-    }
-    .section-card h4 {
-      font-weight: 600;
-      color: #1a3c6e;
-      margin-bottom: 16px;
-      border-bottom: 2px solid #e9edf4;
-      padding-bottom: 10px;
-    }
-    .section-card h4 i {
-      margin-right: 10px;
-    }
-
-    /* Proof Gallery */
-    .proof-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-    .proof-item {
-      background: #f8fafc;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid #e9edf4;
-      transition: transform 0.15s;
-    }
-    .proof-item:hover {
-      transform: translateY(-4px);
-    }
-    .proof-item img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
-    .proof-item .proof-caption {
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      color: #2c3e50;
-      text-align: center;
-    }
-
-    /* Complaints List */
-    .complaint-item {
-      border: 1px solid #e9edf4;
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-      transition: border-color 0.2s;
-    }
-    .complaint-item:hover {
-      border-color: #b0c4de;
-    }
-    .complaint-item .complaint-header {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 4px;
-    }
-    .complaint-item .complaint-header strong {
-      color: #1a3c6e;
-    }
-    .complaint-item .complaint-status {
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 2px 12px;
-      border-radius: 40px;
-    }
-    .complaint-status.resolved { background: #e8f5e9; color: #28a745; }
-    .complaint-status.pending { background: #fde8e8; color: #dc3545; }
-    .complaint-status.in-progress { background: #fff3e0; color: #fd7e14; }
-    .complaint-item .complaint-desc {
-      color: #4a5a72;
-      font-size: 0.95rem;
-      margin: 4px 0 0;
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 24px;
-      background: #f0f4fa;
-      color: #1a3c6e;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-    }
-    .back-link:hover {
-      background: #1a3c6e;
-      color: #fff;
-    }
-
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – {{ project.name }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
+      }
+      .project-wrapper {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
       .project-header {
-        flex-direction: column;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 24px 30px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
       }
+      .project-header h2 {
+        font-weight: 700;
+        color: #1a3c6e;
+        margin: 0;
+        font-size: 1.8rem;
+      }
+      .project-header .status-badge {
+        padding: 6px 20px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: capitalize;
+      }
+      .status-badge.completed {
+        background: #e8f5e9;
+        color: #28a745;
+      }
+      .status-badge.ongoing {
+        background: #fff3e0;
+        color: #fd7e14;
+      }
+      .status-badge.pending {
+        background: #fde8e8;
+        color: #dc3545;
+      }
+      .status-badge.planned {
+        background: #e8f0fe;
+        color: #1a3c6e;
+      }
+
+      /* Stats Row */
       .stats-row {
-        grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
       }
+      .stat-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        text-align: center;
+      }
+      .stat-card .stat-value {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1a3c6e;
+      }
+      .stat-card .stat-label {
+        font-size: 0.85rem;
+        color: #6c7a8a;
+        font-weight: 500;
+      }
+      .stat-card .stat-icon {
+        font-size: 1.8rem;
+        color: #2a5a9a;
+        opacity: 0.3;
+      }
+
+      /* Progress Bar */
+      .progress-container {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      }
+      .progress-container .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 6px;
+      }
+      .progress-container .progress {
+        height: 12px;
+        border-radius: 20px;
+        background: #e9edf4;
+      }
+      .progress-container .progress .progress-bar {
+        border-radius: 20px;
+        background: linear-gradient(90deg, #1a3c6e, #2a5a9a);
+      }
+
+      /* Section Cards */
+      .section-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+      }
+      .section-card h4 {
+        font-weight: 600;
+        color: #1a3c6e;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #e9edf4;
+        padding-bottom: 10px;
+      }
+      .section-card h4 i {
+        margin-right: 10px;
+      }
+
+      /* Proof Gallery */
       .proof-gallery {
-        grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
       }
-    }
-    @media (max-width: 480px) {
-      .stats-row {
-        grid-template-columns: 1fr;
+      .proof-item {
+        background: #f8fafc;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e9edf4;
+        transition: transform 0.15s;
       }
-      .proof-gallery {
-        grid-template-columns: 1fr;
+      .proof-item:hover {
+        transform: translateY(-4px);
       }
-    }
-  </style>
-</head>
-<body>
+      .proof-item img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+      }
+      .proof-item .proof-caption {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        color: #2c3e50;
+        text-align: center;
+      }
 
-<div class="project-wrapper">
+      /* Complaints List */
+      .Complaint-item {
+        border: 1px solid #e9edf4;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 12px;
+        transition: border-color 0.2s;
+      }
+      .Complaint-item:hover {
+        border-color: #b0c4de;
+      }
+      .Complaint-item .Complaint-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+      }
+      .Complaint-item .Complaint-header strong {
+        color: #1a3c6e;
+      }
+      .Complaint-item .Complaint-status {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 2px 12px;
+        border-radius: 40px;
+      }
+      .Complaint-status.resolved {
+        background: #e8f5e9;
+        color: #28a745;
+      }
+      .Complaint-status.pending {
+        background: #fde8e8;
+        color: #dc3545;
+      }
+      .Complaint-status.in-progress {
+        background: #fff3e0;
+        color: #fd7e14;
+      }
+      .Complaint-item .Complaint-desc {
+        color: #4a5a72;
+        font-size: 0.95rem;
+        margin: 4px 0 0;
+      }
 
-  <!-- ===== HEADER ===== -->
-  <div class="project-header">
-    <div>
-      <h2><i class="fas fa-project-diagram" style="color:#1a3c6e;"></i> {{ project.name }}</h2>
-      <div style="color:#6c7a8a; font-size:0.9rem; margin-top:4px;">
-        <i class="fas fa-calendar-alt"></i> Started: {{ project.start_date|date:"d M Y"|default:"Not specified" }}
-      </div>
-    </div>
-    <span class="status-badge {{ project.status|lower }}">
-      <i class="fas fa-circle" style="font-size:0.6rem; margin-right:6px;"></i>
-      {{ project.status|title }}
-    </span>
-  </div>
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background: #f0f4fa;
+        color: #1a3c6e;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+      }
+      .back-link:hover {
+        background: #1a3c6e;
+        color: #fff;
+      }
 
-  <!-- ===== STATS ===== -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-      <div class="stat-value">₹{{ project.sanctioned_amount|floatformat:0|default:"0" }}</div>
-      <div class="stat-label">Sanctioned Amount</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-coins"></i></div>
-      <div class="stat-value">₹{{ project.used_amount|floatformat:0|default:"0" }}</div>
-      <div class="stat-label">Used Amount</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-percent"></i></div>
-      <div class="stat-value">{{ project.progress_percentage|default:0 }}%</div>
-      <div class="stat-label">Progress</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-clock"></i></div>
-      <div class="stat-value">{{ project.duration|default:"—" }}</div>
-      <div class="stat-label">Timeline</div>
-    </div>
-  </div>
-
-  <!-- ===== PROGRESS BAR ===== -->
-  <div class="progress-container">
-    <div class="progress-label">
-      <span>Project Progress</span>
-      <span>{{ project.progress_percentage|default:0 }}%</span>
-    </div>
-    <div class="progress">
-      <div class="progress-bar" style="width: {{ project.progress_percentage|default:0 }}%"></div>
-    </div>
-  </div>
-
-  <!-- ===== PROOFS SECTION ===== -->
-  {% if proofs %}
-  <div class="section-card">
-    <h4><i class="fas fa-camera"></i> Project Proofs</h4>
-    <div class="proof-gallery">
-      {% for proof in proofs %}
-      <div class="proof-item">
-        <img src="{{ proof.image.url }}" alt="{{ proof.description|default:'Project image' }}" />
-        <div class="proof-caption">{{ proof.description|default:"No description" }}</div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  <!-- ===== COMPLAINTS SECTION ===== -->
-  <div class="section-card">
-    <h4><i class="fas fa-exclamation-triangle"></i> Related Complaints ({{ complaints|length }})</h4>
-    {% if complaints %}
-      {% for complaint in complaints %}
-      <div class="complaint-item">
-        <div class="complaint-header">
-          <strong><i class="fas fa-user-circle"></i> {{ complaint.user_name|default:"Anonymous" }}</strong>
-          <span class="complaint-status {{ complaint.status|lower|cut:' ' }}">
-            {{ complaint.status|title }}
-          </span>
+      @media (max-width: 768px) {
+        .project-header {
+          flex-direction: column;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .proof-gallery {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .proof-gallery {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="project-wrapper">
+      <!-- ===== HEADER ===== -->
+      <div class="project-header">
+        <div>
+          <h2>
+            <i class="fas fa-project-diagram" style="color: #1a3c6e"></i> {{
+            project.name }}
+          </h2>
+          <div style="color: #6c7a8a; font-size: 0.9rem; margin-top: 4px">
+            <i class="fas fa-calendar-alt"></i> Started: {{
+            project.start_date|date:"d M Y"|default:"Not specified" }}
+          </div>
         </div>
-        <p class="complaint-desc">{{ complaint.description|truncatechars:120 }}</p>
-        <div style="font-size:0.8rem; color:#6c7a8a; margin-top:4px;">
-          <i class="fas fa-calendar-alt"></i> {{ complaint.created_at|date:"d M Y"|default:"Recently" }}
+        <span class="status-badge {{ project.status|lower }}">
+          <i
+            class="fas fa-circle"
+            style="font-size: 0.6rem; margin-right: 6px"
+          ></i>
+          {{ project.status|title }}
+        </span>
+      </div>
+
+      <!-- ===== STATS ===== -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <div class="stat-value">
+            ₹{{ project.sanctioned_amount|floatformat:0|default:"0" }}
+          </div>
+          <div class="stat-label">Sanctioned Amount</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-coins"></i></div>
+          <div class="stat-value">
+            ₹{{ project.used_amount|floatformat:0|default:"0" }}
+          </div>
+          <div class="stat-label">Used Amount</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-percent"></i></div>
+          <div class="stat-value">
+            {{ project.progress_percentage|default:0 }}%
+          </div>
+          <div class="stat-label">Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-value">{{ project.duration|default:"—" }}</div>
+          <div class="stat-label">Timeline</div>
         </div>
       </div>
-      {% endfor %}
-    {% else %}
-      <p style="color:#6c7a8a; text-align:center; padding:20px 0;">
-        <i class="fas fa-check-circle" style="color:#28a745;"></i> No complaints linked to this project.
-      </p>
-    {% endif %}
-  </div>
 
-  <!-- ===== BACK BUTTON ===== -->
-  <a href="{% url 'projects' %}" class="back-link">
-    <i class="fas fa-arrow-left"></i> Back to Projects
-  </a>
+      <!-- ===== PROGRESS BAR ===== -->
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Project Progress</span>
+          <span>{{ project.progress_percentage|default:0 }}%</span>
+        </div>
+        <div class="progress">
+          <div
+            class="progress-bar"
+            style="width: {{ project.progress_percentage|default:0 }}%"
+          ></div>
+        </div>
+      </div>
 
-</div>
+      <!-- ===== PROOFS SECTION ===== -->
+      {% if proofs %}
+      <div class="section-card">
+        <h4><i class="fas fa-camera"></i> Project Proofs</h4>
+        <div class="proof-gallery">
+          {% for proof in proofs %}
+          <div class="proof-item">
+            <img
+              src="{{ proof.image.url }}"
+              alt="{{ proof.description|default:'Project image' }}"
+            />
+            <div class="proof-caption">
+              {{ proof.description|default:"No description" }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
 
-{% include "footer.html" %}
+      <!-- ===== ComplaintS SECTION ===== -->
+      <div class="section-card">
+        <h4>
+          <i class="fas fa-exclamation-triangle"></i> Related Complaints ({{
+          Complaints|length }})
+        </h4>
+        {% if Complaints %} {% for Complaint in Complaints %}
+        <div class="Complaint-item">
+          <div class="Complaint-header">
+            <strong
+              ><i class="fas fa-user-circle"></i> {{
+              Complaint.user_name|default:"Anonymous" }}</strong
+            >
+            <span class="Complaint-status {{ Complaint.status|lower|cut:' ' }}">
+              {{ Complaint.status|title }}
+            </span>
+          </div>
+          <p class="Complaint-desc">
+            {{ Complaint.description|truncatechars:120 }}
+          </p>
+          <div style="font-size: 0.8rem; color: #6c7a8a; margin-top: 4px">
+            <i class="fas fa-calendar-alt"></i> {{ Complaint.created_at|date:"d
+            M Y"|default:"Recently" }}
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <p style="color: #6c7a8a; text-align: center; padding: 20px 0">
+          <i class="fas fa-check-circle" style="color: #28a745"></i> No
+          Complaints linked to this project.
+        </p>
+        {% endif %}
+      </div>
+
+      <!-- ===== BACK BUTTON ===== -->
+      <a href="{% url 'projects' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Projects
+      </a>
+    </div>
+
+    {% include "footer.html" %}
+  </body>
+</html>

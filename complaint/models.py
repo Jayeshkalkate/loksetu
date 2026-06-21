@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Complaint(models.Model):
 
-    complaint_id = models.CharField(max_length=20, unique=True, blank=True)
+    Complaint_id = models.CharField(max_length=20, unique=True, blank=True)
 
     # Citizen Info
     full_name = models.CharField(max_length=100)
@@ -23,7 +23,7 @@ class Complaint(models.Model):
     ward = models.CharField(max_length=20)
     pincode = models.CharField(max_length=6)
 
-    # complaint Info
+    # Complaint Info
     department = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -31,7 +31,7 @@ class Complaint(models.Model):
     issue_location = models.CharField(max_length=200)
     issue_date = models.DateField()
 
-    evidence = models.FileField(upload_to='complaint/', blank=True, null=True)
+    evidence = models.FileField(upload_to='Complaint/', blank=True, null=True)
 
     # Map Location
     latitude = models.FloatField(blank=True, null=True)
@@ -58,22 +58,22 @@ class Complaint(models.Model):
 
     def save(self, *args, **kwargs):
 
-        if not self.complaint_id:
+        if not self.Complaint_id:
 
             year = datetime.datetime.now().year
             count = Complaint.objects.count() + 1
 
-            self.complaint_id = f"LKS-MH-{year}-{count:06d}"
+            self.Complaint_id = f"LKS-MH-{year}-{count:06d}"
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.complaint_id
+        return self.Complaint_id
     
 
 class ComplaintHistory(models.Model):
 
-    complaint = models.ForeignKey(
+    Complaint = models.ForeignKey(
         Complaint,
         on_delete=models.CASCADE,
         related_name="history"
@@ -90,4 +90,4 @@ class ComplaintHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.complaint.complaint_id} - {self.status}"
+        return f"{self.Complaint.Complaint_id} - {self.status}"

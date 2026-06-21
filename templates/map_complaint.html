@@ -1,209 +1,239 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – Complaint Map</title>
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="{% static 'css/map_complaint.css' %}" type="text/css" />
-  <style>
-    body {
-      background: #f4f7fc;
-    }
-    .map-wrapper {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .map-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .map-header h2 {
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 1.8rem;
-      margin: 0;
-    }
-    .map-header h2 i {
-      margin-right: 12px;
-      color: #dc3545;
-    }
-    .map-header .stats {
-      background: #fff;
-      padding: 8px 20px;
-      border-radius: 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-size: 0.95rem;
-      color: #2c3e50;
-    }
-    .map-header .stats strong {
-      color: #1a3c6e;
-    }
-    #map {
-      height: 70vh;
-      min-height: 400px;
-      width: 100%;
-      border-radius: 16px;
-      border: 2px solid #e9edf4;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-    .map-legend {
-      background: #fff;
-      padding: 12px 20px;
-      border-radius: 12px;
-      margin-top: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      border: 1px solid #e9edf4;
-    }
-    .map-legend .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: #2c3e50;
-    }
-    .map-legend .legend-item .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.1);
-    }
-    .map-legend .legend-item .dot.red { background: #dc3545; }
-    .map-legend .legend-item .dot.orange { background: #fd7e14; }
-    .map-legend .legend-item .dot.green { background: #28a745; }
-    .map-legend .legend-item .dot.blue { background: #1a3c6e; }
-
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – Complaint Map</title>
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/map_Complaint.css' %}"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #f4f7fc;
+      }
+      .map-wrapper {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
       .map-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .map-header h2 {
+        font-weight: 700;
+        color: #1a3c6e;
+        font-size: 1.8rem;
+        margin: 0;
+      }
+      .map-header h2 i {
+        margin-right: 12px;
+        color: #dc3545;
       }
       .map-header .stats {
-        align-self: flex-start;
+        background: #fff;
+        padding: 8px 20px;
+        border-radius: 40px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        font-size: 0.95rem;
+        color: #2c3e50;
       }
-    }
-  </style>
-</head>
-<body>
+      .map-header .stats strong {
+        color: #1a3c6e;
+      }
+      #map {
+        height: 70vh;
+        min-height: 400px;
+        width: 100%;
+        border-radius: 16px;
+        border: 2px solid #e9edf4;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      }
+      .map-legend {
+        background: #fff;
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin-top: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e9edf4;
+      }
+      .map-legend .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #2c3e50;
+      }
+      .map-legend .legend-item .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .map-legend .legend-item .dot.red {
+        background: #dc3545;
+      }
+      .map-legend .legend-item .dot.orange {
+        background: #fd7e14;
+      }
+      .map-legend .legend-item .dot.green {
+        background: #28a745;
+      }
+      .map-legend .legend-item .dot.blue {
+        background: #1a3c6e;
+      }
 
-<div class="map-wrapper">
+      @media (max-width: 768px) {
+        .map-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .map-header .stats {
+          align-self: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="map-wrapper">
+      <!-- Header -->
+      <div class="map-header">
+        <h2><i class="fas fa-map-marked-alt"></i> Complaint Map</h2>
+        <div class="stats">
+          <i class="fas fa-map-pin" style="color: #dc3545"></i>
+          <strong>{{ Complaints|length }}</strong> Complaints reported
+        </div>
+      </div>
 
-  <!-- Header -->
-  <div class="map-header">
-    <h2><i class="fas fa-map-marked-alt"></i> Complaint Map</h2>
-    <div class="stats">
-      <i class="fas fa-map-pin" style="color:#dc3545;"></i>
-      <strong>{{ complaints|length }}</strong> complaints reported
+      <!-- Map Container -->
+      <div id="map"></div>
+
+      <!-- Legend -->
+      <div class="map-legend">
+        <span class="legend-item"><span class="dot red"></span> Pending</span>
+        <span class="legend-item"
+          ><span class="dot orange"></span> In Progress</span
+        >
+        <span class="legend-item"
+          ><span class="dot green"></span> Resolved</span
+        >
+        <span class="legend-item"
+          ><span class="dot blue"></span> Escalated</span
+        >
+        <span
+          class="legend-item"
+          style="margin-left: auto; font-size: 0.8rem; color: #6c7a8a"
+        >
+          <i class="fas fa-info-circle"></i> Click a marker for details
+        </span>
+      </div>
     </div>
-  </div>
 
-  <!-- Map Container -->
-  <div id="map"></div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Legend -->
-  <div class="map-legend">
-    <span class="legend-item"><span class="dot red"></span> Pending</span>
-    <span class="legend-item"><span class="dot orange"></span> In Progress</span>
-    <span class="legend-item"><span class="dot green"></span> Resolved</span>
-    <span class="legend-item"><span class="dot blue"></span> Escalated</span>
-    <span class="legend-item" style="margin-left:auto; font-size:0.8rem; color:#6c7a8a;">
-      <i class="fas fa-info-circle"></i> Click a marker for details
-    </span>
-  </div>
+    <!-- Safe JSON embedding -->
+    {{ Complaint_json|json_script:"Complaint-data" }}
 
-</div>
+    <script>
+      (function () {
+        const Complaints = JSON.parse(
+          document.getElementById("Complaint-data").textContent,
+        );
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        // Initialize map with Maharashtra center
+        const map = L.map("map").setView([19.7515, 75.7139], 7);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
 
-<!-- Safe JSON embedding -->
-{{ complaint_json|json_script:"complaint-data" }}
+        // Custom marker colors based on status
+        function getMarkerColor(status) {
+          switch (status.toLowerCase()) {
+            case "pending":
+              return "#dc3545";
+            case "in progress":
+              return "#fd7e14";
+            case "resolved":
+              return "#28a745";
+            case "escalated":
+              return "#1a3c6e";
+            default:
+              return "#6c757d";
+          }
+        }
 
-<script>
-  (function() {
-    const complaints = JSON.parse(document.getElementById('complaint-data').textContent);
+        const markers = [];
 
-    // Initialize map with Maharashtra center
-    const map = L.map('map').setView([19.7515, 75.7139], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+        Complaints.forEach(function (c) {
+          if (c.latitude && c.longitude) {
+            const lat = parseFloat(c.latitude);
+            const lng = parseFloat(c.longitude);
+            const color = getMarkerColor(c.status);
 
-    // Custom marker colors based on status
-    function getMarkerColor(status) {
-      switch(status.toLowerCase()) {
-        case 'pending': return '#dc3545';
-        case 'in progress': return '#fd7e14';
-        case 'resolved': return '#28a745';
-        case 'escalated': return '#1a3c6e';
-        default: return '#6c757d';
-      }
-    }
+            // Create a custom icon
+            const icon = L.divIcon({
+              className: "custom-marker",
+              html: `<div style="background-color:${color}; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow:0 2px 8px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">${c.Complaint_id.slice(-2)}</div>`,
+              iconSize: [24, 24],
+              iconAnchor: [12, 12],
+              popupAnchor: [0, -12],
+            });
 
-    const markers = [];
+            const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
+            markers.push(marker);
 
-    complaints.forEach(function(c) {
-      if (c.latitude && c.longitude) {
-        const lat = parseFloat(c.latitude);
-        const lng = parseFloat(c.longitude);
-        const color = getMarkerColor(c.status);
-
-        // Create a custom icon
-        const icon = L.divIcon({
-          className: 'custom-marker',
-          html: `<div style="background-color:${color}; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow:0 2px 8px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">${c.complaint_id.slice(-2)}</div>`,
-          iconSize: [24, 24],
-          iconAnchor: [12, 12],
-          popupAnchor: [0, -12]
-        });
-
-        const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
-        markers.push(marker);
-
-        // Popup content
-        const popupContent = `
+            // Popup content
+            const popupContent = `
           <div style="font-family: 'Inter', sans-serif; min-width:200px;">
-            <h4 style="margin:0 0 6px; color:#1a3c6e;">#${c.complaint_id}</h4>
-            <p style="margin:4px 0;"><strong>Department:</strong> ${c.department || '—'}</p>
+            <h4 style="margin:0 0 6px; color:#1a3c6e;">#${c.Complaint_id}</h4>
+            <p style="margin:4px 0;"><strong>Department:</strong> ${c.department || "—"}</p>
             <p style="margin:4px 0;"><strong>Status:</strong> <span style="color:${color}; font-weight:600;">${c.status}</span></p>
-            <p style="margin:4px 0 8px;"><strong>Description:</strong> ${c.description.substring(0, 80)}${c.description.length > 80 ? '…' : ''}</p>
-            <a href="/detail/${c.complaint_id}/" style="display:inline-block; background:#1a3c6e; color:#fff; padding:4px 16px; border-radius:20px; text-decoration:none; font-size:0.85rem;">View Details</a>
+            <p style="margin:4px 0 8px;"><strong>Description:</strong> ${c.description.substring(0, 80)}${c.description.length > 80 ? "…" : ""}</p>
+            <a href="/detail/${c.Complaint_id}/" style="display:inline-block; background:#1a3c6e; color:#fff; padding:4px 16px; border-radius:20px; text-decoration:none; font-size:0.85rem;">View Details</a>
           </div>
         `;
-        marker.bindPopup(popupContent);
-      }
-    });
+            marker.bindPopup(popupContent);
+          }
+        });
 
-    // Auto-zoom to fit all markers
-    if (markers.length > 0) {
-      const group = new L.featureGroup(markers);
-      map.fitBounds(group.getBounds(), { padding: [40, 40] });
-    } else {
-      map.setView([19.7515, 75.7139], 6);
-      // Show a message overlay
-      const info = L.control({ position: 'bottomright' });
-      info.onAdd = function() {
-        const div = L.DomUtil.create('div', 'info-msg');
-        div.innerHTML = '<div style="background:rgba(255,255,255,0.9); padding:10px 20px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.1);">No complaints with location data yet.</div>';
-        return div;
-      };
-      info.addTo(map);
-    }
-  })();
-</script>
+        // Auto-zoom to fit all markers
+        if (markers.length > 0) {
+          const group = new L.featureGroup(markers);
+          map.fitBounds(group.getBounds(), { padding: [40, 40] });
+        } else {
+          map.setView([19.7515, 75.7139], 6);
+          // Show a message overlay
+          const info = L.control({ position: "bottomright" });
+          info.onAdd = function () {
+            const div = L.DomUtil.create("div", "info-msg");
+            div.innerHTML =
+              '<div style="background:rgba(255,255,255,0.9); padding:10px 20px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.1);">No Complaints with location data yet.</div>';
+            return div;
+          };
+          info.addTo(map);
+        }
+      })();
+    </script>
 
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from account.models import Citizen
 from complaint.models import Complaint
 from schemes.models import Scheme

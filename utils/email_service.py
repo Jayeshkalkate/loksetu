@@ -2,42 +2,42 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-def send_complaint_created_email(complaint):
-    if complaint.email:
+def send_Complaint_created_email(Complaint):
+    if Complaint.email:
         send_mail(
-            subject=f"Complaint Registered - {complaint.complaint_id}",
+            subject=f"Complaint Registered - {Complaint.Complaint_id}",
             message=f"""
-Hello {complaint.full_name},
+Hello {Complaint.full_name},
 
-Your complaint has been successfully registered.
+Your Complaint has been successfully registered.
 
-Title: {complaint.title}
+Title: {Complaint.title}
 
-Status: {complaint.status}
+Status: {Complaint.status}
 
 Thank you for using LokSetu.
             """,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[complaint.email],
+            recipient_list=[Complaint.email],
             fail_silently=True,
         )
 
 
-def send_complaint_resolved_email(complaint):
-    if complaint.email:
+def send_Complaint_resolved_email(Complaint):
+    if Complaint.email:
         send_mail(
-            subject=f"Complaint Resolved - {complaint.complaint_id}",
+            subject=f"Complaint Resolved - {Complaint.Complaint_id}",
             message=f"""
-Hello {complaint.full_name},
+Hello {Complaint.full_name},
 
-Your complaint has been resolved.
+Your Complaint has been resolved.
 
-Title: {complaint.title}
+Title: {Complaint.title}
 
 Thank you for using LokSetu.
             """,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[complaint.email],
+            recipient_list=[Complaint.email],
             fail_silently=True,
         )
 

@@ -1,295 +1,314 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LokSetu – Bridging Citizens and Government</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
-  <style>
-    /* ===== HERO ===== */
-    .hero-section {
-      background: linear-gradient(135deg, #e8f0fe 0%, #d4e0f5 100%);
-      padding: 50px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-    .hero-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      gap: 50px;
-    }
-    .hero-text {
-      flex: 1;
-    }
-    .hero-text h1 {
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: #1a3c6e;
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    .hero-text h1 span {
-      color: #ffd700;
-      background: #1a3c6e;
-      padding: 0 12px;
-      border-radius: 8px;
-    }
-    .hero-text p {
-      font-size: 1.1rem;
-      color: #2c3e50;
-      line-height: 1.7;
-      margin-bottom: 24px;
-      max-width: 500px;
-    }
-    .hero-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-    .btn-hero {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.25s ease;
-      border: none;
-      cursor: pointer;
-    }
-    .btn-hero.primary {
-      background: #1a3c6e;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(26,60,110,0.3);
-    }
-    .btn-hero.primary:hover {
-      background: #14315a;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(26,60,110,0.4);
-    }
-    .btn-hero.secondary {
-      background: #fff;
-      color: #1a3c6e;
-      border: 2px solid #1a3c6e;
-    }
-    .btn-hero.secondary:hover {
-      background: #1a3c6e;
-      color: #fff;
-      transform: translateY(-2px);
-    }
-    .btn-hero i {
-      font-size: 1rem;
-    }
-    .hero-image {
-      flex: 1;
-      text-align: center;
-    }
-    .hero-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.10);
-    }
-
-    /* ===== FEATURES ===== */
-    .features-section {
-      padding: 50px 0;
-      background: #ffffff;
-    }
-    .features-section .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    .features-section h2 {
-      text-align: center;
-      font-weight: 700;
-      color: #1a3c6e;
-      font-size: 2rem;
-      margin-bottom: 36px;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 30px;
-    }
-    .feature-card {
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 24px 20px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border: 1px solid #e9edf4;
-    }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-    }
-    .feature-card .icon {
-      font-size: 2.8rem;
-      color: #1a3c6e;
-      margin-bottom: 12px;
-    }
-    .feature-card h3 {
-      font-weight: 600;
-      color: #1a2a3a;
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-    }
-    .feature-card p {
-      color: #4a5a72;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    /* ===== TESTIMONIAL ===== */
-    .testimonial-section {
-      background: #f4f7fc;
-      padding: 50px 0;
-    }
-    .testimonial-section .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    .testimonial-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 30px 36px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-      border-left: 5px solid #ffd700;
-    }
-    .testimonial-card p {
-      font-size: 1.1rem;
-      color: #2c3e50;
-      font-style: italic;
-      line-height: 1.7;
-    }
-    .testimonial-card .author {
-      font-weight: 600;
-      color: #1a3c6e;
-      margin-top: 12px;
-      font-style: normal;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 992px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LokSetu – Bridging Citizens and Government</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/style.css' %}"
+      type="text/css"
+    />
+    <style>
+      /* ===== HERO ===== */
+      .hero-section {
+        background: linear-gradient(135deg, #e8f0fe 0%, #d4e0f5 100%);
+        padding: 50px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
       .hero-container {
-        flex-direction: column;
-        text-align: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        gap: 50px;
+      }
+      .hero-text {
+        flex: 1;
+      }
+      .hero-text h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #1a3c6e;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+      .hero-text h1 span {
+        color: #ffd700;
+        background: #1a3c6e;
+        padding: 0 12px;
+        border-radius: 8px;
       }
       .hero-text p {
-        margin-left: auto;
-        margin-right: auto;
+        font-size: 1.1rem;
+        color: #2c3e50;
+        line-height: 1.7;
+        margin-bottom: 24px;
+        max-width: 500px;
       }
       .hero-buttons {
-        justify-content: center;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
       }
-    }
-    @media (max-width: 768px) {
-      .hero-text h1 {
+      .btn-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-hero.primary {
+        background: #1a3c6e;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(26, 60, 110, 0.3);
+      }
+      .btn-hero.primary:hover {
+        background: #14315a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(26, 60, 110, 0.4);
+      }
+      .btn-hero.secondary {
+        background: #fff;
+        color: #1a3c6e;
+        border: 2px solid #1a3c6e;
+      }
+      .btn-hero.secondary:hover {
+        background: #1a3c6e;
+        color: #fff;
+        transform: translateY(-2px);
+      }
+      .btn-hero i {
+        font-size: 1rem;
+      }
+      .hero-image {
+        flex: 1;
+        text-align: center;
+      }
+      .hero-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      /* ===== FEATURES ===== */
+      .features-section {
+        padding: 50px 0;
+        background: #ffffff;
+      }
+      .features-section .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .features-section h2 {
+        text-align: center;
+        font-weight: 700;
+        color: #1a3c6e;
         font-size: 2rem;
-      }
-      .hero-section {
-        padding: 30px 0;
+        margin-bottom: 36px;
       }
       .features-grid {
-        grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 30px;
       }
-    }
-    @media (max-width: 480px) {
-      .features-grid {
-        grid-template-columns: 1fr;
+      .feature-card {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 24px 20px;
+        text-align: center;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        border: 1px solid #e9edf4;
       }
-    }
-  </style>
-</head>
-<body>
+      .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+      }
+      .feature-card .icon {
+        font-size: 2.8rem;
+        color: #1a3c6e;
+        margin-bottom: 12px;
+      }
+      .feature-card h3 {
+        font-weight: 600;
+        color: #1a2a3a;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+      .feature-card p {
+        color: #4a5a72;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
 
-<!-- ===== HERO ===== -->
-<section class="hero-section">
-  <div class="hero-container">
-    <div class="hero-text">
-      <h1>LokSetu: <br /><span>Smart Governance</span> for Maharashtra</h1>
-      <p>
-        A comprehensive digital platform bridging citizens and government
-        through transparent complaint management, scheme discovery, and
-        real-time project tracking.
-      </p>
-      <div class="hero-buttons">
-        <a href="{% url 'complaint' %}" class="btn-hero primary">
-          <i class="fas fa-pen"></i> File Complaint
-        </a>
-        <a href="{% url 'track_complaint' %}" class="btn-hero secondary">
-          <i class="fas fa-search"></i> Track Complaint
-        </a>
-        <a href="{% url 'schemes' %}" class="btn-hero secondary">
-          <i class="fas fa-hand-holding-heart"></i> View Schemes
-        </a>
+      /* ===== TESTIMONIAL ===== */
+      .testimonial-section {
+        background: #f4f7fc;
+        padding: 50px 0;
+      }
+      .testimonial-section .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .testimonial-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px 36px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+        border-left: 5px solid #ffd700;
+      }
+      .testimonial-card p {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        font-style: italic;
+        line-height: 1.7;
+      }
+      .testimonial-card .author {
+        font-weight: 600;
+        color: #1a3c6e;
+        margin-top: 12px;
+        font-style: normal;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 992px) {
+        .hero-container {
+          flex-direction: column;
+          text-align: center;
+        }
+        .hero-text p {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-buttons {
+          justify-content: center;
+        }
+      }
+      @media (max-width: 768px) {
+        .hero-text h1 {
+          font-size: 2rem;
+        }
+        .hero-section {
+          padding: 30px 0;
+        }
+        .features-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 480px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HERO ===== -->
+    <section class="hero-section">
+      <div class="hero-container">
+        <div class="hero-text">
+          <h1>LokSetu: <br /><span>Smart Governance</span> for Maharashtra</h1>
+          <p>
+            A comprehensive digital platform bridging citizens and government
+            through transparent Complaint management, scheme discovery, and
+            real-time project tracking.
+          </p>
+          <div class="hero-buttons">
+            <a href="{% url 'Complaint' %}" class="btn-hero primary">
+              <i class="fas fa-pen"></i> File Complaint
+            </a>
+            <a href="{% url 'track_Complaint' %}" class="btn-hero secondary">
+              <i class="fas fa-search"></i> Track Complaint
+            </a>
+            <a href="{% url 'schemes' %}" class="btn-hero secondary">
+              <i class="fas fa-hand-holding-heart"></i> View Schemes
+            </a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img
+            src="{% static 'images/maharashtra_map_16x9.jpg' %}"
+            alt="Maharashtra Map"
+          />
+        </div>
       </div>
-    </div>
-    <div class="hero-image">
-      <img src="{% static 'images/maharashtra_map_16x9.jpg' %}" alt="Maharashtra Map" />
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ===== FEATURES ===== -->
-<section class="features-section">
-  <div class="container">
-    <h2><i class="fas fa-star" style="color:#ffd700;"></i> Key Features</h2>
-    <div class="features-grid">
+    <!-- ===== FEATURES ===== -->
+    <section class="features-section">
+      <div class="container">
+        <h2><i class="fas fa-star" style="color: #ffd700"></i> Key Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="icon"><i class="fas fa-pen-fancy"></i></div>
+            <h3>Easy Complaint Submission</h3>
+            <p>
+              Citizens can quickly report issues related to roads, water,
+              electricity, sanitation, and more.
+            </p>
+          </div>
 
-      <div class="feature-card">
-        <div class="icon"><i class="fas fa-pen-fancy"></i></div>
-        <h3>Easy Complaint Submission</h3>
-        <p>Citizens can quickly report issues related to roads, water, electricity, sanitation, and more.</p>
+          <div class="feature-card">
+            <div class="icon"><i class="fas fa-building"></i></div>
+            <h3>Department-Based Resolution</h3>
+            <p>
+              Complaints are automatically routed to the relevant government
+              department for faster action.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Real-Time Tracking</h3>
+            <p>
+              Get a unique Complaint ID and track progress online from
+              submission to resolution.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="icon"><i class="fas fa-handshake"></i></div>
+            <h3>Stronger Citizen–Government Connect</h3>
+            <p>
+              Improves communication and transparency, ensuring issues are
+              resolved efficiently.
+            </p>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="feature-card">
-        <div class="icon"><i class="fas fa-building"></i></div>
-        <h3>Department-Based Resolution</h3>
-        <p>Complaints are automatically routed to the relevant government department for faster action.</p>
+    <!-- ===== TESTIMONIAL ===== -->
+    <section class="testimonial-section">
+      <div class="container">
+        <div class="testimonial-card">
+          <p>
+            “LokSetu makes it easier for citizens to report problems such as
+            road damage, water supply issues, and sanitation concerns. The
+            platform helps improve communication between people and government
+            departments.”
+          </p>
+          <div class="author">— Citizen of Maharashtra</div>
+        </div>
       </div>
+    </section>
 
-      <div class="feature-card">
-        <div class="icon"><i class="fas fa-chart-line"></i></div>
-        <h3>Real-Time Tracking</h3>
-        <p>Get a unique Complaint ID and track progress online from submission to resolution.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="icon"><i class="fas fa-handshake"></i></div>
-        <h3>Stronger Citizen–Government Connect</h3>
-        <p>Improves communication and transparency, ensuring issues are resolved efficiently.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ===== TESTIMONIAL ===== -->
-<section class="testimonial-section">
-  <div class="container">
-    <div class="testimonial-card">
-      <p>
-        “LokSetu makes it easier for citizens to report problems such as
-        road damage, water supply issues, and sanitation concerns. The
-        platform helps improve communication between people and government
-        departments.”
-      </p>
-      <div class="author">— Citizen of Maharashtra</div>
-    </div>
-  </div>
-</section>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
+  </body>
+</html>
