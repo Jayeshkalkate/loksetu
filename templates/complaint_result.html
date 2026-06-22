@@ -158,7 +158,7 @@
       <!-- Complaint ID -->
       <div class="Complaint-id-box">
         <i class="fas fa-ticket-alt me-2"></i> Complaint #{{
-        Complaint.Complaint_id }}
+        Complaint.complaint_id }}
       </div>
 
       <!-- Summary -->
@@ -231,7 +231,7 @@
       <!-- Action Buttons -->
       <div class="action-grid">
         <a
-          href="{% url 'track_Complaint' %}?id={{ Complaint.Complaint_id }}"
+          href="{% url 'track_Complaint' %}?id={{ Complaint.complaint_id }}"
           class="action-btn primary"
         >
           <i class="fas fa-search"></i> Track Complaint

@@ -482,7 +482,7 @@
           <tbody>
             {% for c in Complaints %}
             <tr>
-              <td><strong>#{{ c.Complaint_id }}</strong></td>
+              <td><strong>#{{ c.complaint_id }}</strong></td>
               <td>{{ c.title|truncatechars:30 }}</td>
               <td>{{ c.district }}</td>
               <td>{{ c.department|default:"—" }}</td>
@@ -496,14 +496,14 @@
               <td>
                 {% if not c.is_read %}
                 <a
-                  href="{% url 'mark_Complaint_read' c.Complaint_id %}"
+                  href="{% url 'mark_Complaint_read' c.complaint_id %}"
                   class="action-link read"
                 >
                   <i class="fas fa-book-open"></i> Mark Read
                 </a>
                 {% elif c.status != "Resolved" %}
                 <a
-                  href="{% url 'resolve_Complaint' c.Complaint_id %}"
+                  href="{% url 'resolve_Complaint' c.complaint_id %}"
                   class="action-link resolve"
                 >
                   <i class="fas fa-check"></i> Resolve

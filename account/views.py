@@ -16,7 +16,7 @@ from django.db.models import Sum
 from funds.models import Fund
 import json
 from .permissions import role_required
-
+from django.conf import settings
 
 def send_otp(request):
 

@@ -4,6 +4,7 @@ from decouple import config
 import logging
 import dj_database_url
 import sentry_sdk
+import cloudinary
 logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,11 +20,7 @@ SECRET_KEY = config(
     default="django-insecure-dev-key"
 )
 
-DEBUG = config(
-    "DEBUG",
-    default=False,
-    cast=bool
-)
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # --------------------------------------------------
 # SECURITY
@@ -184,21 +181,51 @@ STATICFILES_STORAGE = (
 MEDIA_URL = "/media/"
 
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUD_NAME", default=""),
-    "API_KEY": config("API_KEY", default=""),
-    "API_SECRET": config("API_SECRET", default=""),
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
 }
 
-STORAGES = {
-    "default": {
-        "BACKEND":
-        "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND":
-        "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+API_KEY = os.getenv("CLOUDINARY_API_KEY")
+API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
+
+if CLOUD_NAME and API_KEY and API_SECRET:
+    cloudinary.config(
+        cloud_name=CLOUD_NAME,
+        api_key=API_KEY,
+        api_secret=API_SECRET,
+        secure=True
+    )
+
+if DEBUG:
+
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+
+    STORAGES = {
+        "default": {
+            "BACKEND":
+            "django.core.files.storage.FileSystemStorage"
+        },
+        "staticfiles": {
+            "BACKEND":
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+        }
+    }
+
+else:
+
+    STORAGES = {
+        "default": {
+            "BACKEND":
+            "cloudinary_storage.storage.MediaCloudinaryStorage"
+        },
+        "staticfiles": {
+            "BACKEND":
+            "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        }
+    }
 
 # --------------------------------------------------
 # EMAIL
@@ -249,11 +276,14 @@ CELERY_TIMEZONE = "Asia/Kolkata"
 # SECURITY SETTINGS
 # --------------------------------------------------
 
-SECURE_SSL_REDIRECT = not DEBUG
-
-SESSION_COOKIE_SECURE = not DEBUG
-
-CSRF_COOKIE_SECURE = not DEBUG
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+else:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 
 SECURE_HSTS_SECONDS = 31536000
 
@@ -261,6 +291,10 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 SECURE_HSTS_PRELOAD = True
 
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
 # --------------------------------------------------
 # DEFAULT PK FIELD
 # --------------------------------------------------

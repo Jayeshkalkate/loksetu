@@ -4,32 +4,32 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from .models import Complaint, ComplaintHistory
 
-def resolve_Complaint(request, Complaint_id):
+def resolve_Complaint(request, complaint_id):
 
-    c = get_object_or_404(Complaint, Complaint_id=Complaint_id)
+    c = get_object_or_404(Complaint, complaint_id=complaint_id)
 
     c.status = "Resolved"
     c.save()
     
     ComplaintHistory.objects.create(
-        Complaint=c,
+        complaint=c,
         status="Resolved",
-        updated_by="State Admin"
+        updated_by=request.user
     )
 
     return redirect("state_admin_dashboard")
 
-def mark_Complaint_read(request, Complaint_id):
+def mark_Complaint_read(request, complaint_id):
 
-    c = get_object_or_404(Complaint, Complaint_id=Complaint_id)
+    c = get_object_or_404(Complaint, complaint_id=complaint_id)
 
-    c.status = "Assigned"
+    c.status = "In Progress"
     c.save()
     
     ComplaintHistory.objects.create(
-        Complaint=c,
+        complaint=c,
         status="Assigned",
-        updated_by="State Admin"
+        updated_by=request.user
     )
 
     return redirect("state_admin_dashboard")
@@ -69,12 +69,12 @@ def Complaint_view(request):
         )
         
         ComplaintHistory.objects.create(
-            Complaint=c,
+            complaint=c,
             status="Submitted",
-            updated_by="Citizen"
+            updated_by=None
         )
 
-        return redirect('Complaint_result', Complaint_id=c.Complaint_id)
+        return redirect('Complaint_result', complaint_id=c.complaint_id)
 
     return render(request,"complaint.html")
 
@@ -85,19 +85,19 @@ def track_Complaint(request):
     Complaint_data = None
 
     if request.method == "POST":
-        Complaint_id = request.POST.get("Complaint_id")
+        complaint_id = request.POST.get("complaint_id")
 
         try:
-            Complaint_data = Complaint.objects.get(Complaint_id=Complaint_id)
+            Complaint_data = Complaint.objects.get(complaint_id=complaint_id)
         except Complaint.DoesNotExist:
             Complaint_data = None
 
     return render(request, "track_complaint.html", {"Complaint": Complaint_data})
 
 
-def Complaint_result(request, Complaint_id):
+def Complaint_result(request, complaint_id):
 
-    c = Complaint.objects.get(Complaint_id=Complaint_id)
+    c = Complaint.objects.get(complaint_id=complaint_id)
 
     return render(request, "Complaint_result.html", {"Complaint": c})
 
@@ -114,7 +114,7 @@ def map_Complaint(request):
     for c in Complaints:
         Complaint_data.append({
             "id": c.id,
-            "Complaint_id": c.Complaint_id,
+            "complaint_id": c.complaint_id,
             "department": c.department,
             "status": c.status,
             "description": c.description,
@@ -128,29 +128,29 @@ def map_Complaint(request):
     
     return render(request, "map_complaint.html", context)
 
-def close_Complaint(request, Complaint_id):
+def close_Complaint(request, complaint_id):
 
     c = get_object_or_404(
         Complaint,
-        Complaint_id=Complaint_id
+        complaint_id=complaint_id
     )
 
     c.status = "Closed"
     c.save()
-
+    
     ComplaintHistory.objects.create(
-        Complaint=c,
+        complaint=c,
         status="Closed",
-        updated_by="Admin"
+        updated_by=request.user
     )
 
     return redirect("state_admin_dashboard")
 
-def Complaint_detail(request, Complaint_id):
+def Complaint_detail(request, complaint_id):
 
     c = get_object_or_404(
         Complaint,
-        Complaint_id=Complaint_id
+        complaint_id=complaint_id
     )
 
     history = c.history.all().order_by("timestamp")

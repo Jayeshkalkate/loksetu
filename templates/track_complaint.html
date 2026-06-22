@@ -343,13 +343,13 @@
             <form method="post" action="" class="message">
               {% csrf_token %}
               <div class="form-group">
-                <label for="Complaint_id"
+                <label for="complaint_id"
                   ><i class="fas fa-ticket-alt"></i> Complaint ID</label
                 >
                 <input
                   type="text"
-                  id="Complaint_id"
-                  name="Complaint_id"
+                  id="complaint_id"
+                  name="complaint_id"
                   placeholder="e.g., CMP-2024-1023"
                   required
                 />
@@ -366,7 +366,7 @@
             <div class="result-header">
               <h3><i class="fas fa-file-alt"></i> Complaint Details</h3>
               <span class="Complaint-id"
-                ><i class="fas fa-hashtag"></i> {{ Complaint.Complaint_id
+                ><i class="fas fa-hashtag"></i> {{ Complaint.complaint_id
                 }}</span
               >
             </div>

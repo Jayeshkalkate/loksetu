@@ -42,7 +42,7 @@ class ComplaintAPIView(generics.ListCreateAPIView):
     ]
 
     ordering_fields = [
-        'Complaint_id'
+        'complaint_id'
     ]
 
 

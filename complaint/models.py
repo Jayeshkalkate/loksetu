@@ -2,10 +2,11 @@ from django.db import models
 from django.conf import settings
 import datetime
 from django.contrib.auth.models import User
+import uuid
 
 class Complaint(models.Model):
 
-    Complaint_id = models.CharField(max_length=20, unique=True, blank=True)
+    complaint_id = models.CharField(max_length=20, unique=True, blank=True)
 
     # Citizen Info
     full_name = models.CharField(max_length=100)
@@ -57,23 +58,21 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-
-        if not self.Complaint_id:
-
-            year = datetime.datetime.now().year
-            count = Complaint.objects.count() + 1
-
-            self.Complaint_id = f"LKS-MH-{year}-{count:06d}"
-
+        
+        if not self.complaint_id:
+            self.complaint_id = (
+                f"LKS-MH-{uuid.uuid4().hex[:8].upper()}"
+            )
+            
         super().save(*args, **kwargs)
-
+            
     def __str__(self):
-        return self.Complaint_id
+        return self.complaint_id
     
 
 class ComplaintHistory(models.Model):
 
-    Complaint = models.ForeignKey(
+    complaint = models.ForeignKey(
         Complaint,
         on_delete=models.CASCADE,
         related_name="history"
@@ -90,4 +89,5 @@ class ComplaintHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.Complaint.Complaint_id} - {self.status}"
+        return f"{self.complaint.complaint_id} - {self.status}"
+

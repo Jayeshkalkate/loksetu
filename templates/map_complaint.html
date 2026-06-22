@@ -192,7 +192,7 @@
             // Create a custom icon
             const icon = L.divIcon({
               className: "custom-marker",
-              html: `<div style="background-color:${color}; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow:0 2px 8px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">${c.Complaint_id.slice(-2)}</div>`,
+              html: `<div style="background-color:${color}; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow:0 2px 8px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">${c.complaint_id.slice(-2)}</div>`,
               iconSize: [24, 24],
               iconAnchor: [12, 12],
               popupAnchor: [0, -12],
@@ -204,11 +204,11 @@
             // Popup content
             const popupContent = `
           <div style="font-family: 'Inter', sans-serif; min-width:200px;">
-            <h4 style="margin:0 0 6px; color:#1a3c6e;">#${c.Complaint_id}</h4>
+            <h4 style="margin:0 0 6px; color:#1a3c6e;">#${c.complaint_id}</h4>
             <p style="margin:4px 0;"><strong>Department:</strong> ${c.department || "—"}</p>
             <p style="margin:4px 0;"><strong>Status:</strong> <span style="color:${color}; font-weight:600;">${c.status}</span></p>
             <p style="margin:4px 0 8px;"><strong>Description:</strong> ${c.description.substring(0, 80)}${c.description.length > 80 ? "…" : ""}</p>
-            <a href="/detail/${c.Complaint_id}/" style="display:inline-block; background:#1a3c6e; color:#fff; padding:4px 16px; border-radius:20px; text-decoration:none; font-size:0.85rem;">View Details</a>
+            <a href="/detail/${c.complaint_id}/" style="display:inline-block; background:#1a3c6e; color:#fff; padding:4px 16px; border-radius:20px; text-decoration:none; font-size:0.85rem;">View Details</a>
           </div>
         `;
             marker.bindPopup(popupContent);

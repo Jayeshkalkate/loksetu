@@ -31,8 +31,8 @@ class Scheme(models.Model):
     slug = models.SlugField(unique=True, blank=True)
 
     description = models.TextField(blank=True)
-    eligibility = models.TextField(blank=True)
-    benefits = models.TextField(blank=True)
+    eligibility = models.TextField(blank=True, null=True)
+    benefits = models.TextField(blank=True, null=True)
 
     # 🔹 Classification
     category = models.CharField(

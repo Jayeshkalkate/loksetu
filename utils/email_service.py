@@ -5,7 +5,7 @@ from django.conf import settings
 def send_Complaint_created_email(Complaint):
     if Complaint.email:
         send_mail(
-            subject=f"Complaint Registered - {Complaint.Complaint_id}",
+            subject=f"Complaint Registered - {Complaint.complaint_id}",
             message=f"""
 Hello {Complaint.full_name},
 
@@ -26,7 +26,7 @@ Thank you for using LokSetu.
 def send_Complaint_resolved_email(Complaint):
     if Complaint.email:
         send_mail(
-            subject=f"Complaint Resolved - {Complaint.Complaint_id}",
+            subject=f"Complaint Resolved - {Complaint.complaint_id}",
             message=f"""
 Hello {Complaint.full_name},
 

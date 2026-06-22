@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-@login_required
 def send_email_to_client(first_name, last_name, email, message):
     subject = "New Message from Client"
     full_message = f"Name: {first_name} {last_name}\nEmail: {email}\n\nMessage:\n{message}"
@@ -24,11 +23,6 @@ def aboutus(request):
 @login_required
 def services(request):
     return render(request, "services.html")
-
-@login_required
-def contactus(request):
-    return render(request, "contact.html")
-
 
 @login_required(login_url='login')
 def contactus(request):
@@ -91,12 +85,3 @@ def disclaimer(request):
 @login_required
 def emergency_contacts(request):
     return render(request, "emergency_contacts.html")
-
-@login_required
-def singlepost(request):
-    return render(request, "singlepost.html")
-
-@login_required
-def singlepost(request):
-    return render(request, "singlepost.html")
-

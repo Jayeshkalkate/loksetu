@@ -6,7 +6,7 @@ admin.site.register(ComplaintHistory)
 class ComplaintAdmin(admin.ModelAdmin):
 
     list_display = (
-        "Complaint_id",
+        "complaint_id",
         "title",
         "department",
         "district",
