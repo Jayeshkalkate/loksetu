@@ -6,4 +6,4 @@ class SchemesConfig(AppConfig):
     name = 'schemes'
 
     def ready(self):
-        import schemes.signals
+        import schemes.signals  # noqa

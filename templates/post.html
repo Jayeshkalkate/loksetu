@@ -1,4 +1,4 @@
-{% load static %} {% include "header.html" %}
+{% load static %} {% include "base.html" %}
 
 <!doctype html>
 <html lang="en">
@@ -218,12 +218,10 @@
         <div class="post-card">
           <div class="post-meta">
             <span class="date"
-              ><i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"F d,
-              Y" }}</span
+              ><i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"F d, Y" }}</span
             >
             <span class="category"
-              ><i class="fas fa-tag"></i> {{ post.category|default:"News"
-              }}</span
+              ><i class="fas fa-tag"></i> {{ post.category|default:"News" }}</span
             >
           </div>
           <h1>{{ post.title }}</h1>
@@ -280,7 +278,7 @@
           <div class="cta-box">
             <h4><i class="fas fa-pen"></i> Report an Issue</h4>
             <p>Submit a Complaint and track its progress.</p>
-            <a href="{% url 'Complaint' %}" class="btn-cta">
+            <a href="{% url 'complaint:complaint' %}" class="btn-cta">
               <i class="fas fa-arrow-right"></i> File Complaint
             </a>
           </div>
@@ -288,6 +286,5 @@
       </div>
     </div>
 
-    {% include "footer.html" %}
-  </body>
+      </body>
 </html>

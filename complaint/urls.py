@@ -1,21 +1,18 @@
 from django.urls import path
 from . import views
 
+app_name = 'complaint'
+
 urlpatterns = [
+    path('', views.complaint_view, name='complaint'),
+    path('track/', views.track_complaint, name='track_complaint'),
+    path('result/<str:complaint_id>/', views.complaint_result, name='complaint_result'),
+    path('map/', views.map_complaint, name='map_complaint'),
 
-    path('Complaint/', views.Complaint_view, name='Complaint'),
-
-    path('track-Complaint/', views.track_Complaint, name='track_Complaint'),
-
-    # path('Complaint-result/<int:complaint_id>/', views.Complaint_result, name='Complaint_result'),
-    path('Complaint-result/<str:complaint_id>/', views.Complaint_result, name='Complaint_result'),
-
-    path('map-Complaint/', views.map_Complaint, name='map_Complaint'),
-    
-    path('mark-read/<str:complaint_id>/', views.mark_Complaint_read, name='mark_Complaint_read'),
-    
-    path("resolve/<str:complaint_id>/", views.resolve_Complaint, name="resolve_Complaint"),
-    path("close/<str:complaint_id>/", views.close_Complaint, name="close_Complaint"),
-    path("detail/<str:complaint_id>/", views.Complaint_detail, name="Complaint_detail"),
-
+    # Authenticated/admin actions
+    path('detail/<str:complaint_id>/', views.complaint_detail, name='complaint_detail'),
+    path('mark-read/<str:complaint_id>/', views.mark_complaint_read, name='mark_complaint_read'),
+    path('resolve/<str:complaint_id>/', views.resolve_complaint, name='resolve_complaint'),
+    path('close/<str:complaint_id>/', views.close_complaint, name='close_complaint'),
+    path('reject/<str:complaint_id>/', views.reject_complaint, name='reject_complaint'),
 ]

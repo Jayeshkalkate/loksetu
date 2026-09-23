@@ -1,4 +1,4 @@
-{% load static %} {% include "header.html" %}
+{% load static %} {% include "base.html" %}
 
 <!doctype html>
 <html lang="en">
@@ -289,7 +289,7 @@
                 Report issues related to drinking water supply, pipeline
                 leakage, water shortage, or irregular water distribution.
               </p>
-              <a href="{% url 'Complaint' %}" class="btn-service"
+              <a href="{% url 'complaint:complaint' %}" class="btn-service"
                 ><i class="fas fa-pen"></i> File Complaint</a
               >
             </div>
@@ -306,7 +306,7 @@
                 malfunctioning street lights so the responsible department can
                 act quickly.
               </p>
-              <a href="{% url 'Complaint' %}" class="btn-service"
+              <a href="{% url 'complaint:complaint' %}" class="btn-service"
                 ><i class="fas fa-pen"></i> File Complaint</a
               >
             </div>
@@ -325,7 +325,7 @@
                 issues, and other infrastructure problems affecting your village
                 or town.
               </p>
-              <a href="{% url 'Complaint' %}" class="btn-service"
+              <a href="{% url 'complaint:complaint' %}" class="btn-service"
                 ><i class="fas fa-pen"></i> File Complaint</a
               >
             </div>
@@ -338,17 +338,17 @@
             <h3><i class="fas fa-list-ul"></i> Complaint Services</h3>
             <ul>
               <li>
-                <a href="{% url 'Complaint' %}"
+                <a href="{% url 'complaint:complaint' %}"
                   ><i class="fas fa-plus-circle"></i> Submit New Complaint</a
                 >
               </li>
               <li>
-                <a href="{% url 'track_Complaint' %}"
+                <a href="{% url 'complaint:track_complaint' %}"
                   ><i class="fas fa-search"></i> Track Complaint Status</a
                 >
               </li>
               <li>
-                <a href="{% url 'map_Complaint' %}"
+                <a href="{% url 'complaint:map_complaint' %}"
                   ><i class="fas fa-map-marked-alt"></i> Complaint Map</a
                 >
               </li>
@@ -359,7 +359,7 @@
             <h3><i class="fas fa-chart-pie"></i> Track Funds</h3>
             <ul>
               <li>
-                <a href="{% url 'dashboard' %}"
+                <a href="{% url 'funds:dashboard' %}"
                   ><i class="fas fa-wallet"></i> Funds Dashboard</a
                 >
               </li>
@@ -398,7 +398,7 @@
               Citizens can report issues quickly using the online Complaint
               system.
             </p>
-            <a href="{% url 'Complaint' %}" class="more-link"
+            <a href="{% url 'complaint:complaint' %}" class="more-link"
               >Submit Complaint <i class="fas fa-arrow-right"></i
             ></a>
           </div>
@@ -420,7 +420,7 @@
               Track status using the unique Complaint ID received after
               submission.
             </p>
-            <a href="{% url 'track_Complaint' %}" class="more-link"
+            <a href="{% url 'complaint:track_complaint' %}" class="more-link"
               >Track Complaint <i class="fas fa-arrow-right"></i
             ></a>
           </div>
@@ -439,6 +439,5 @@
       </div>
     </div>
 
-    {% include "footer.html" %}
-  </body>
+      </body>
 </html>

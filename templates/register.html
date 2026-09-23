@@ -476,11 +476,18 @@
       }, 1000);
     }
 
-    // Send OTP
+    // Send OTP (delivered by email — no paid SMS gateway used)
     sendOtpBtn.addEventListener('click', function() {
       const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+
       if (!/^\d{10}$/.test(phone)) {
         otpStatus.textContent = '❌ Enter a valid 10-digit phone number';
+        otpStatus.className = 'status-msg error';
+        return;
+      }
+      if (!email) {
+        otpStatus.textContent = '❌ Enter your email address first — the OTP is sent there';
         otpStatus.className = 'status-msg error';
         return;
       }
@@ -494,12 +501,12 @@
           'Content-Type': 'application/x-www-form-urlencoded',
           'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
         },
-        body: `phone=${phone}`,
+        body: `phone=${phone}&email=${encodeURIComponent(email)}`,
       })
       .then(res => res.json())
       .then(data => {
         if (data.status === 'success') {
-          otpStatus.textContent = '✅ OTP sent successfully! Check your phone.';
+          otpStatus.textContent = '✅ OTP sent successfully! Check your email.';
           otpStatus.className = 'status-msg success';
           otp.focus();
           startResendTimer();

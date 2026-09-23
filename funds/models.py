@@ -1,9 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
-# ==============================
-# Location Model
-# ==============================
+
 class Location(models.Model):
     STATE = 'state'
     DISTRICT = 'district'
@@ -27,35 +26,44 @@ class Location(models.Model):
         related_name='children'
     )
 
+    class Meta:
+        ordering = ['type', 'name']
+        indexes = [
+            models.Index(fields=['type']),
+            models.Index(fields=['parent']),
+        ]
+
     def __str__(self):
         return f"{self.name} ({self.type})"
 
 
-# ==============================
-# Fund Model
-# ==============================
 class Fund(models.Model):
     title = models.CharField(max_length=255)
     department = models.CharField(max_length=200)
-
     total_amount = models.DecimalField(max_digits=15, decimal_places=2)
     released_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='funds')
     year = models.IntegerField()
-
-    def clean(self):
-        if self.released_amount > self.total_amount:
-            raise ValidationError("Released > Total not allowed")
-
-        if self.total_amount < 0 or self.released_amount < 0:
-            raise ValidationError("Negative values not allowed")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['-year', 'title']
         indexes = [
             models.Index(fields=['year']),
             models.Index(fields=['location']),
+            models.Index(fields=['department']),
         ]
+
+    def clean(self):
+        if self.released_amount > self.total_amount:
+            raise ValidationError("Released amount cannot exceed total amount.")
+        if self.total_amount < 0 or self.released_amount < 0:
+            raise ValidationError("Amounts cannot be negative.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     @property
     def used_amount(self):
@@ -68,9 +76,7 @@ class Fund(models.Model):
     def __str__(self):
         return f"{self.title} - {self.year}"
 
-# ==============================
-# Project Model
-# ==============================
+
 class Project(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -78,26 +84,35 @@ class Project(models.Model):
         ('completed', 'Completed'),
     ]
 
-    fund = models.ForeignKey(
-        Fund,
-        on_delete=models.CASCADE,
-        related_name='projects'
-    )
-
+    fund = models.ForeignKey(Fund, on_delete=models.CASCADE, related_name='projects')
     name = models.CharField(max_length=255)
-
     sanctioned_amount = models.DecimalField(max_digits=12, decimal_places=2)
     used_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # 🔥 Progress Calculation
+    class Meta:
+        ordering = ['-start_date']
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['fund']),
+        ]
+
+    def clean(self):
+        if self.used_amount > self.sanctioned_amount:
+            raise ValidationError("Used amount cannot exceed sanctioned amount.")
+        if self.sanctioned_amount < 0 or self.used_amount < 0:
+            raise ValidationError("Amounts cannot be negative.")
+        if self.end_date and self.end_date < self.start_date:
+            raise ValidationError("End date cannot be before start date.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     @property
     def progress_percentage(self):
         if self.sanctioned_amount == 0:
@@ -108,48 +123,34 @@ class Project(models.Model):
         return self.name
 
 
-# ==============================
-# Proof Model
-# ==============================
 class Proof(models.Model):
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        related_name='proofs'
-    )
-
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='proofs')
     image = models.ImageField(upload_to='proofs/')
     description = models.TextField(blank=True)
-
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-uploaded_at']
 
     def __str__(self):
         return f"Proof for {self.project.name}"
 
 
-# ==============================
-# Complaint Model
-# ==============================
 class Complaint(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('resolved', 'Resolved'),
     ]
 
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        related_name='Complaints'
-    )
-
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='complaints')
     user_name = models.CharField(max_length=200)
     description = models.TextField()
-
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return f"Complaint - {self.project.name} ({self.status})"
-    

@@ -1,4 +1,4 @@
-{% load static %} {% include "header.html" %}
+{% load static %} {% include "base.html" %}
 
 <!doctype html>
 <html lang="en">
@@ -230,13 +230,13 @@
             real-time project tracking.
           </p>
           <div class="hero-buttons">
-            <a href="{% url 'Complaint' %}" class="btn-hero primary">
+            <a href="{% url 'complaint:complaint' %}" class="btn-hero primary">
               <i class="fas fa-pen"></i> File Complaint
             </a>
-            <a href="{% url 'track_Complaint' %}" class="btn-hero secondary">
+            <a href="{% url 'complaint:track_complaint' %}" class="btn-hero secondary">
               <i class="fas fa-search"></i> Track Complaint
             </a>
-            <a href="{% url 'schemes' %}" class="btn-hero secondary">
+            <a href="{% url 'schemes:schemes' %}" class="btn-hero secondary">
               <i class="fas fa-hand-holding-heart"></i> View Schemes
             </a>
           </div>
@@ -309,6 +309,5 @@
       </div>
     </section>
 
-    {% include "footer.html" %}
-  </body>
+      </body>
 </html>

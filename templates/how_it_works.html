@@ -1,4 +1,4 @@
-{% load static %} {% include "header.html" %}
+{% load static %} {% include "base.html" %}
 
 <!doctype html>
 <html lang="en">
@@ -313,13 +313,13 @@
               "
             >
               <a
-                href="{% url 'Complaint' %}"
+                href="{% url 'complaint:complaint' %}"
                 class="btn-cta"
                 style="background: #fff; color: #1a3c6e"
                 ><i class="fas fa-plus-circle"></i> File Complaint</a
               >
               <a
-                href="{% url 'track_Complaint' %}"
+                href="{% url 'complaint:track_complaint' %}"
                 class="btn-cta"
                 style="
                   background: rgba(255, 255, 255, 0.2);
@@ -334,6 +334,5 @@
       </div>
     </div>
 
-    {% include "footer.html" %}
-  </body>
+      </body>
 </html>

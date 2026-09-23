@@ -1,165 +1,285 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
-from django.contrib import messages
-from .models import Fund, Project, Location
 import json
+import logging
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import models, transaction
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_http_methods
 
-# ==============================
-# ROLE CHECK
-# ==============================
-from account.models import UserProfile
+from account.permissions import role_required
+from .forms import FundForm, ProjectForm, LocationForm
+from .models import Fund, Project, Location
 
-def is_admin(user):
-    if not user.is_authenticated:
-        return False
-    try:
-        return user.userprofile.role == "super_admin"
-    except UserProfile.DoesNotExist:
-        return False
+logger = logging.getLogger(__name__)
 
 
-def is_admin_or_state(user):
-    if not user.is_authenticated:
-        return False
-    try:
-        return user.userprofile.role in ["super_admin", "state_admin"]
-    except UserProfile.DoesNotExist:
-        return False
-    
-# ==============================
-# BULK UPLOAD
-# ==============================
-from django.db import transaction
-
-@user_passes_test(is_admin)
-@transaction.atomic
-def funds_bulk_upload(request):
-    if request.method == 'POST':
-        file = request.FILES.get('file')
-
-        if not file or not file.name.endswith('.json'):
-            return HttpResponse("Only JSON file allowed")
-
-        try:
-            data = json.load(file)
-        except Exception:
-            return HttpResponse("Invalid JSON file")
-
-        for item in data:
-            if not all(k in item for k in ["title", "year", "location"]):
-                continue
-
-            location, _ = Location.objects.get_or_create(
-                name=item['location'],
-                type='district'
-            )
-
-            Fund.objects.update_or_create(
-                title=item['title'],
-                year=item['year'],
-                location=location,
-                defaults={
-                    'department': item.get('department', ''),
-                    'total_amount': item.get('total_amount', 0),
-                    'released_amount': item.get('released_amount', 0),
-                }
-            )
-
-        messages.success(request, "Bulk upload successful")
-        return redirect('/')
-
-    return redirect('/?view=upload')
-
-# ==============================
-# DASHBOARD
-# ==============================
-@login_required
-def dashboard(request):
-    view_type = request.GET.get('view', 'dashboard')
-
-    funds = Fund.objects.select_related('location').prefetch_related('projects')
-    projects = Project.objects.select_related('fund')
-    projects = Project.objects.all()
-    locations = Location.objects.all()
-
-    total_funds = funds.aggregate(total=Sum('total_amount'))['total'] or 0
-    total_released = funds.aggregate(total=Sum('released_amount'))['total'] or 0
-    total_used = projects.aggregate(total=Sum('used_amount'))['total'] or 0
-
-    context = {
-        'view_type': view_type,
-        'funds': funds,
-        'projects': projects,
-        'locations': locations,
+# -------------------- Helper --------------------
+def _get_fund_stats():
+    """Aggregate fund statistics."""
+    total_funds = Fund.objects.aggregate(total=models.Sum('total_amount'))['total'] or 0
+    total_released = Fund.objects.aggregate(total=models.Sum('released_amount'))['total'] or 0
+    total_used = Project.objects.aggregate(total=models.Sum('used_amount'))['total'] or 0
+    return {
         'total_funds': total_funds,
         'total_released': total_released,
         'total_used': total_used,
         'remaining': total_funds - total_used,
     }
 
-    if view_type == 'fund':
-        fund = get_object_or_404(Fund, id=request.GET.get('id'))
-        context.update({'fund': fund, 'projects': fund.projects.all()})
 
-    if view_type == 'location':
-        location = get_object_or_404(Location, id=request.GET.get('id'))
-        context.update({
-            'location': location,
-            'funds': location.funds.all(),
-            'projects': Project.objects.filter(fund__location=location)
-        })
+# -------------------- Dashboard --------------------
+@login_required
+@role_required(['super_admin', 'state_officer', 'district_officer'])
+def dashboard(request):
+    """Main dashboard with fund summary and lists."""
+    funds_list = Fund.objects.select_related('location').prefetch_related('projects').all()
+    paginator = Paginator(funds_list, 15)
+    page = request.GET.get('page')
+    try:
+        funds = paginator.page(page)
+    except PageNotAnInteger:
+        funds = paginator.page(1)
+    except EmptyPage:
+        funds = paginator.page(paginator.num_pages)
 
-    return render(request, 'dashboard.html', context)
+    stats = _get_fund_stats()
+    context = {
+        'funds': funds,
+        'locations': Location.objects.all(),
+        **stats,
+    }
+    return render(request, 'funds/dashboard.html', context)
 
-# ==============================
-# CREATE
-# ==============================
-@user_passes_test(is_admin)
-def create_fund(request):
+
+# -------------------- Fund CRUD --------------------
+@login_required
+@role_required(['super_admin', 'state_officer'])
+def fund_create(request):
     if request.method == 'POST':
         form = FundForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Fund Created Successfully")
-            return redirect('/')
+            fund = form.save()
+            messages.success(request, f'Fund "{fund.title}" created successfully.')
+            return redirect('funds:dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = FundForm()
+    return render(request, 'funds/fund_form.html', {'form': form, 'action': 'Create'})
 
-    return render(request, 'dashboard.html', {
-        'view_type': 'create_fund',
-        'form': form
-    })
 
-# ==============================
-# EDIT
-# ==============================
-@user_passes_test(is_admin)
-@user_passes_test(is_admin)
-def edit_fund(request, id):
-    fund = get_object_or_404(Fund, id=id)
-
+@login_required
+@role_required(['super_admin', 'state_officer'])
+def fund_edit(request, pk):
+    fund = get_object_or_404(Fund, pk=pk)
     if request.method == 'POST':
         form = FundForm(request.POST, instance=fund)
         if form.is_valid():
             form.save()
-            messages.success(request, "Fund Updated")
-            return redirect('/')
+            messages.success(request, f'Fund "{fund.title}" updated successfully.')
+            return redirect('funds:dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = FundForm(instance=fund)
+    return render(request, 'funds/fund_form.html', {'form': form, 'action': 'Edit'})
 
-    return render(request, 'dashboard.html', {
-        'view_type': 'edit_fund',
-        'form': form
-    })
 
-# ==============================
-# DELETE
-# ==============================
-@user_passes_test(is_admin)
-def delete_fund(request, id):
-    fund = get_object_or_404(Fund, id=id)
+@login_required
+@role_required(['super_admin'])
+@require_http_methods(['POST'])
+def fund_delete(request, pk):
+    fund = get_object_or_404(Fund, pk=pk)
+    title = fund.title
     fund.delete()
-    messages.success(request, "Fund Deleted")
-    return redirect('/')
+    messages.success(request, f'Fund "{title}" deleted successfully.')
+    return redirect('funds:dashboard')
+
+
+# -------------------- Project CRUD --------------------
+@login_required
+@role_required(['super_admin', 'state_officer'])
+def project_create(request, fund_pk=None):
+    initial = {}
+    if fund_pk:
+        initial['fund'] = get_object_or_404(Fund, pk=fund_pk)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save()
+            messages.success(request, f'Project "{project.name}" created successfully.')
+            return redirect('funds:dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ProjectForm(initial=initial)
+    return render(request, 'funds/project_form.html', {'form': form, 'action': 'Create'})
+
+
+@login_required
+@role_required(['super_admin', 'state_officer'])
+def project_edit(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Project "{project.name}" updated successfully.')
+            return redirect('funds:dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ProjectForm(instance=project)
+    return render(request, 'funds/project_form.html', {'form': form, 'action': 'Edit'})
+
+
+@login_required
+@role_required(['super_admin'])
+@require_http_methods(['POST'])
+def project_delete(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    name = project.name
+    project.delete()
+    messages.success(request, f'Project "{name}" deleted successfully.')
+    return redirect('funds:dashboard')
+
+
+# -------------------- Location CRUD --------------------
+@login_required
+@role_required(['super_admin'])
+def location_create(request):
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            location = form.save()
+            messages.success(request, f'Location "{location.name}" created.')
+            return redirect('funds:dashboard')
+    else:
+        form = LocationForm()
+    return render(request, 'funds/location_form.html', {'form': form})
+
+
+@login_required
+@role_required(['super_admin'])
+def location_edit(request, pk):
+    location = get_object_or_404(Location, pk=pk)
+    if request.method == 'POST':
+        form = LocationForm(request.POST, instance=location)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Location "{location.name}" updated.')
+            return redirect('funds:dashboard')
+    else:
+        form = LocationForm(instance=location)
+    return render(request, 'funds/location_form.html', {'form': form})
+
+
+@login_required
+@role_required(['super_admin'])
+@require_http_methods(['POST'])
+def location_delete(request, pk):
+    location = get_object_or_404(Location, pk=pk)
+    name = location.name
+    location.delete()
+    messages.success(request, f'Location "{name}" deleted.')
+    return redirect('funds:dashboard')
+
+
+# -------------------- Bulk Upload --------------------
+@login_required
+@role_required(['super_admin'])
+@transaction.atomic
+def bulk_upload(request):
+    if request.method != 'POST':
+        return render(request, 'funds/bulk_upload.html')
+
+    file = request.FILES.get('file')
+    if not file:
+        messages.error(request, 'No file selected.')
+        return redirect('funds:bulk_upload')
+
+    if not file.name.endswith('.json'):
+        messages.error(request, 'Only JSON files are allowed.')
+        return redirect('funds:bulk_upload')
+
+    try:
+        data = json.load(file)
+    except json.JSONDecodeError as e:
+        messages.error(request, f'Invalid JSON file: {e}')
+        return redirect('funds:bulk_upload')
+
+    if not isinstance(data, list):
+        messages.error(request, 'JSON must contain a list of objects.')
+        return redirect('funds:bulk_upload')
+
+    created_count = 0
+    updated_count = 0
+    errors = []
+
+    for idx, item in enumerate(data, start=1):
+        # Validate required fields
+        required = ['title', 'year', 'location']
+        if not all(k in item for k in required):
+            errors.append(f"Row {idx}: Missing required fields: {required}")
+            continue
+
+        # Get or create location
+        location_name = item['location']
+        location, loc_created = Location.objects.get_or_create(
+            name=location_name,
+            defaults={'type': Location.DISTRICT}  # default type; you can adjust
+        )
+        if loc_created:
+            # Optionally log location creation
+            pass
+
+        # Prepare fund data
+        defaults = {
+            'department': item.get('department', ''),
+            'total_amount': item.get('total_amount', 0),
+            'released_amount': item.get('released_amount', 0),
+        }
+
+        try:
+            fund, created = Fund.objects.update_or_create(
+                title=item['title'],
+                year=item['year'],
+                location=location,
+                defaults=defaults
+            )
+            if created:
+                created_count += 1
+            else:
+                updated_count += 1
+        except Exception as e:
+            errors.append(f"Row {idx}: {str(e)}")
+
+    if errors:
+        messages.warning(request, f"Bulk upload completed with {len(errors)} errors. "
+                                  f"Created: {created_count}, Updated: {updated_count}. "
+                                  f"First error: {errors[0]}")
+    else:
+        messages.success(request, f"Bulk upload successful. Created: {created_count}, Updated: {updated_count}")
+
+    return redirect('funds:dashboard')
+
+
+# -------------------- API (optional) --------------------
+@login_required
+def fund_detail_json(request, pk):
+    fund = get_object_or_404(Fund, pk=pk)
+    data = {
+        'id': fund.id,
+        'title': fund.title,
+        'department': fund.department,
+        'total_amount': str(fund.total_amount),
+        'released_amount': str(fund.released_amount),
+        'used_amount': str(fund.used_amount),
+        'remaining': str(fund.remaining_amount),
+        'year': fund.year,
+        'location': fund.location.name,
+        'projects': [{'id': p.id, 'name': p.name, 'status': p.status} for p in fund.projects.all()],
+    }
+    return JsonResponse(data)

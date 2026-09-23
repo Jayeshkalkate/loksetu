@@ -1,42 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Pie Chart
-  new Chart(document.getElementById("statusChart"), {
-    type: "pie",
-    data: {
-      labels: Object.keys(statusData),
-      datasets: [
-        {
-          data: Object.values(statusData),
-        },
-      ],
-    },
-  });
+/**
+ * dashboard.js – Additional dashboard interactivity.
+ * Can be merged with charts.js if desired, but kept separate for modularity.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    // Auto-refresh notification (example)
+    const refreshBtn = document.getElementById('refreshDashboard');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () {
+            location.reload();
+        });
+    }
 
-  // Bar Chart
-  new Chart(document.getElementById("districtChart"), {
-    type: "bar",
-    data: {
-      labels: districtData.map((d) => d.district),
-      datasets: [
-        {
-          label: "Complaints",
-          data: districtData.map((d) => d.count),
-        },
-      ],
-    },
-  });
+    // Toggle sidebar on mobile (Bootstrap or custom)
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+    }
 
-  // Line Chart
-  new Chart(document.getElementById("trendChart"), {
-    type: "line",
-    data: {
-      labels: trendLabels,
-      datasets: [
-        {
-          label: "Complaints",
-          data: trendValues,
-        },
-      ],
-    },
-  });
+    // Tooltip initialisation (if using Bootstrap)
+    if (typeof bootstrap !== 'undefined') {
+        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltips.map(el => new bootstrap.Tooltip(el));
+    }
+
+    console.log('Dashboard interactive elements initialised.');
 });

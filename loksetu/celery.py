@@ -1,18 +1,13 @@
-# loksetu/celery.py
-
 import os
 from celery import Celery
 
-os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE",
-    "loksetu.settings"
-)
+# Set the default Django settings module
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "loksetu.settings")
 
 app = Celery("loksetu")
 
-app.config_from_object(
-    "django.conf:settings",
-    namespace="CELERY"
-)
+# Load task modules from all registered Django app configs.
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
+# Auto-discover tasks in installed apps
 app.autodiscover_tasks()

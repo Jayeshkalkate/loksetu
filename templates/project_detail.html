@@ -1,4 +1,4 @@
-{% load static %} {% include "header.html" %}
+{% load static %} {% include "base.html" %}
 
 <!doctype html>
 <html lang="en">
@@ -261,12 +261,10 @@
       <div class="project-header">
         <div>
           <h2>
-            <i class="fas fa-project-diagram" style="color: #1a3c6e"></i> {{
-            project.name }}
+            <i class="fas fa-project-diagram" style="color: #1a3c6e"></i> {{ project.name }}
           </h2>
           <div style="color: #6c7a8a; font-size: 0.9rem; margin-top: 4px">
-            <i class="fas fa-calendar-alt"></i> Started: {{
-            project.start_date|date:"d M Y"|default:"Not specified" }}
+            <i class="fas fa-calendar-alt"></i> Started: {{ project.start_date|date:"d M Y"|default:"Not specified" }}
           </div>
         </div>
         <span class="status-badge {{ project.status|lower }}">
@@ -345,15 +343,13 @@
       <!-- ===== ComplaintS SECTION ===== -->
       <div class="section-card">
         <h4>
-          <i class="fas fa-exclamation-triangle"></i> Related Complaints ({{
-          Complaints|length }})
+          <i class="fas fa-exclamation-triangle"></i> Related Complaints ({{ Complaints|length }})
         </h4>
         {% if Complaints %} {% for Complaint in Complaints %}
         <div class="Complaint-item">
           <div class="Complaint-header">
             <strong
-              ><i class="fas fa-user-circle"></i> {{
-              Complaint.user_name|default:"Anonymous" }}</strong
+              ><i class="fas fa-user-circle"></i> {{ Complaint.user_name|default:"Anonymous" }}</strong
             >
             <span class="Complaint-status {{ Complaint.status|lower|cut:' ' }}">
               {{ Complaint.status|title }}
@@ -363,8 +359,7 @@
             {{ Complaint.description|truncatechars:120 }}
           </p>
           <div style="font-size: 0.8rem; color: #6c7a8a; margin-top: 4px">
-            <i class="fas fa-calendar-alt"></i> {{ Complaint.created_at|date:"d
-            M Y"|default:"Recently" }}
+            <i class="fas fa-calendar-alt"></i> {{ Complaint.created_at|date:"d M Y"|default:"Recently" }}
           </div>
         </div>
         {% endfor %} {% else %}
@@ -376,11 +371,10 @@
       </div>
 
       <!-- ===== BACK BUTTON ===== -->
-      <a href="{% url 'projects' %}" class="back-link">
+      <a href="{% url 'funds:dashboard' %}" class="back-link">
         <i class="fas fa-arrow-left"></i> Back to Projects
       </a>
     </div>
 
-    {% include "footer.html" %}
-  </body>
+      </body>
 </html>
