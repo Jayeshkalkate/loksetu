@@ -1,0 +1,36 @@
+{% extends 'base.html' %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>Government Departments</h1>
+<p class="lead" style="max-width:65ch">Find the right department for a service, scheme, or problem — instead of a phone number, LOKSETU shows you what a department does and where to go.</p>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-sm-7"><input class="form-control" type="text" name="q" value="{{ query }}" placeholder="What do you need help with? e.g. farmer subsidy, birth certificate, land records"></div>
+  <div class="col-sm-3"><select class="form-select" name="category">
+    <option value="">All categories</option>
+    {% for value, label in categories %}<option value="{{ value }}" {% if value == category %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select></div>
+  <div class="col-sm-2"><button class="btn btn-saffron w-100">Search</button></div>
+</form>
+
+<h2 class="h5 mb-3">Which department should I contact?</h2>
+<div class="d-flex flex-wrap gap-2 mb-4">
+{% for need, cats in needs %}<a class="btn btn-outline-dark btn-sm" href="?category={{ cats.0 }}">{{ need }}</a>{% endfor %}
+</div>
+
+<p class="text-muted">{{ total }} department{{ total|pluralize }} found</p>
+
+{% for label, deps in grouped.items %}
+<h2 class="h5 mt-4">{{ label }}</h2>
+<div class="row g-3 mb-3">
+{% for d in deps %}
+<div class="col-md-6"><div class="tile h-100 d-flex flex-column">
+  <h3 class="h6 mb-1"><a href="{% url 'department_detail' d.pk %}">{{ d.name }}</a></h3>
+  <p class="mb-2 small">{{ d.description|default:"Profile coming soon."|truncatewords:28 }}</p>
+  <div class="mt-auto d-flex justify-content-between align-items-center small text-muted">
+    <span>{{ d.scheme_count }} scheme{{ d.scheme_count|pluralize }} · {{ d.officer_count }} contact{{ d.officer_count|pluralize }}</span>
+    <a class="btn btn-saffron btn-sm" href="{% url 'department_detail' d.pk %}">View department →</a>
+  </div>
+</div></div>
+{% endfor %}
+</div>
+{% empty %}<p>No departments match your search yet.</p>{% endfor %}
+{% endblock %}

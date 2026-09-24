@@ -52,7 +52,7 @@ class Status(models.TextChoices):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    department = models.ForeignKey('departments.Department', on_delete=models.PROTECT)
+    department = models.ForeignKey('departments.Department', on_delete=models.PROTECT, related_name='categories')
 
     class Meta:
         verbose_name_plural = 'categories'

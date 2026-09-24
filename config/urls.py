@@ -2,8 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import ListView, TemplateView
 
-from core.views import healthz, home, robots
-from departments.models import Department
+from core.views import about, healthz, home, robots
 from emergency.models import EmergencyContact
 from news.models import Announcement
 from schemes.models import Scheme
@@ -29,10 +28,10 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('complaints/', include('complaints.urls')),
     path('schemes/', listing(Scheme, 'Government Schemes'), name='schemes'),
-    path('departments/', listing(Department, 'Departments'), name='departments'),
+    path('departments/', include('departments.urls')),
     path('news/', listing(Announcement, 'News & Announcements'), name='news'),
     path('emergency/', listing(EmergencyContact, 'Emergency Contacts'), name='emergency'),
-    path('about/', page('About', 'LOKSETU is a bridge between the citizens of Maharashtra and their government: report civic issues, track them, and find schemes, news and public projects in one place.'), name='about'),
+    path('about/', about, name='about'),
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     path('privacy/', page('Privacy Policy', 'We collect only the details needed to process your complaints. Your contact details and complaint description are never shown publicly.'), name='privacy'),
     path('terms/', page('Terms & Conditions', 'Submit only genuine complaints. False or abusive reports may lead to account suspension.'), name='terms'),

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}{% block title %}About{% endblock %}{% block content %}
+<section class="hero p-4 p-md-5 rounded mb-4">
+<h1 class="display-6 fw-bold">About LOKSETU</h1>
+<p class="lead mb-0">A digital bridge between the citizens of Maharashtra and their government — schemes, departments, services and public projects, in one place.</p>
+<p class="mb-0 mt-2">लोक आणि शासन यांच्यातील डिजिटल सेतू.</p>
+</section>
+
+<h2 class="h4">Maharashtra at a glance</h2>
+<div class="row g-3 mb-2">
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.districts.value }}</b>{{ facts.districts.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.divisions.value }}</b>{{ facts.divisions.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.talukas.value }}</b>{{ facts.talukas.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.villages.value }}</b>{{ facts.villages.label }} <small class="text-muted">({{ facts.villages.year }})</small></div></div>
+</div>
+<div class="row g-3 mb-2">
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.cities.value }}</b>{{ facts.cities.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.area.value }}</b>{{ facts.area.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.coastline.value }}</b>{{ facts.coastline.label }}</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ facts.population.value }}</b>{{ facts.population.label }} <small class="text-muted">({{ facts.population.source }})</small></div></div>
+</div>
+<p class="small text-muted mb-4">Figures are administrative reference data; each is shown with its reference year since different government datasets are updated on different schedules.</p>
+
+<h2 class="h4 mt-4">Explore Maharashtra, level by level</h2>
+<p style="max-width:70ch">LOKSETU organises Maharashtra the way citizens actually experience it: <b>State → Revenue Division → District → Taluka → City / Village</b>. Every district has its own profile — people, economy, education, healthcare, infrastructure and administration — instead of one long page of statewide statistics.</p>
+
+{% if districts %}
+<div class="row g-2 mb-2">
+{% for d in districts %}<div class="col-6 col-md-3"><div class="tile py-2"><span class="fw-semibold">{{ d.name }}</span>{% if d.division %}<br><small class="text-muted">{{ d.division }}</small>{% endif %}</div></div>{% endfor %}
+</div>
+<p class="small text-muted">Showing {{ districts|length }} of {{ district_count }} districts loaded so far.</p>
+{% else %}
+<p class="text-muted">District profiles are being added to LOKSETU's database — check back soon for a full breakdown by district, taluka and village.</p>
+{% endif %}
+
+<h2 class="h4 mt-4">Your government, closer to you</h2>
+<p style="max-width:70ch">A citizen shouldn't need to know which department is responsible before trying to solve a problem. LOKSETU's <a href="{% url 'departments' %}">Departments directory</a> lets you search by what you need — a certificate, a subsidy, a complaint — and shows the right department, its services, schemes and official contacts.</p>
+<a class="btn btn-saffron" href="{% url 'departments' %}">Browse departments →</a>
+<a class="btn btn-outline-dark ms-2" href="{% url 'schemes' %}">Browse schemes →</a>
+
+<h2 class="h4 mt-4">Where does our data come from?</h2>
+<p style="max-width:70ch">LOKSETU prioritises information from the Government of Maharashtra, the Maharashtra State Data Bank, the Directorate of Economics and Statistics, and official department and district portals. Every statistic on this page is shown with its reference year, and every scheme or department profile links back to its official source where one is available. LOKSETU is an independent citizen project and is not an official Government of Maharashtra website unless stated — see our <a href="{% url 'disclaimer' %}">disclaimer</a>.</p>
+
+<h2 class="h4 mt-4">Information. Access. Connection.</h2>
+<p style="max-width:70ch">From a major city to the smallest village, every part of Maharashtra is connected through its people, institutions, administration, services and communities. LOKSETU brings these connections together in one place.</p>
+{% endblock %}

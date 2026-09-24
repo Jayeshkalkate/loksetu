@@ -1,0 +1,60 @@
+{% extends 'base.html' %}{% block title %}{{ department.name }}{% endblock %}{% block content %}
+<p><a href="{% url 'departments' %}">← All departments</a></p>
+<h1>{{ department.name }}</h1>
+<p class="text-muted">{{ department.get_category_display }}</p>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ department.scheme_count }}</b>Schemes</div></div>
+  <div class="col-6 col-md-3"><div class="tile"><b>{{ department.officer_count }}</b>Contacts listed</div></div>
+</div>
+
+<h2 class="h5">About the department</h2>
+<p style="max-width:70ch">{{ department.description|default:"No description added yet."|linebreaksbr }}</p>
+
+{% if department.responsibilities_list %}
+<h2 class="h5 mt-4">What does this department do?</h2>
+<ul>{% for r in department.responsibilities_list %}<li>{{ r }}</li>{% endfor %}</ul>
+{% endif %}
+
+<h2 class="h5 mt-4">Schemes under this department</h2>
+{% for s in schemes %}<div class="tile mb-2"><a href="{% url 'schemes' %}">{{ s.name }}</a></div>{% empty %}<p>No schemes listed yet.</p>{% endfor %}
+
+<h2 class="h5 mt-4">Contact the department</h2>
+<table class="table table-sm w-auto">
+<tbody>
+{% if department.hod_name or department.hod_designation %}<tr><th>Head of Department</th><td>{{ department.hod_name }}{% if department.hod_designation %} — {{ department.hod_designation }}{% endif %}</td></tr>{% endif %}
+{% if department.phone %}<tr><th>Office phone</th><td><a href="tel:{{ department.phone }}">{{ department.phone }}</a></td></tr>{% endif %}
+{% if department.email %}<tr><th>Email</th><td><a href="mailto:{{ department.email }}">{{ department.email }}</a></td></tr>{% endif %}
+{% if department.address %}<tr><th>Address</th><td>{{ department.address }}</td></tr>{% endif %}
+{% if department.website %}<tr><th>Website</th><td><a href="{{ department.website }}" target="_blank" rel="noopener noreferrer">{{ department.website }}</a></td></tr>{% endif %}
+{% if department.citizen_helpline %}<tr><th>Citizen helpline</th><td><a href="tel:{{ department.citizen_helpline }}">{{ department.citizen_helpline }}</a></td></tr>{% endif %}
+</tbody>
+</table>
+
+{% if officers %}
+<h2 class="h5 mt-4">Department officers</h2>
+<table class="table table-sm">
+<thead><tr><th>Name</th><th>Designation</th><th>Responsibility</th><th>Phone</th><th>Email</th></tr></thead>
+<tbody>{% for o in officers %}<tr><td>{{ o.name|default:"—" }}</td><td>{{ o.designation }}</td><td>{{ o.responsibility }}</td>
+<td>{% if o.phone %}<a href="tel:{{ o.phone }}">{{ o.phone }}</a>{% endif %}</td>
+<td>{% if o.email %}<a href="mailto:{{ o.email }}">{{ o.email }}</a>{% endif %}</td></tr>{% endfor %}</tbody>
+</table>
+{% endif %}
+
+{% if department.grievance_officer or department.grievance_portal_url %}
+<h2 class="h5 mt-4">Have a problem?</h2>
+<p>{% if department.grievance_officer %}Grievance officer: {{ department.grievance_officer }}<br>{% endif %}
+{% if department.grievance_portal_url %}<a class="btn btn-danger btn-sm" href="{{ department.grievance_portal_url }}" target="_blank" rel="noopener noreferrer">Register a grievance</a>{% endif %}</p>
+{% endif %}
+
+{% if department.rti_officer %}
+<h2 class="h5 mt-4">Right to Information</h2>
+<p>Public Information Officer: {{ department.rti_officer }}{% if department.rti_appellate_authority %}<br>Appellate authority: {{ department.rti_appellate_authority }}{% endif %}</p>
+{% endif %}
+
+<h2 class="h5 mt-4">Sources</h2>
+<p class="small text-muted">
+{% if department.source_url %}Official source: <a href="{{ department.source_url }}" target="_blank" rel="noopener noreferrer">{{ department.source_url }}</a><br>{% endif %}
+{% if department.last_verified %}Information verified on {{ department.last_verified|date:"d M Y" }}.{% else %}Not yet verified against an official source — please confirm details on the department's website.{% endif %}
+</p>
+{% endblock %}
