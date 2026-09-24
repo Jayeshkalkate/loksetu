@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block content %}<h1>Create your account</h1><p>For citizens of Maharashtra.</p>
+<form method="post" style="max-width:34rem">{% csrf_token %}{{ form.as_div }}<button class="btn btn-saffron btn-lg mt-3">Create account</button></form>{% endblock %}

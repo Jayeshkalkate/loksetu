@@ -1,0 +1,17 @@
+from django.db.models import Count, Q
+from django.shortcuts import render
+from complaints.models import Complaint
+from emergency.models import EmergencyContact
+from news.models import Announcement
+from schemes.models import Scheme
+
+
+def home(request):
+    stats = Complaint.objects.aggregate(
+        total=Count('id'),
+        pending=Count('id', filter=Q(status__in=['SUBMITTED', 'RECEIVED', 'ASSIGNED'])),
+        progress=Count('id', filter=Q(status__in=['UNDER_REVIEW', 'IN_PROGRESS', 'NEEDS_INFO'])),
+        resolved=Count('id', filter=Q(status__in=['RESOLVED', 'CLOSED'])))
+    return render(request, 'home.html', {
+        'stats': stats, 'schemes': Scheme.objects.all()[:3], 'news': Announcement.objects.all()[:3],
+        'emergency': EmergencyContact.objects.filter(number__in=['100', '108', '101', '112'])})

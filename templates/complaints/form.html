@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block content %}<h1>File a complaint</h1>
+<p>The complaint goes to the right department automatically based on the category.</p>
+<form method="post" enctype="multipart/form-data" style="max-width:40rem">{% csrf_token %}{{ form.as_div }}
+<button class="btn btn-saffron btn-lg mt-3">Submit complaint</button></form>{% endblock %}

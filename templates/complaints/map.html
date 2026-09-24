@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}<h1>Complaint map</h1><p>Locations are approximate. No personal details are shown.</p><div id="map" style="height:70vh" class="rounded"></div>{% endblock %}
+{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const map=L.map('map').setView([19.75,75.71],6);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+fetch("{% url 'map_data' %}").then(r=>r.json()).then(d=>d.points.forEach(p=>
+L.circleMarker([p.lat,p.lng],{radius:8,color:'#e8871e'}).bindPopup(document.createTextNode(p.category+' — '+p.status).textContent).addTo(map)));
+</script>{% endblock %}
