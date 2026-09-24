@@ -2,18 +2,41 @@ import os
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models, transaction
 from django.utils import timezone
 
 ALLOWED_EXT = {'.jpg', '.jpeg', '.png', '.pdf', '.mp4'}
 MAX_UPLOAD = 10 * 1024 * 1024
+CONTENT_TYPES = {'.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+                 '.pdf': 'application/pdf', '.mp4': 'video/mp4'}
+
+
+def _looks_like(ext, head):
+    if ext in ('.jpg', '.jpeg'):
+        return head.startswith(b'\xff\xd8\xff')
+    if ext == '.png':
+        return head.startswith(b'\x89PNG\r\n\x1a\n')
+    if ext == '.pdf':
+        return head.startswith(b'%PDF-')
+    if ext == '.mp4':
+        return head[4:8] == b'ftyp'
+    return False
 
 
 def validate_upload(f):
-    if os.path.splitext(f.name)[1].lower() not in ALLOWED_EXT:
+    """Check extension, size and the file's real signature (not just its name)."""
+    ext = os.path.splitext(f.name)[1].lower()
+    if ext not in ALLOWED_EXT:
         raise ValidationError('Allowed files: JPG, PNG, PDF, MP4.')
     if f.size > MAX_UPLOAD:
         raise ValidationError('File is larger than 10 MB.')
+    pos = f.tell() if hasattr(f, 'tell') else 0
+    f.seek(0)
+    head = f.read(12)
+    f.seek(pos)
+    if not _looks_like(ext, head):
+        raise ValidationError('The file content does not match its type. Upload a genuine JPG, PNG, PDF or MP4.')
 
 
 class Status(models.TextChoices):
@@ -51,8 +74,8 @@ class Complaint(models.Model):
     village_city = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=255, blank=True)
     incident_date = models.DateField(default=timezone.localdate)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True, validators=[MinValueValidator(-90), MaxValueValidator(90)])
+    longitude = models.FloatField(null=True, blank=True, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     additional_info = models.TextField(blank=True)
     status = models.CharField(max_length=14, choices=Status.choices, default=Status.SUBMITTED)
     assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,
@@ -82,9 +105,28 @@ class Complaint(models.Model):
                                     message=f'{self.complaint_id}: {self.get_status_display()}')
         log(by, 'Complaint status', self.complaint_id, new=self.status)
         if self.citizen.email:
-            send_mail(f'LOKSETU {self.complaint_id}: {self.get_status_display()}',
-                      f'Your complaint "{self.title}" is now: {self.get_status_display()}.\n'
-                      f'Track it with ID {self.complaint_id}.', None, [self.citizen.email], fail_silently=True)
+            subject = f'LOKSETU {self.complaint_id}: {self.get_status_display()}'
+            body = (f'Your complaint "{self.title}" is now: {self.get_status_display()}.\n'
+                    f'Track it with ID {self.complaint_id}.')
+            to = [self.citizen.email]
+            # Send only after the DB transaction commits; a mail failure never breaks the request.
+            transaction.on_commit(lambda: send_mail(subject, body, None, to, fail_silently=True))
+
+    def can_view_private(self, user):
+        """Owner, or staff whose role scope covers this complaint. Others see the public summary only."""
+        if not getattr(user, 'is_authenticated', False):
+            return False
+        if user.pk == self.citizen_id:
+            return True
+        if not user.is_staff:
+            return False
+        if user.is_superuser or user.role == 'SUPER':
+            return True
+        if user.role == 'DEPT_ADMIN':
+            return user.department_id is not None and user.department_id == self.department_id
+        if user.role == 'OFFICER':
+            return self.assigned_to_id == user.pk
+        return False
 
     def set_status(self, status, by, note=''):
         self.status = status

@@ -1,5 +1,17 @@
-{% extends 'base.html' %}{% block content %}<h1>{{ title }}</h1>
+{% extends 'base.html' %}{% block title %}{{ title }}{% endblock %}{% block content %}<h1>{{ title }}</h1>
 {% for o in object_list %}<div class="tile mb-3"><h2 class="h5">{{ o }}</h2><p class="mb-1">{{ o.blurb|linebreaksbr }}</p>
+{% if o.eligibility %}<p class="mb-1"><b>Eligibility:</b> {{ o.eligibility|linebreaksbr }}</p>{% endif %}
+{% if o.benefits %}<p class="mb-1"><b>Benefits:</b> {{ o.benefits|linebreaksbr }}</p>{% endif %}
+{% if o.documents_required %}<p class="mb-1"><b>Documents required:</b> {{ o.documents_required|linebreaksbr }}</p>{% endif %}
+{% if o.application_process %}<p class="mb-1"><b>How to apply:</b> {{ o.application_process|linebreaksbr }}</p>{% endif %}
+{% if o.published %}<small class="text-muted d-block">{{ o.published|date:"d M Y" }}{% if o.is_official %} · <span class="badge bg-success">Official</span>{% endif %}</small>{% endif %}
 {% if o.number %}<a class="btn btn-danger" href="tel:{{ o.number }}">Call {{ o.number }}</a>{% endif %}
-{% if o.official_source %}<a href="{{ o.official_source }}" rel="noopener">Official source</a>{% endif %}</div>
-{% empty %}<p>Nothing here yet.</p>{% endfor %}{% endblock %}
+{% if o.application_link %}<a class="btn btn-saffron btn-sm" href="{{ o.application_link }}" rel="noopener noreferrer" target="_blank">Apply</a>{% endif %}
+{% if o.official_source %}<a href="{{ o.official_source }}" rel="noopener noreferrer" target="_blank">Official source</a>{% endif %}
+{% if o.source_url %}<a href="{{ o.source_url }}" rel="noopener noreferrer" target="_blank">Source</a>{% endif %}</div>
+{% empty %}<p>Nothing here yet.</p>{% endfor %}
+{% if is_paginated %}<nav aria-label="Pages" class="d-flex gap-3 align-items-center">
+{% if page_obj.has_previous %}<a class="btn btn-outline-dark btn-sm" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+<span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+{% if page_obj.has_next %}<a class="btn btn-outline-dark btn-sm" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}</nav>{% endif %}
+{% endblock %}

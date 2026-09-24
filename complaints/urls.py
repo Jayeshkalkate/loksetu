@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -7,5 +8,6 @@ urlpatterns = [
     path('history/', views.history, name='history'),
     path('map/', views.complaint_map, name='complaint_map'),
     path('map/data/', views.map_data, name='map_data'),
+    path('evidence/<int:pk>/', views.evidence_file, name='evidence_file'),
     path('<str:cid>/', views.detail, name='complaint_detail'),
 ]

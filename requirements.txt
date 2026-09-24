@@ -1,7 +1,8 @@
-Django>=5.0,<6.0
-python-dotenv
-Pillow
-gunicorn
-whitenoise
-psycopg[binary]
-dj-database-url
+Django>=5.2,<6.0
+python-dotenv>=1.0,<2
+Pillow>=10.0
+gunicorn>=22.0
+whitenoise>=6.6,<7
+psycopg[binary]>=3.1,<4
+dj-database-url>=2.1,<4
+sentry-sdk>=2.0,<3

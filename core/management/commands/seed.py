@@ -19,9 +19,13 @@ EMERGENCY = [('Police', 'Police', '100'), ('Ambulance', 'Ambulance', '108'), ('F
 
 
 class Command(BaseCommand):
-    help = 'Load districts, departments, categories and sample content'
+    help = 'Load districts, departments, categories and emergency numbers (idempotent). Use --demo for sample content.'
 
-    def handle(self, *a, **k):
+    def add_arguments(self, parser):
+        parser.add_argument('--demo', action='store_true',
+                            help='Also add placeholder scheme/announcement (development only)')
+
+    def handle(self, *a, demo=False, **k):
         for d in DISTRICTS:
             District.objects.get_or_create(name=d.strip())
         for cat, dept in CATEGORIES.items():
@@ -29,10 +33,12 @@ class Command(BaseCommand):
             Category.objects.get_or_create(name=cat, defaults={'department': dep})
         for c, n, num in EMERGENCY:
             EmergencyContact.objects.get_or_create(number=num, defaults={'category': c, 'name': n})
-        Scheme.objects.get_or_create(
-            name='Sample scheme (replace with verified data)',
-            defaults={'description': 'Placeholder entry. Add real schemes with their official source.',
-                      'official_source': 'https://www.maharashtra.gov.in'})
-        Announcement.objects.get_or_create(title='Welcome to LOKSETU',
-                                           defaults={'body': 'Sample announcement. Only tick "official" for authoritative sources.'})
+        if demo:
+            Scheme.objects.get_or_create(
+                name='Sample scheme (replace with verified data)',
+                defaults={'description': 'Placeholder entry. Add real schemes with their official source.',
+                          'official_source': 'https://www.maharashtra.gov.in'})
+            Announcement.objects.get_or_create(
+                title='Welcome to LOKSETU',
+                defaults={'body': 'Sample announcement. Only tick "official" for authoritative sources.'})
         self.stdout.write(self.style.SUCCESS('Seed data loaded.'))
