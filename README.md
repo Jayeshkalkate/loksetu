@@ -9,11 +9,27 @@ pip install -r requirements.txt
 cp .env.example .env                                  # then set DEBUG=True in .env for local work
 python manage.py migrate
 python manage.py seed                                 # districts, departments, categories, emergency numbers
-python manage.py seed --demo                          # optional: placeholder scheme + announcement (dev only)
+python manage.py seed --demo                          # optional: one placeholder item per app (dev only)
+python manage.py demo_data                            # optional: a full demo dataset — see below
 python manage.py createsuperuser
 python manage.py runserver
 ```
 `DEBUG` is **off by default** (secure by default). With it off, `SECRET_KEY` is mandatory.
+
+## Full demo dataset
+`python manage.py demo_data` loads a much richer dataset than `seed --demo` — enough to make every page and
+the dashboard charts look populated:
+* 5 citizens, 4 officers, 4 department admins and 1 super admin (`demo_citizen1`, `demo_officer1`,
+  `demo_deptadmin1`, `demo_superadmin`, …) — **password for all of them:** `Demo-pass-2026!`
+* 60 complaints spread across every status, district, category and the last ~55 days (so the dashboard's
+  status/trend/department/district charts have real shape)
+* 5 schemes, 5 announcements, 6 projects (one per status), 5 funds across two financial years, 5 documents
+  (one per category), 5 reports (one per type), 7 FAQs across 3 categories, and 5 support tickets
+Every record's title/name is prefixed `[DEMO] ` so it's easy to spot and safe to remove:
+```bash
+python manage.py demo_data --flush   # deletes all [DEMO] records, then reloads a fresh set
+```
+This command is for **local development only** — never run it against a production database.
 
 ## Tests
 ```bash
