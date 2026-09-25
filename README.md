@@ -1,125 +1,53 @@
-# LOKSETU — Citizen–Government Digital Bridge (Maharashtra)
+# LOKSETU — new features from the cybercafe project
 
-Django 5.2 project for filing and tracking civic complaints, plus schemes, news, departments and emergency contacts.
+This adds: Gallery, Reviews, Job & Recruitment Notifications, and Book Appointment
+(+ a "My appointments" section on the profile/dashboard page). Terms, Privacy,
+Dashboard and Profile already existed in LOKSETU so those were extended in place
+instead of duplicated.
 
-## Run locally
-```bash
-python -m venv venv && source venv/bin/activate      # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env                                  # then set DEBUG=True in .env for local work
-python manage.py migrate
-python manage.py seed                                 # districts, departments, categories, emergency numbers
-python manage.py seed --demo                          # optional: one placeholder item per app (dev only)
-python manage.py demo_data                            # optional: a full demo dataset — see below
-python manage.py createsuperuser
-python manage.py runserver
-```
-`DEBUG` is **off by default** (secure by default). With it off, `SECRET_KEY` is mandatory.
+Already tested end-to-end (migrations applied, all pages return 200, both the
+review form and appointment form submit and redirect correctly).
 
-## Full demo dataset
-`python manage.py demo_data` loads a much richer dataset than `seed --demo` — enough to make every page and
-the dashboard charts look populated:
-* 5 citizens, 4 officers, 4 department admins and 1 super admin (`demo_citizen1`, `demo_officer1`,
-  `demo_deptadmin1`, `demo_superadmin`, …) — **password for all of them:** `Demo-pass-2026!`
-* 60 complaints spread across every status, district, category and the last ~55 days (so the dashboard's
-  status/trend/department/district charts have real shape)
-* 5 schemes, 5 announcements, 6 projects (one per status), 5 funds across two financial years, 5 documents
-  (one per category), 5 reports (one per type), 7 FAQs across 3 categories, and 5 support tickets
-Every record's title/name is prefixed `[DEMO] ` so it's easy to spot and safe to remove:
-```bash
-python manage.py demo_data --flush   # deletes all [DEMO] records, then reloads a fresh set
-```
-This command is for **local development only** — never run it against a production database.
+## How to apply
 
-## Tests
-```bash
-DEBUG=True python manage.py test
-```
-The original 30 tests cover registration, login/throttling, password reset, complaint filing, upload validation,
-privacy rules, evidence access control, admin department scoping and the public pages. Additional tests for the
-dashboard, projects, funds, documents, reports, FAQ and support apps live in each app's own `tests.py`.
+1. Copy these folders straight into your LOKSETU project root (same level as
+   `manage.py`), overwriting nothing that doesn't already exist there:
+   - `gallery/`
+   - `reviews/`
+   - `jobs/`
+   - `appointments/`
+   - `templates/gallery/`, `templates/reviews/`, `templates/appointments/`
+     (merge into your existing `templates/` folder)
 
-## Roles
-Citizens self-register. Staff accounts are created in `/admin/` → Users: set **role** (Officer / Department
-Administrator / Super Administrator) and **department**. Saving the user automatically ticks *staff* and adds them to the
-right permission group (`Officers` / `Department Admins`, created on every `migrate`).
+2. These 3 files already exist in your project and were modified — replace them:
+   - `config/settings.py` — added `'gallery', 'reviews', 'jobs', 'appointments'`
+     to `INSTALLED_APPS` (only that one line changed; if you've edited settings.py
+     since, just add those 4 app names yourself instead of overwriting the file)
+   - `config/urls.py` — added routes for jobs/gallery/reviews/appointment
+   - `accounts/views.py` — `profile()` now also loads the user's recent appointments
 
-| Role | Sees in admin | Can change |
-|---|---|---|
-| Officer | complaints assigned to them | status only |
-| Department Admin | their department's complaints | status + assign to an officer of their department |
-| Super Admin / superuser | everything | everything |
+3. These 3 templates already exist and were modified — replace them, or apply
+   the small diffs yourself if you've customized them:
+   - `templates/base.html` — added nav links (Jobs, Gallery, Reviews, Book Appointment)
+   - `templates/list.html` — added a "last date to apply" line for job postings
+     (harmless no-op for schemes/news, which don't have that field)
+   - `templates/profile.html` — added a "My appointments" section + button
 
-Bulk actions "Mark as In progress / Resolved" record timeline entries, notify the citizen and write an audit log.
+4. Run:
+   ```
+   python manage.py makemigrations   # should say "No changes" — migrations are included
+   python manage.py migrate
+   ```
 
-## Privacy model
-* The public tracking page (by Complaint ID) shows only category, status, district, department and timeline.
-  Title, description, notes and evidence are visible to the complainant and in-scope staff only.
-* Evidence files are **never served directly**. They are streamed by `/complaints/evidence/<id>/` after a permission check.
-* Uploads are checked for extension, size (10 MB) **and** real file signature (JPG/PNG/PDF/MP4).
-* The public map rounds coordinates to ~1 km and exposes no personal data.
-* Rate limits: login, registration, password reset, complaint filing (20/day/user) and ID lookups.
+## What each app does
 
-## Deploying (Render / Heroku-style)
-Build command:
-```
-pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py seed
-```
-Start command: `gunicorn config.wsgi` (the `Procfile` has a tuned version). Health check path: `/healthz/`.
-
-Environment variables (see `.env.example`):
-* `SECRET_KEY` (required), `DEBUG=False`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS=https://<your-app>` (Render's hostname is auto-added)
-* `DATABASE_URL` — a Postgres URL (e.g. Neon, with `?sslmode=require`)
-* `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` — Gmail app password or any SMTP; without it emails print to the log
-* `MEDIA_ROOT` — **must point to a persistent disk** (see below)
-* `CONTACT_EMAIL`, `LINKEDIN_URL`, `PORTFOLIO_URL`, `GITHUB_URL`, `INSTAGRAM_URL` — shown on the Contact page/footer; blank ones are hidden
-* `SENTRY_DSN` — optional error monitoring
-
-Create the first admin without a shell prompt:
-`DJANGO_SUPERUSER_PASSWORD=... python manage.py createsuperuser --noinput --username admin --email you@example.com`
-
-### Things to know before real users arrive
-1. **Evidence storage.** Files live on local disk (`MEDIA_ROOT`). On free tiers with an ephemeral filesystem they vanish on
-   redeploy, so attach a persistent disk. Cloud object storage (S3/R2) is a sensible next step for scale.
-2. **Rate limits use per-process memory.** With N gunicorn workers the effective limit is up to N× higher. For strict
-   limits switch `CACHES` to Redis or the database cache.
-3. **SQLite is for development only.** Set `DATABASE_URL` in production.
-4. **Content.** Add real schemes/news in `/admin/` with their official source URLs; nothing placeholder is loaded in production.
-5. The Bootstrap/Leaflet assets load from public CDNs; vendor them under `static/` if you need a strict Content-Security-Policy.
-
-## Not yet built
-SMS delivery; multiple evidence files per complaint; district-wise map table (data is at `/complaints/map/data/`).
-
-## Dashboard & analytics
-Staff (Officer / Department Admin / Super Admin) see a **Dashboard** link in the nav instead of the citizen
-"My dashboard": complaints by status/department/district/category, a 30-day trend, resolution rate and average
-resolution time — scoped to their department for Officers/Department Admins, sitewide for Super Admins (who also
-see totals for schemes, projects, funds, documents, reports, FAQs and open support tickets). Citizens get an
-enhanced "My dashboard" with a status-breakdown chart and their recent complaints.
-
-## Projects, Funds, Documents, Reports, FAQ, Support
-Six more apps round out the "not yet built" list from before:
-* **Projects** (`/projects/`) — government projects with status, budget, timeline.
-* **Funds** (`/funds/`) — budget allocation vs. utilization by financial year, with a progress bar.
-* **Documents** (`/documents/`) — downloadable forms, circulars, notifications, guidelines.
-* **Reports** (`/reports/`) — annual/performance/audit reports and surveys.
-* **FAQ** (`/faq/`) — categorized, accordion-style.
-* **Support** (`/support/`) — citizens raise a ticket (rate-limited like complaint filing); staff manage responses
-  in `/admin/`.
-All six are managed from `/admin/` and linked from the "Resources" menu in the navbar.
-
-## Marathi (मराठी) translation
-A language switcher in the navbar toggles the site chrome (navigation, buttons, headings, footer) between English
-and Marathi via Django's i18n framework (`LocaleMiddleware`, `locale/mr/LC_MESSAGES/django.mo`). This covers the
-site's own interface text — **not** admin-entered content (scheme descriptions, complaint text, etc.), which is
-stored and shown in whichever language it was entered in. The Marathi strings were AI-translated; have a native
-speaker review `locale/mr/LC_MESSAGES/django.po` before relying on it for real users. If you add new `{% trans %}`
-strings and have `gettext` installed locally, regenerate with:
-```bash
-python manage.py makemessages -l mr
-# hand-fill locale/mr/LC_MESSAGES/django.po, then:
-python manage.py compilemessages
-```
-(This sandbox built `django.mo` without `gettext` via `scripts/build_mr_locale.py` — prefer the standard
-`makemessages`/`compilemessages` flow above once you have `gettext` available locally.)
-
+- **gallery** — `/gallery/` public photo grid, grouped by category. Manage photos
+  from Django admin (`GalleryImage`).
+- **reviews** — `/reviews/` logged-in users submit a 1–5 star rating + comment;
+  shows only admin-approved reviews publicly. Approve reviews from Django admin
+  (there's a bulk "Approve selected reviews" action).
+- **jobs** — `/jobs/` public job/recruitment notice board (reuses your existing
+  generic list template). Manage from Django admin (`JobNotification`).
+- **appointments** — `/appointment/` book an appointment with a department;
+  `/appointment/my/` and `/appointment/my/<id>/` for the citizen's own bookings.
+  Manage/confirm from Django admin (`Appointment`).

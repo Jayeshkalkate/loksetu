@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ appointment.appointment_id }}{% endblock %}{% block content %}
+<a href="{% url 'appointment_list' %}">&larr; {% trans "All appointments" %}</a>
+<div class="d-flex justify-content-between align-items-start mt-2">
+<h1 class="h4">{{ appointment.purpose }}</h1>
+<span class="badge bg-secondary fs-6">{{ appointment.get_status_display }}</span>
+</div>
+<p class="text-muted small">{{ appointment.appointment_id }} · {% trans "Requested" %} {{ appointment.created|date:"d M Y H:i" }}</p>
+<div class="tile mb-3">
+<p class="mb-1"><b>{% trans "Department" %}:</b> {{ appointment.department|default:"Not specified" }}</p>
+<p class="mb-1"><b>{% trans "Preferred date & time" %}:</b> {{ appointment.preferred_date|date:"d M Y" }} at {{ appointment.preferred_time|time:"H:i" }}</p>
+{% if appointment.notes %}<p class="mb-0"><b>{% trans "Notes" %}:</b> {{ appointment.notes|linebreaksbr }}</p>{% endif %}
+</div>
+{% if appointment.officer_remarks %}
+<h2 class="h6">{% trans "Officer remarks" %}</h2>
+<div class="tile"><p class="mb-0">{{ appointment.officer_remarks|linebreaksbr }}</p></div>
+{% endif %}
+{% endblock %}

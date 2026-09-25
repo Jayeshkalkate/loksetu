@@ -39,9 +39,11 @@ def profile(request):
     status_values = [counts.get(code, 0) for code, _ in Status.choices]
     recent = list(request.user.complaint_set.select_related('category').all()[:5])
     notifications = list(request.user.notification_set.all()[:10])
+    appointments = list(request.user.appointments.select_related('department').all()[:5])
     response = render(request, 'profile.html', {
         'stats': stats, 'notifications': notifications, 'recent': recent,
         'status_labels': status_labels, 'status_values': status_values,
+        'appointments': appointments,
     })
     request.user.notification_set.filter(pk__in=[n.pk for n in notifications], is_read=False).update(is_read=True)
     return response

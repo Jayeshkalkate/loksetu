@@ -6,6 +6,7 @@ from core.views import about, healthz, home, robots
 from emergency.models import EmergencyContact
 from news.models import Announcement
 from schemes.models import Scheme
+from jobs.models import JobNotification
 
 admin.site.site_header = 'LOKSETU administration'
 admin.site.site_title = 'LOKSETU admin'
@@ -31,6 +32,10 @@ urlpatterns = [
     path('schemes/', listing(Scheme, 'Government Schemes'), name='schemes'),
     path('departments/', include('departments.urls')),
     path('news/', listing(Announcement, 'News & Announcements'), name='news'),
+    path('jobs/', listing(JobNotification, 'Job & Recruitment Notifications'), name='jobs'),
+    path('gallery/', include('gallery.urls')),
+    path('reviews/', include('reviews.urls')),
+    path('appointment/', include('appointments.urls')),
     path('emergency/', listing(EmergencyContact, 'Emergency Contacts'), name='emergency'),
     path('projects/', include('projects.urls')),
     path('funds/', include('funds.urls')),

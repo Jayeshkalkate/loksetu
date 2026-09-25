@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts', 'departments', 'complaints', 'schemes', 'news', 'emergency',
     'audit', 'notifications', 'core',
     'projects', 'funds', 'documents', 'reports', 'faq', 'support', 'dashboard',
+    'gallery', 'reviews', 'jobs', 'appointments',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

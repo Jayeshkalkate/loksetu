@@ -38,6 +38,10 @@ footer{background:var(--ink);color:#dbe4ee}footer a{color:#fff}
     <li><a class="dropdown-item" href="{% url 'documents' %}">{% trans "Documents" %}</a></li>
     <li><a class="dropdown-item" href="{% url 'reports' %}">{% trans "Reports" %}</a></li>
     <li><a class="dropdown-item" href="{% url 'emergency' %}">{% trans "Emergency" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'jobs' %}">{% trans "Jobs & Notifications" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'gallery' %}">{% trans "Gallery" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'reviews' %}">{% trans "Reviews" %}</a></li>
+    {% if user.is_authenticated %}<li><a class="dropdown-item" href="{% url 'appointment' %}">{% trans "Book Appointment" %}</a></li>{% endif %}
     <li><a class="dropdown-item" href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
     <li><a class="dropdown-item" href="{% url 'support' %}">{% trans "Support" %}</a></li>
     <li><a class="dropdown-item" href="{% url 'contact' %}">{% trans "Contact" %}</a></li>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "Gallery" %}</h1>
+<p class="lead" style="max-width:65ch">{% trans "Photos from events, campaigns and everyday work." %}</p>
+{% for cat, images in grouped %}
+<h2 class="h5 mt-4">{{ cat }}</h2>
+<div class="row g-3 mb-3">
+{% for img in images %}
+<div class="col-6 col-md-4 col-lg-3">
+  <a href="{{ img.image.url }}" target="_blank" rel="noopener noreferrer">
+    <img src="{{ img.image.url }}" alt="{{ img.title }}" class="img-fluid rounded" style="aspect-ratio:4/3;object-fit:cover;width:100%">
+  </a>
+  <p class="small text-muted mb-0 mt-1">{{ img.title }}</p>
+  {% if img.caption %}<p class="small text-muted mb-0">{{ img.caption }}</p>{% endif %}
+</div>
+{% endfor %}
+</div>
+{% empty %}<p>{% trans "No photos yet." %}</p>{% endfor %}
+{% endblock %}

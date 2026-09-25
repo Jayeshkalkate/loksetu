@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "Reviews" %}</h1>
+<p class="lead" style="max-width:65ch">{% trans "What citizens are saying about using LOKSETU." %}</p>
+{% if form %}
+<div class="tile mb-4" style="max-width:40rem">
+  <h2 class="h5">{% trans "Leave a review" %}</h2>
+  <form method="post">{% csrf_token %}{{ form.as_p }}
+    <button class="btn btn-saffron">{% trans "Submit review" %}</button>
+  </form>
+</div>
+{% elif not user.is_authenticated %}
+<p><a href="{% url 'login' %}">{% trans "Log in" %}</a> {% trans "to leave a review." %}</p>
+{% endif %}
+{% for r in reviews %}
+<div class="tile mb-3">
+  <div class="d-flex justify-content-between">
+    <b class="h6 mb-1">{{ r.user.username }}</b>
+    <span class="text-warning">{{ r.rating }}/5 &#9733;</span>
+  </div>
+  <p class="mb-1">{{ r.comment|linebreaksbr }}</p>
+  <small class="text-muted">{{ r.created|date:"d M Y" }}</small>
+</div>
+{% empty %}<p>{% trans "No reviews yet." %}</p>{% endfor %}
+{% endblock %}

@@ -5,6 +5,7 @@
 {% if o.documents_required %}<p class="mb-1"><b>Documents required:</b> {{ o.documents_required|linebreaksbr }}</p>{% endif %}
 {% if o.application_process %}<p class="mb-1"><b>How to apply:</b> {{ o.application_process|linebreaksbr }}</p>{% endif %}
 {% if o.published %}<small class="text-muted d-block">{{ o.published|date:"d M Y" }}{% if o.is_official %} · <span class="badge bg-success">Official</span>{% endif %}</small>{% endif %}
+{% if o.last_date %}<small class="text-danger d-block">Last date to apply: {{ o.last_date|date:"d M Y" }}</small>{% endif %}
 {% if o.number %}<a class="btn btn-danger" href="tel:{{ o.number }}">Call {{ o.number }}</a>{% endif %}
 {% if o.application_link %}<a class="btn btn-saffron btn-sm" href="{{ o.application_link }}" rel="noopener noreferrer" target="_blank">Apply</a>{% endif %}
 {% if o.official_source %}<a href="{{ o.official_source }}" rel="noopener noreferrer" target="_blank">Official source</a>{% endif %}

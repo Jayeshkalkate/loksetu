@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "My appointments" %}</h1>
+<a class="btn btn-saffron mb-3" href="{% url 'appointment' %}">{% trans "New appointment" %}</a>
+<ul class="list-group">
+{% for a in appointments %}
+<li class="list-group-item d-flex justify-content-between align-items-center">
+  <span><a href="{% url 'appointment_detail' a.appointment_id %}">{{ a.appointment_id }} — {{ a.purpose }}</a>
+  <small class="text-muted d-block">{{ a.preferred_date|date:"d M Y" }} at {{ a.preferred_time|time:"H:i" }}
+  {% if a.department %} · {{ a.department }}{% endif %}</small></span>
+  <span class="badge bg-secondary">{{ a.get_status_display }}</span>
+</li>
+{% empty %}<li class="list-group-item">{% trans "No appointments yet." %}</li>{% endfor %}
+</ul>
+{% endblock %}
