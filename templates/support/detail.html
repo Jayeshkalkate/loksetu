@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ ticket.ticket_id }}{% endblock %}{% block content %}
+<a href="{% url 'support_list' %}">&larr; {% trans "All tickets" %}</a>
+<div class="d-flex justify-content-between align-items-start mt-2">
+<h1 class="h4">{{ ticket.subject }}</h1>
+<span class="badge bg-secondary fs-6">{{ ticket.get_status_display }}</span>
+</div>
+<p class="text-muted small">{{ ticket.ticket_id }} · {% trans "Submitted" %} {{ ticket.created|date:"d M Y H:i" }}</p>
+<div class="tile mb-3"><p class="mb-0">{{ ticket.message|linebreaksbr }}</p></div>
+{% if ticket.response %}
+<h2 class="h6">{% trans "Response" %}</h2>
+<div class="tile"><p class="mb-0">{{ ticket.response|linebreaksbr }}</p></div>
+{% endif %}
+{% endblock %}

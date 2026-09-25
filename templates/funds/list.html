@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "Government Funds" %}</h1>
+<p class="lead" style="max-width:65ch">{% trans "Budget allocation and utilization for schemes and projects, by financial year." %}</p>
+<form method="get" class="row g-2 mb-4">
+  <div class="col-sm-4"><select class="form-select" name="year">
+    <option value="">{% trans "All years" %}</option>
+    {% for y in years %}<option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>{% endfor %}
+  </select></div>
+  <div class="col-sm-2"><button class="btn btn-saffron w-100">{% trans "Filter" %}</button></div>
+</form>
+<p class="text-muted">{{ total }} fund{{ total|pluralize }} found</p>
+{% for f in funds %}
+<div class="tile mb-3">
+  <div class="d-flex justify-content-between align-items-start">
+    <h2 class="h6 mb-1">{{ f.name }} <span class="text-muted">({{ f.financial_year }})</span></h2>
+    {% if f.department %}<span class="small text-muted">{{ f.department.name }}</span>{% endif %}
+  </div>
+  <p class="mb-2 small">{{ f.blurb|default:""|truncatewords:28 }}</p>
+  <div class="progress mb-1" style="height:1.25rem" role="progressbar" aria-valuenow="{{ f.utilization_percent }}" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar bg-saffron" style="width:{{ f.utilization_percent }}%;background:var(--saffron)">{{ f.utilization_percent }}%</div>
+  </div>
+  <div class="small text-muted">{% trans "Allocated" %}: ₹{{ f.allocated_crore }} crore · {% trans "Utilized" %}: ₹{{ f.utilized_crore }} crore</div>
+  <a class="small" href="{{ f.official_source }}" rel="noopener noreferrer" target="_blank">{% trans "Official source" %}</a>
+</div>
+{% empty %}<p>{% trans "No funds listed yet." %}</p>{% endfor %}
+{% endblock %}

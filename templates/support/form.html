@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Support" %}{% endblock %}{% block content %}
+<h1>{% trans "Contact support" %}</h1>
+<p class="lead" style="max-width:65ch">{% trans "For anything other than a civic complaint — account issues, feedback, or a question about the site — raise a ticket here." %}</p>
+<form method="post" class="mb-4" style="max-width:40rem">{% csrf_token %}
+{{ form.as_p }}
+<button class="btn btn-saffron">{% trans "Submit ticket" %}</button>
+</form>
+<h2 class="h5">{% trans "Your recent tickets" %}</h2>
+<ul class="list-group mb-3">
+{% for t in tickets|slice:":5" %}
+<li class="list-group-item d-flex justify-content-between align-items-center">
+  <a href="{% url 'support_detail' t.ticket_id %}">{{ t.subject }}</a>
+  <span class="badge bg-secondary">{{ t.get_status_display }}</span>
+</li>
+{% empty %}<li class="list-group-item">{% trans "No tickets yet." %}</li>{% endfor %}
+</ul>
+{% if tickets|length > 5 %}<a href="{% url 'support_list' %}">{% trans "View all tickets" %} &rarr;</a>{% endif %}
+{% endblock %}

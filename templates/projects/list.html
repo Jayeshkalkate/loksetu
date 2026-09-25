@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "Government Projects" %}</h1>
+<form method="get" class="row g-2 mb-4">
+  <div class="col-sm-4"><select class="form-select" name="status">
+    <option value="">{% trans "All statuses" %}</option>
+    {% for value, label in statuses %}<option value="{{ value }}" {% if value == status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select></div>
+  <div class="col-sm-2"><button class="btn btn-saffron w-100">{% trans "Filter" %}</button></div>
+</form>
+<p class="text-muted">{{ total }} project{{ total|pluralize }} found</p>
+<div class="row g-3">
+{% for p in projects %}
+<div class="col-md-6"><div class="tile h-100 d-flex flex-column">
+  <div class="d-flex justify-content-between align-items-start">
+    <h2 class="h6 mb-1"><a href="{% url 'project_detail' p.pk %}">{{ p.name }}</a></h2>
+    <span class="badge bg-{{ p.status_color }}">{{ p.get_status_display }}</span>
+  </div>
+  <p class="mb-2 small">{{ p.blurb|truncatewords:28 }}</p>
+  <div class="mt-auto small text-muted">
+    {% if p.department %}{{ p.department.name }} · {% endif %}{% if p.district %}{{ p.district.name }} · {% endif %}
+    {% if p.budget_crore %}₹{{ p.budget_crore }} crore{% endif %}
+  </div>
+</div></div>
+{% empty %}<p>{% trans "No projects listed yet." %}</p>{% endfor %}
+</div>
+{% endblock %}

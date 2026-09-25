@@ -1,3 +1,3 @@
-{% extends 'base.html' %}{% block title %}Contact{% endblock %}
-{% block content %}<h1>Contact</h1>
-<p class="lead" style="max-width:65ch">{% if CONTACT_EMAIL %}Write to <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>. {% endif %}For emergencies, use the <a href="{% url 'emergency' %}">Emergency Contacts</a> page. To follow up on a complaint, use <a href="{% url 'track' %}">Track a complaint</a>.</p>{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Contact" %}{% endblock %}
+{% block content %}<h1>{% trans "Contact" %}</h1>
+<p class="lead" style="max-width:65ch">{% if CONTACT_EMAIL %}Write to <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>. {% endif %}For emergencies, use the <a href="{% url 'emergency' %}">Emergency Contacts</a> page. To follow up on a complaint, use <a href="{% url 'track' %}">Track a complaint</a>. Have a question about the site itself? Check the <a href="{% url 'faq' %}">FAQ</a> or <a href="{% url 'support' %}">raise a support ticket</a>.</p>{% endblock %}

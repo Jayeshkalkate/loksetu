@@ -25,6 +25,7 @@ def register(request):
 
 @login_required
 def profile(request):
+    from complaints.models import Status
     counts = {r['status']: r['n'] for r in
               request.user.complaint_set.values('status').annotate(n=Count('id'))}
     stats = {
@@ -34,7 +35,13 @@ def profile(request):
         'resolved': counts.get('RESOLVED', 0),
         'closed': counts.get('CLOSED', 0),
     }
+    status_labels = [label for _, label in Status.choices]
+    status_values = [counts.get(code, 0) for code, _ in Status.choices]
+    recent = list(request.user.complaint_set.select_related('category').all()[:5])
     notifications = list(request.user.notification_set.all()[:10])
-    response = render(request, 'profile.html', {'stats': stats, 'notifications': notifications})
+    response = render(request, 'profile.html', {
+        'stats': stats, 'notifications': notifications, 'recent': recent,
+        'status_labels': status_labels, 'status_values': status_values,
+    })
     request.user.notification_set.filter(pk__in=[n.pk for n in notifications], is_read=False).update(is_read=True)
     return response

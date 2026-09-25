@@ -1,11 +1,49 @@
-{% extends 'base.html' %}{% block content %}<h1>My dashboard</h1>
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "My dashboard" %}{% endblock %}{% block content %}
+<h1>{% trans "My dashboard" %}</h1>
 <div class="row g-3 mb-4">
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.total }}</b>Total</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.pending }}</b>Pending</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.progress }}</b>In progress</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.resolved }}</b>Resolved</div></div></div>
-<a class="btn btn-saffron btn-lg" href="{% url 'file_complaint' %}">File a complaint</a>
-<a class="btn btn-outline-dark btn-lg" href="{% url 'history' %}">Complaint history</a>
-<h2 class="h4 mt-4">Notifications</h2>
-<ul class="list-group">{% for n in notifications %}<li class="list-group-item">{{ n.message }} <small class="text-muted">{{ n.created|date:"d M Y H:i" }}</small></li>{% empty %}<li class="list-group-item">No notifications yet.</li>{% endfor %}</ul>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.total }}</b>{% trans "Total" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.pending }}</b>{% trans "Pending" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.progress }}</b>{% trans "In progress" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.resolved }}</b>{% trans "Resolved" %}</div></div></div>
+<a class="btn btn-saffron btn-lg" href="{% url 'file_complaint' %}">{% trans "File a complaint" %}</a>
+<a class="btn btn-outline-dark btn-lg" href="{% url 'history' %}">{% trans "Complaint history" %}</a>
+<a class="btn btn-outline-dark btn-lg" href="{% url 'support' %}">{% trans "Support tickets" %}</a>
+
+<div class="row g-4 mt-1">
+<div class="col-md-5">
+<h2 class="h5 mt-3">{% trans "Status breakdown" %}</h2>
+{% if stats.total %}<div class="tile"><canvas id="statusChart" height="200"></canvas></div>
+{% else %}<p class="text-muted">{% trans "File your first complaint to see your status breakdown here." %}</p>{% endif %}
+</div>
+<div class="col-md-7">
+<h2 class="h5 mt-3">{% trans "Recent complaints" %}</h2>
+<ul class="list-group mb-3">
+{% for c in recent %}
+<li class="list-group-item d-flex justify-content-between align-items-center">
+  <a href="{% url 'complaint_detail' c.complaint_id %}">{{ c.title|truncatechars:40 }}</a>
+  <span class="badge bg-secondary">{{ c.get_status_display }}</span>
+</li>
+{% empty %}<li class="list-group-item">{% trans "No complaints filed yet." %}</li>{% endfor %}
+</ul>
+</div>
+</div>
+
+<h2 class="h4 mt-4">{% trans "Notifications" %}</h2>
+<ul class="list-group">{% for n in notifications %}<li class="list-group-item">{{ n.message }} <small class="text-muted">{{ n.created|date:"d M Y H:i" }}</small></li>{% empty %}<li class="list-group-item">{% trans "No notifications yet." %}</li>{% endfor %}</ul>
+
+{% if stats.total %}{{ status_labels|json_script:"status-labels" }}{{ status_values|json_script:"status-values" }}{% endif %}
+{% endblock %}
+{% block scripts %}
+{% if stats.total %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const labels = JSON.parse(document.getElementById('status-labels').textContent);
+const values = JSON.parse(document.getElementById('status-values').textContent);
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: { labels: labels, datasets: [{ data: values, backgroundColor: ['#e8871e','#12355b','#2e8540','#a1332c','#5b6b7c','#c99a2e','#6b4fa1','#1f7a8c'] }] },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+</script>
+{% endif %}
 {% endblock %}

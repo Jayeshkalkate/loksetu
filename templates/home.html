@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 <section class="hero p-4 p-md-5 rounded mb-4">
-<h1 class="display-5 fw-bold">Report it. Track it. See it fixed.</h1>
-<p class="lead">LOKSETU connects the citizens of Maharashtra with their government.</p>
-<a class="btn btn-saffron btn-lg me-2" href="{% url 'file_complaint' %}">File a complaint</a>
-<a class="btn btn-outline-light btn-lg" href="{% url 'track' %}">Track a complaint</a></section>
+<h1 class="display-5 fw-bold">{% trans "Report it. Track it. See it fixed." %}</h1>
+<p class="lead">{% trans "LOKSETU connects the citizens of Maharashtra with their government." %}</p>
+<a class="btn btn-saffron btn-lg me-2" href="{% url 'file_complaint' %}">{% trans "File a complaint" %}</a>
+<a class="btn btn-outline-light btn-lg" href="{% url 'track' %}">{% trans "Track a complaint" %}</a></section>
 <div class="row g-3 mb-4">
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.total }}</b>Total complaints</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.pending }}</b>Pending</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.progress }}</b>In progress</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.resolved }}</b>Resolved</div></div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.total }}</b>{% trans "Total complaints" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.pending }}</b>{% trans "Pending" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.progress }}</b>{% trans "In progress" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ stats.resolved }}</b>{% trans "Resolved" %}</div></div></div>
 <div class="row g-4">
-<div class="col-md-6"><h2 class="h4">Latest schemes</h2>{% for s in schemes %}<div class="tile mb-2"><a href="{% url 'schemes' %}">{{ s.name }}</a></div>{% empty %}<p>No schemes yet.</p>{% endfor %}</div>
-<div class="col-md-6"><h2 class="h4">Latest announcements</h2>{% for n in news %}<div class="tile mb-2"><a href="{% url 'news' %}">{{ n.title }}</a></div>{% empty %}<p>No announcements yet.</p>{% endfor %}</div></div>
-<h2 class="h4 mt-4">Emergency numbers</h2>
+<div class="col-md-6"><h2 class="h4">{% trans "Latest schemes" %}</h2>{% for s in schemes %}<div class="tile mb-2"><a href="{% url 'schemes' %}">{{ s.name }}</a></div>{% empty %}<p>{% trans "No schemes yet." %}</p>{% endfor %}</div>
+<div class="col-md-6"><h2 class="h4">{% trans "Latest announcements" %}</h2>{% for n in news %}<div class="tile mb-2"><a href="{% url 'news' %}">{{ n.title }}</a></div>{% empty %}<p>{% trans "No announcements yet." %}</p>{% endfor %}</div></div>
+<h2 class="h4 mt-4">{% trans "Emergency numbers" %}</h2>
 <div class="d-flex flex-wrap gap-2">{% for e in emergency %}<a class="btn btn-danger btn-lg" href="tel:{{ e.number }}">{{ e.name }}: {{ e.number }}</a>{% endfor %}</div>
 {% endblock %}

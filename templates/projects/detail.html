@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<a href="{% url 'projects' %}">&larr; {% trans "All projects" %}</a>
+<div class="d-flex justify-content-between align-items-start mt-2">
+<h1>{{ project.name }}</h1>
+<span class="badge bg-{{ project.status_color }} fs-6">{{ project.get_status_display }}</span>
+</div>
+<p>{{ project.description|linebreaksbr }}</p>
+<table class="table w-auto">
+<tbody>
+{% if project.department %}<tr><th>{% trans "Department" %}</th><td><a href="{% url 'department_detail' project.department.pk %}">{{ project.department.name }}</a></td></tr>{% endif %}
+{% if project.district %}<tr><th>{% trans "District" %}</th><td>{{ project.district.name }}</td></tr>{% endif %}
+{% if project.budget_crore %}<tr><th>{% trans "Budget" %}</th><td>₹{{ project.budget_crore }} crore</td></tr>{% endif %}
+{% if project.start_date %}<tr><th>{% trans "Start date" %}</th><td>{{ project.start_date|date:"d M Y" }}</td></tr>{% endif %}
+{% if project.end_date %}<tr><th>{% trans "End date" %}</th><td>{{ project.end_date|date:"d M Y" }}</td></tr>{% endif %}
+<tr><th>{% trans "Last updated" %}</th><td>{{ project.updated|date:"d M Y" }}</td></tr>
+</tbody>
+</table>
+<a href="{{ project.official_source }}" rel="noopener noreferrer" target="_blank">{% trans "Official source" %}</a>
+{% endblock %}

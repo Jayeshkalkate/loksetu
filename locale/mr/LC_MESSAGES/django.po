@@ -1,0 +1,311 @@
+# Marathi translation for LOKSETU.
+# AI-assisted machine translation of the site chrome (nav, buttons, headings).
+# Please have a native Marathi speaker review before relying on it for real users.
+msgid ""
+msgstr ""
+"Project-Id-Version: LOKSETU\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: mr\n"
+
+msgid "About"
+msgstr "आमच्याबद्दल"
+
+msgid "All Rights Reserved."
+msgstr "सर्व हक्क राखीव."
+
+msgid "All categories"
+msgstr "सर्व प्रवर्ग"
+
+msgid "All projects"
+msgstr "सर्व प्रकल्प"
+
+msgid "All statuses"
+msgstr "सर्व स्थिती"
+
+msgid "All tickets"
+msgstr "सर्व तिकिटे"
+
+msgid "All types"
+msgstr "सर्व प्रकार"
+
+msgid "All years"
+msgstr "सर्व वर्षे"
+
+msgid "Allocated"
+msgstr "मंजूर निधी"
+
+msgid "Avg. days to resolve"
+msgstr "निराकरणासाठी सरासरी दिवस"
+
+msgid "Budget allocation and utilization for schemes and projects, by financial year."
+msgstr "आर्थिक वर्षानुसार योजना व प्रकल्पांसाठीचा निधी वाटप आणि वापर."
+
+msgid "Budget"
+msgstr "अंदाजपत्रक"
+
+msgid "Citizen–Government Digital Bridge"
+msgstr "नागरिक–शासन डिजिटल सेतू"
+
+msgid "Complaint history"
+msgstr "तक्रार इतिहास"
+
+msgid "Complaints by status"
+msgstr "स्थितीनुसार तक्रारी"
+
+msgid "Complaints filed"
+msgstr "दाखल तक्रारी"
+
+msgid "Complaints"
+msgstr "तक्रारी"
+
+msgid "Connect with me:"
+msgstr "माझ्याशी संपर्क साधा:"
+
+msgid "Contact support"
+msgstr "सहाय्यासाठी संपर्क"
+
+msgid "Contact"
+msgstr "संपर्क"
+
+msgid "Create account"
+msgstr "खाते तयार करा"
+
+msgid "Dashboard"
+msgstr "डॅशबोर्ड"
+
+msgid "Department"
+msgstr "विभाग"
+
+msgid "Departments"
+msgstr "विभाग"
+
+msgid "Developed by DEVJAYESH"
+msgstr "DEVJAYESH यांनी विकसित"
+
+msgid "Disclaimer"
+msgstr "अस्वीकरण"
+
+msgid "District"
+msgstr "जिल्हा"
+
+msgid "Documents"
+msgstr "कागदपत्रे"
+
+msgid "Download"
+msgstr "डाउनलोड करा"
+
+msgid "Emergency numbers"
+msgstr "आपत्कालीन क्रमांक"
+
+msgid "Emergency"
+msgstr "आपत्कालीन"
+
+msgid "End date"
+msgstr "समाप्ती तारीख"
+
+msgid "FAQ"
+msgstr "वारंवार विचारले जाणारे प्रश्न"
+
+msgid "File a complaint"
+msgstr "तक्रार दाखल करा"
+
+msgid "File your first complaint to see your status breakdown here."
+msgstr "स्थिती पाहण्यासाठी येथे तुमची पहिली तक्रार दाखल करा."
+
+msgid "Filter"
+msgstr "गाळणी लावा"
+
+msgid "For anything other than a civic complaint — account issues, feedback, or a question about the site — raise a ticket here."
+msgstr "नागरी तक्रारीव्यतिरिक्त इतर कोणत्याही गोष्टीसाठी — खाते समस्या, अभिप्राय किंवा संकेतस्थळाबाबत प्रश्न — येथे तिकीट नोंदवा."
+
+msgid "Forms, circulars, notifications and guidelines you can download."
+msgstr "डाउनलोड करता येणारे अर्ज, परिपत्रके, अधिसूचना आणि मार्गदर्शक तत्त्वे."
+
+msgid "Frequently Asked Questions"
+msgstr "वारंवार विचारले जाणारे प्रश्न"
+
+msgid "Funds"
+msgstr "निधी"
+
+msgid "Government Funds"
+msgstr "शासकीय निधी"
+
+msgid "Government Projects"
+msgstr "शासकीय प्रकल्प"
+
+msgid "In progress"
+msgstr "प्रगतीपथावर"
+
+msgid "LOKSETU connects the citizens of Maharashtra with their government."
+msgstr "LOKSETU महाराष्ट्रातील नागरिकांना त्यांच्या शासनाशी जोडते."
+
+msgid "Last 30 days"
+msgstr "गेले ३० दिवस"
+
+msgid "Last updated"
+msgstr "शेवटचे अद्ययावत"
+
+msgid "Latest announcements"
+msgstr "ताज्या घोषणा"
+
+msgid "Latest schemes"
+msgstr "ताज्या योजना"
+
+msgid "Log in"
+msgstr "लॉग इन करा"
+
+msgid "Log out"
+msgstr "लॉग आउट करा"
+
+msgid "Map"
+msgstr "नकाशा"
+
+msgid "My dashboard"
+msgstr "माझा डॅशबोर्ड"
+
+msgid "My support tickets"
+msgstr "माझी सहाय्य तिकिटे"
+
+msgid "New ticket"
+msgstr "नवीन तिकीट"
+
+msgid "News"
+msgstr "बातम्या"
+
+msgid "No announcements yet."
+msgstr "अद्याप कोणतीही घोषणा नाही."
+
+msgid "No complaints filed yet."
+msgstr "अद्याप कोणतीही तक्रार दाखल नाही."
+
+msgid "No documents listed yet."
+msgstr "अद्याप कोणतेही दस्तऐवज नाहीत."
+
+msgid "No funds listed yet."
+msgstr "अद्याप कोणताही निधी नमूद नाही."
+
+msgid "No notifications yet."
+msgstr "अद्याप कोणतीही सूचना नाही."
+
+msgid "No projects listed yet."
+msgstr "अद्याप कोणताही प्रकल्प नमूद नाही."
+
+msgid "No questions added yet."
+msgstr "अद्याप कोणतेही प्रश्न जोडलेले नाहीत."
+
+msgid "No reports listed yet."
+msgstr "अद्याप कोणताही अहवाल नाही."
+
+msgid "No schemes yet."
+msgstr "अद्याप कोणतीही योजना नाही."
+
+msgid "No tickets yet."
+msgstr "अद्याप कोणतेही तिकीट नाही."
+
+msgid "Notifications"
+msgstr "सूचना"
+
+msgid "Official Documents"
+msgstr "अधिकृत कागदपत्रे"
+
+msgid "Official source"
+msgstr "अधिकृत स्रोत"
+
+msgid "Open report"
+msgstr "अहवाल उघडा"
+
+msgid "Pending"
+msgstr "प्रलंबित"
+
+msgid "Privacy"
+msgstr "गोपनीयता"
+
+msgid "Projects"
+msgstr "प्रकल्प"
+
+msgid "Recent complaints"
+msgstr "अलीकडील तक्रारी"
+
+msgid "Report it. Track it. See it fixed."
+msgstr "तक्रार नोंदवा. मागोवा घ्या. निराकरण पहा."
+
+msgid "Reports & Publications"
+msgstr "अहवाल व प्रकाशने"
+
+msgid "Reports"
+msgstr "अहवाल"
+
+msgid "Resolution rate"
+msgstr "निराकरण दर"
+
+msgid "Resolved"
+msgstr "निराकरण झाले"
+
+msgid "Resources"
+msgstr "संसाधने"
+
+msgid "Response"
+msgstr "प्रतिसाद"
+
+msgid "Schemes"
+msgstr "योजना"
+
+msgid "Showing complaints in your scope only."
+msgstr "फक्त तुमच्या कार्यक्षेत्रातील तक्रारी दर्शवल्या आहेत."
+
+msgid "Site content"
+msgstr "संकेतस्थळावरील सामग्री"
+
+msgid "Start date"
+msgstr "प्रारंभ तारीख"
+
+msgid "Status breakdown"
+msgstr "स्थितीनुसार विभागणी"
+
+msgid "Status stages"
+msgstr "स्थिती टप्पे"
+
+msgid "Submit ticket"
+msgstr "तिकीट सादर करा"
+
+msgid "Submitted"
+msgstr "सादर केले"
+
+msgid "Support tickets"
+msgstr "सहाय्य तिकिटे"
+
+msgid "Support"
+msgstr "सहाय्य"
+
+msgid "Terms"
+msgstr "अटी"
+
+msgid "Top categories"
+msgstr "आघाडीचे प्रवर्ग"
+
+msgid "Top departments"
+msgstr "आघाडीचे विभाग"
+
+msgid "Top districts"
+msgstr "आघाडीचे जिल्हे"
+
+msgid "Total complaints"
+msgstr "एकूण तक्रारी"
+
+msgid "Total"
+msgstr "एकूण"
+
+msgid "Track a complaint"
+msgstr "तक्रारीचा मागोवा घ्या"
+
+msgid "Utilized"
+msgstr "वापरलेला निधी"
+
+msgid "View all tickets"
+msgstr "सर्व तिकिटे पहा"
+
+msgid "Your recent tickets"
+msgstr "तुमची अलीकडील तिकिटे"

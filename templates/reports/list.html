@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<h1>{% trans "Reports & Publications" %}</h1>
+<form method="get" class="row g-2 mb-4">
+  <div class="col-sm-4"><select class="form-select" name="type">
+    <option value="">{% trans "All types" %}</option>
+    {% for value, label in types %}<option value="{{ value }}" {% if value == report_type %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select></div>
+  <div class="col-sm-2"><button class="btn btn-saffron w-100">{% trans "Filter" %}</button></div>
+</form>
+<p class="text-muted">{{ total }} report{{ total|pluralize }} found</p>
+{% for r in reports %}
+<div class="tile mb-3">
+  <div class="d-flex justify-content-between align-items-start">
+    <h2 class="h6 mb-1">{{ r.title }}</h2>
+    <span class="badge bg-secondary">{{ r.get_report_type_display }}</span>
+  </div>
+  <p class="mb-2 small">{{ r.blurb|linebreaksbr }}</p>
+  <div class="small text-muted mb-1">{% if r.department %}{{ r.department.name }} · {% endif %}{{ r.published|date:"d M Y" }}</div>
+  {% if r.url %}<a class="btn btn-saffron btn-sm" href="{{ r.url }}" rel="noopener noreferrer" target="_blank">{% trans "Open report" %}</a>{% endif %}
+  {% if r.official_source %}<a class="small ms-2" href="{{ r.official_source }}" rel="noopener noreferrer" target="_blank">{% trans "Official source" %}</a>{% endif %}
+</div>
+{% empty %}<p>{% trans "No reports listed yet." %}</p>{% endfor %}
+{% endblock %}

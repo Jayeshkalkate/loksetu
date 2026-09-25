@@ -19,8 +19,9 @@ python manage.py runserver
 ```bash
 DEBUG=True python manage.py test
 ```
-30 tests cover registration, login/throttling, password reset, complaint filing, upload validation, privacy rules,
-evidence access control, admin department scoping and the public pages.
+The original 30 tests cover registration, login/throttling, password reset, complaint filing, upload validation,
+privacy rules, evidence access control, admin department scoping and the public pages. Additional tests for the
+dashboard, projects, funds, documents, reports, FAQ and support apps live in each app's own `tests.py`.
 
 ## Roles
 Citizens self-register. Staff accounts are created in `/admin/` → Users: set **role** (Officer / Department
@@ -71,5 +72,38 @@ Create the first admin without a shell prompt:
 5. The Bootstrap/Leaflet assets load from public CDNs; vendor them under `static/` if you need a strict Content-Security-Policy.
 
 ## Not yet built
-Projects, funds, documents, reports, FAQ and support apps; admin charts; Marathi translation; SMS delivery;
-multiple evidence files per complaint; district-wise map table (data is at `/complaints/map/data/`).
+SMS delivery; multiple evidence files per complaint; district-wise map table (data is at `/complaints/map/data/`).
+
+## Dashboard & analytics
+Staff (Officer / Department Admin / Super Admin) see a **Dashboard** link in the nav instead of the citizen
+"My dashboard": complaints by status/department/district/category, a 30-day trend, resolution rate and average
+resolution time — scoped to their department for Officers/Department Admins, sitewide for Super Admins (who also
+see totals for schemes, projects, funds, documents, reports, FAQs and open support tickets). Citizens get an
+enhanced "My dashboard" with a status-breakdown chart and their recent complaints.
+
+## Projects, Funds, Documents, Reports, FAQ, Support
+Six more apps round out the "not yet built" list from before:
+* **Projects** (`/projects/`) — government projects with status, budget, timeline.
+* **Funds** (`/funds/`) — budget allocation vs. utilization by financial year, with a progress bar.
+* **Documents** (`/documents/`) — downloadable forms, circulars, notifications, guidelines.
+* **Reports** (`/reports/`) — annual/performance/audit reports and surveys.
+* **FAQ** (`/faq/`) — categorized, accordion-style.
+* **Support** (`/support/`) — citizens raise a ticket (rate-limited like complaint filing); staff manage responses
+  in `/admin/`.
+All six are managed from `/admin/` and linked from the "Resources" menu in the navbar.
+
+## Marathi (मराठी) translation
+A language switcher in the navbar toggles the site chrome (navigation, buttons, headings, footer) between English
+and Marathi via Django's i18n framework (`LocaleMiddleware`, `locale/mr/LC_MESSAGES/django.mo`). This covers the
+site's own interface text — **not** admin-entered content (scheme descriptions, complaint text, etc.), which is
+stored and shown in whichever language it was entered in. The Marathi strings were AI-translated; have a native
+speaker review `locale/mr/LC_MESSAGES/django.po` before relying on it for real users. If you add new `{% trans %}`
+strings and have `gettext` installed locally, regenerate with:
+```bash
+python manage.py makemessages -l mr
+# hand-fill locale/mr/LC_MESSAGES/django.po, then:
+python manage.py compilemessages
+```
+(This sandbox built `django.mo` without `gettext` via `scripts/build_mr_locale.py` — prefer the standard
+`makemessages`/`compilemessages` flow above once you have `gettext` available locally.)
+

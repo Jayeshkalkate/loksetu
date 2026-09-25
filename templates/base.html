@@ -1,8 +1,8 @@
-<!doctype html>
-<html lang="en">
+{% load i18n %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}LOKSETU{% endblock %} | Citizen–Government Digital Bridge</title>
+<title>{% block title %}LOKSETU{% endblock %} | {% trans "Citizen–Government Digital Bridge" %}</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;800&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +16,7 @@ body{font-family:'Noto Sans','Noto Sans Devanagari',sans-serif;background:var(--
 .tile b{font-size:1.9rem;color:var(--ink);display:block}
 footer{background:var(--ink);color:#dbe4ee}footer a{color:#fff}
 :focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.dropdown-menu{--bs-dropdown-min-width:12rem}
 </style>{% block head %}{% endblock %}
 </head>
 <body>
@@ -23,26 +24,47 @@ footer{background:var(--ink);color:#dbe4ee}footer a{color:#fff}
 <a class="navbar-brand" href="{% url 'home' %}">LOKSETU</a>
 <button class="navbar-toggler bg-light" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Menu"><span class="navbar-toggler-icon"></span></button>
 <div id="nav" class="collapse navbar-collapse"><ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'file_complaint' %}">File a complaint</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'complaint_map' %}">Map</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'schemes' %}">Schemes</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'departments' %}">Departments</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'news' %}">News</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'emergency' %}">Emergency</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li></ul>
+<li class="nav-item"><a class="nav-link" href="{% url 'about' %}">{% trans "About" %}</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'file_complaint' %}">{% trans "File a complaint" %}</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'complaint_map' %}">{% trans "Map" %}</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'schemes' %}">{% trans "Schemes" %}</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'departments' %}">{% trans "Departments" %}</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'news' %}">{% trans "News" %}</a></li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Resources" %}</a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'projects' %}">{% trans "Projects" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'funds' %}">{% trans "Funds" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'documents' %}">{% trans "Documents" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'reports' %}">{% trans "Reports" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'emergency' %}">{% trans "Emergency" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'support' %}">{% trans "Support" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+  </ul>
+</li>
+{% if user.is_authenticated and user.is_staff %}<li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>{% endif %}
+</ul>
 <div class="d-flex gap-2 align-items-center">
+<form action="{% url 'set_language' %}" method="post" class="d-flex">{% csrf_token %}
+<input type="hidden" name="next" value="{{ request.path }}">
+<select name="language" class="form-select form-select-sm" onchange="this.form.submit()" aria-label="Language">
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_available_languages as LANGUAGES %}
+{% for code, name in LANGUAGES %}<option value="{{ code }}" {% if code == CURRENT_LANGUAGE %}selected{% endif %}>{{ name }}</option>{% endfor %}
+</select>
+</form>
 {% if user.is_authenticated %}<a class="nav-link" href="{% url 'profile' %}">{{ user.username }}</a>
-<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline-light btn-sm">Log out</button></form>
-{% else %}<a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Log in</a><a class="btn btn-saffron btn-sm" href="{% url 'register' %}">Create account</a>{% endif %}
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline-light btn-sm">{% trans "Log out" %}</button></form>
+{% else %}<a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">{% trans "Log in" %}</a><a class="btn btn-saffron btn-sm" href="{% url 'register' %}">{% trans "Create account" %}</a>{% endif %}
 </div></div></div></nav>
 <main class="container py-4">
 {% for m in messages %}<div class="alert alert-{{ m.tags|default:'info' }}{% if m.tags == 'error' %} alert-danger{% endif %}">{{ m }}</div>{% endfor %}
 {% block content %}{% endblock %}</main>
 <footer class="py-4 mt-5"><div class="container">
-{% if SOCIAL_LINKS %}<p class="mb-1"><b>Connect with me:</b> {% for name, url in SOCIAL_LINKS.items %}<a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ name|capfirst }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</p>{% endif %}
-<p class="mb-1"><a href="{% url 'privacy' %}">Privacy</a> · <a href="{% url 'terms' %}">Terms</a> · <a href="{% url 'disclaimer' %}">Disclaimer</a></p>
-<small>© 2026 LOKSETU. All Rights Reserved. Developed by DEVJAYESH</small></div></footer>
+{% if SOCIAL_LINKS %}<p class="mb-1"><b>{% trans "Connect with me:" %}</b> {% for name, url in SOCIAL_LINKS.items %}<a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ name|capfirst }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+<p class="mb-1"><a href="{% url 'privacy' %}">{% trans "Privacy" %}</a> · <a href="{% url 'terms' %}">{% trans "Terms" %}</a> · <a href="{% url 'disclaimer' %}">{% trans "Disclaimer" %}</a></p>
+<small>&copy; {% now "Y" %} LOKSETU. {% trans "All Rights Reserved." %} {% trans "Developed by DEVJAYESH" %}</small></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% block scripts %}{% endblock %}
 </body></html>

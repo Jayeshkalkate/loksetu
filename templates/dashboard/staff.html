@@ -1,0 +1,77 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Dashboard" %}</h1>
+{% if scoped %}<p class="text-muted">{% trans "Showing complaints in your scope only." %}</p>{% endif %}
+
+<div class="row g-3 mb-4">
+<div class="col-6 col-md-3"><div class="tile"><b>{{ total }}</b>{% trans "Total complaints" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ resolution_rate }}%</b>{% trans "Resolution rate" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{% if avg_resolution_days %}{{ avg_resolution_days }}{% else %}—{% endif %}</b>{% trans "Avg. days to resolve" %}</div></div>
+<div class="col-6 col-md-3"><div class="tile"><b>{{ status_values|length }}</b>{% trans "Status stages" %}</div></div>
+</div>
+
+{% if site_counts %}
+<h2 class="h5 mt-4">{% trans "Site content" %}</h2>
+<div class="row g-3 mb-4">
+{% for label, value in site_counts %}
+<div class="col-6 col-md-3"><div class="tile"><b>{{ value }}</b>{{ label }}</div></div>
+{% endfor %}
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-md-6"><div class="tile"><h2 class="h6">{% trans "Complaints by status" %}</h2><canvas id="statusChart" height="220"></canvas></div></div>
+  <div class="col-md-6"><div class="tile"><h2 class="h6">{% trans "Last 30 days" %}</h2><canvas id="trendChart" height="220"></canvas></div></div>
+  <div class="col-md-6"><div class="tile"><h2 class="h6">{% trans "Top departments" %}</h2><canvas id="deptChart" height="220"></canvas></div></div>
+  <div class="col-md-6"><div class="tile"><h2 class="h6">{% trans "Top districts" %}</h2><canvas id="districtChart" height="220"></canvas></div></div>
+  <div class="col-md-6"><div class="tile"><h2 class="h6">{% trans "Top categories" %}</h2><canvas id="categoryChart" height="220"></canvas></div></div>
+</div>
+
+{{ status_labels|json_script:"status-labels" }}
+{{ status_values|json_script:"status-values" }}
+{{ trend_labels|json_script:"trend-labels" }}
+{{ trend_values|json_script:"trend-values" }}
+{{ dept_labels|json_script:"dept-labels" }}
+{{ dept_values|json_script:"dept-values" }}
+{{ district_labels|json_script:"district-labels" }}
+{{ district_values|json_script:"district-values" }}
+{{ category_labels|json_script:"category-labels" }}
+{{ category_values|json_script:"category-values" }}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+function readJSON(id) { return JSON.parse(document.getElementById(id).textContent); }
+const palette = ['#e8871e', '#12355b', '#2e8540', '#a1332c', '#5b6b7c', '#c99a2e', '#6b4fa1', '#1f7a8c'];
+
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: { labels: readJSON('status-labels'), datasets: [{ data: readJSON('status-values'), backgroundColor: palette }] },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: { labels: readJSON('trend-labels'), datasets: [{ label: '{% trans "Complaints filed" %}', data: readJSON('trend-values'), borderColor: '#12355b', backgroundColor: 'rgba(18,53,91,.15)', tension: .3, fill: true }] },
+  options: { scales: { x: { ticks: { maxTicksLimit: 8 } } }, plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('deptChart'), {
+  type: 'bar',
+  data: { labels: readJSON('dept-labels'), datasets: [{ label: '{% trans "Complaints" %}', data: readJSON('dept-values'), backgroundColor: '#e8871e' }] },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('districtChart'), {
+  type: 'bar',
+  data: { labels: readJSON('district-labels'), datasets: [{ label: '{% trans "Complaints" %}', data: readJSON('district-values'), backgroundColor: '#2e8540' }] },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'bar',
+  data: { labels: readJSON('category-labels'), datasets: [{ label: '{% trans "Complaints" %}', data: readJSON('category-values'), backgroundColor: '#5b6b7c' }] },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+});
+</script>
+{% endblock %}

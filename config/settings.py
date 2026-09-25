@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles',
     'accounts', 'departments', 'complaints', 'schemes', 'news', 'emergency',
     'audit', 'notifications', 'core',
+    'projects', 'funds', 'documents', 'reports', 'faq', 'support', 'dashboard',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -63,6 +65,7 @@ TEMPLATES = [{
         'django.template.context_processors.request',
         'django.contrib.auth.context_processors.auth',
         'django.contrib.messages.context_processors.messages',
+        'django.template.context_processors.i18n',
         'core.context_processors.site',
     ]},
 }]
@@ -90,6 +93,8 @@ LANGUAGE_CODE = 'en-in'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
+LANGUAGES = [('en', 'English'), ('mr', 'मराठी')]
+LOCALE_PATHS = [BASE_DIR / 'locale']
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Uploaded evidence is private and is served only through an authorised view (never directly).

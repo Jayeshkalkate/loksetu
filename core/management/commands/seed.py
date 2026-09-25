@@ -1,8 +1,13 @@
 from django.core.management.base import BaseCommand
 from complaints.models import Category
 from departments.models import Department, District
+from documents.models import Document
 from emergency.models import EmergencyContact
+from faq.models import FAQ
+from funds.models import Fund
 from news.models import Announcement
+from projects.models import Project
+from reports.models import Report
 from schemes.models import Scheme
 
 DISTRICTS = """Ahilyanagar,Akola,Amravati,Beed,Bhandara,Buldhana,Chandrapur,Chhatrapati Sambhajinagar,Dharashiv,
@@ -41,4 +46,21 @@ class Command(BaseCommand):
             Announcement.objects.get_or_create(
                 title='Welcome to LOKSETU',
                 defaults={'body': 'Sample announcement. Only tick "official" for authoritative sources.'})
+            Project.objects.get_or_create(
+                name='Sample project (replace with verified data)',
+                defaults={'description': 'Placeholder entry. Add real projects with their official source.',
+                          'official_source': 'https://www.maharashtra.gov.in'})
+            Fund.objects.get_or_create(
+                name='Sample fund (replace with verified data)', financial_year='2025-26',
+                defaults={'allocated_crore': 0, 'official_source': 'https://www.maharashtra.gov.in'})
+            Document.objects.get_or_create(
+                title='Sample document (replace with verified data)',
+                defaults={'external_link': 'https://www.maharashtra.gov.in'})
+            Report.objects.get_or_create(
+                title='Sample report (replace with verified data)',
+                defaults={'summary': 'Placeholder entry.', 'external_link': 'https://www.maharashtra.gov.in'})
+            FAQ.objects.get_or_create(
+                question='How do I file a complaint?',
+                defaults={'category': 'Getting started',
+                          'answer': 'Log in, then use "File a complaint" from the menu.', 'order': 1})
         self.stdout.write(self.style.SUCCESS('Seed data loaded.'))
