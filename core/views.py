@@ -31,9 +31,16 @@ def home(request):
         pending=Count('id', filter=Q(status__in=['SUBMITTED', 'RECEIVED', 'ASSIGNED'])),
         progress=Count('id', filter=Q(status__in=['UNDER_REVIEW', 'IN_PROGRESS', 'NEEDS_INFO'])),
         resolved=Count('id', filter=Q(status__in=['RESOLVED', 'CLOSED'])))
+    today = timezone.localdate()
+    # Scheme uses start_date/end_date (not a published timestamp). Show schemes
+    # currently in their application window, allowing either boundary to be open.
+    active_schemes = (Scheme.objects
+        .filter(Q(start_date__isnull=True) | Q(start_date__lte=today))
+        .filter(Q(end_date__isnull=True) | Q(end_date__gte=today))
+        .order_by('-updated', 'name')[:3])
     return render(request, 'home.html', {
         'stats': stats,
-        'schemes': Scheme.objects.filter(published__lte=timezone.now()).order_by('-published')[:3],
+        'schemes': active_schemes,
         'news': Announcement.objects.filter(published__lte=timezone.now()).order_by('-published')[:3],
         'emergency': EmergencyContact.objects.filter(number__in=['100', '108', '101', '112'])})
 

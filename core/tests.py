@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.core import mail
@@ -8,6 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
 from accounts.models import User
 from complaints.models import Complaint, Evidence, Status
@@ -326,6 +328,33 @@ class AdminScopeTests(BaseCase):
 
 
 class PublicPageTests(BaseCase):
+    def test_home_filters_schemes_by_start_and_end_dates(self):
+        from schemes.models import Scheme
+
+        today = timezone.localdate()
+        active = Scheme.objects.create(
+            name='Currently available scheme', description='Available today.',
+            start_date=today - timedelta(days=1), end_date=today + timedelta(days=1),
+            official_source='https://example.gov.in/schemes/current')
+        Scheme.objects.create(
+            name='Future scheme must be hidden', description='Not open yet.',
+            start_date=today + timedelta(days=1),
+            official_source='https://example.gov.in/schemes/future')
+        Scheme.objects.create(
+            name='Expired scheme must be hidden', description='No longer active.',
+            end_date=today - timedelta(days=1),
+            official_source='https://example.gov.in/schemes/expired')
+        Scheme.objects.create(
+            name='Open-ended scheme', description='No date restrictions.',
+            official_source='https://example.gov.in/schemes/open')
+
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, active.name)
+        self.assertContains(response, 'Open-ended scheme')
+        self.assertNotContains(response, 'Future scheme must be hidden')
+        self.assertNotContains(response, 'Expired scheme must be hidden')
+
     def test_pages_render(self):
         for name in ('home', 'about', 'contact', 'schemes', 'departments', 'news', 'emergency',
                      'privacy', 'terms', 'disclaimer', 'login', 'register', 'track', 'complaint_map',
