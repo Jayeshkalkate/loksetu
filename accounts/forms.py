@@ -34,3 +34,31 @@ class RegisterForm(UserCreationForm):
 
     def clean_mobile(self):
         return clean_indian_mobile(self.cleaned_data.get('mobile'))
+
+
+class ProfileForm(forms.ModelForm):
+    """Only citizen-editable fields; privilege and staff assignments are never exposed."""
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'mobile', 'district')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'mobile': forms.TextInput(attrs={'class': 'form-control', 'inputmode': 'tel', 'autocomplete': 'tel'}),
+            'district': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['email'].required = True
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('An account with this email already exists.')
+        return email
+
+    def clean_mobile(self):
+        return clean_indian_mobile(self.cleaned_data.get('mobile'))

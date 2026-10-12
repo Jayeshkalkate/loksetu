@@ -6,6 +6,7 @@
 </div>
 <p class="text-muted small">{{ ticket.ticket_id }} · {% trans "Submitted" %} {{ ticket.created|date:"d M Y H:i" }}</p>
 <div class="tile mb-3"><p class="mb-0">{{ ticket.message|linebreaksbr }}</p></div>
+{% if ticket.status == 'OPEN' %}<div class="d-flex flex-wrap gap-2 mb-3"><a class="btn btn-outline-primary" href="{% url 'support_edit' ticket.ticket_id %}">{% trans "Edit ticket" %}</a><a class="btn btn-outline-danger" href="{% url 'support_delete' ticket.ticket_id %}">{% trans "Delete ticket" %}</a></div>{% endif %}
 {% if ticket.response %}
 <h2 class="h6">{% trans "Response" %}</h2>
 <div class="tile"><p class="mb-0">{{ ticket.response|linebreaksbr }}</p></div>

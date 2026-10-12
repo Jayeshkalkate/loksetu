@@ -4,6 +4,12 @@ from .models import Review
 
 
 class ReviewForm(forms.ModelForm):
+    def clean_comment(self):
+        comment = self.cleaned_data['comment'].strip()
+        if len(comment) < 10:
+            raise forms.ValidationError('Please write at least 10 characters so your feedback is useful.')
+        return comment
+
     class Meta:
         model = Review
         fields = ['rating', 'comment']

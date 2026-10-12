@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Withdraw complaint" %}{% endblock %}{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7">
+<div class="tile"><h1 class="h3">{% trans "Withdraw this complaint?" %}</h1>
+<p>You are about to withdraw <strong>{{ c.complaint_id }}</strong> — {{ c.title }}.</p>
+<p class="text-muted">This is available only before a department starts processing the complaint. The complaint will be marked as withdrawn rather than erased, so the status history remains auditable.</p>
+<form method="post">{% csrf_token %}<button class="btn btn-danger">{% trans "Yes, withdraw complaint" %}</button> <a class="btn btn-outline-secondary" href="{% url 'complaint_detail' c.complaint_id %}">{% trans "Keep complaint" %}</a></form>
+</div></div></div>{% endblock %}

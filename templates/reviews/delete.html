@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Delete review" %}{% endblock %}{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7"><div class="tile">
+<h1 class="h3">{% trans "Delete your review?" %}</h1><p>{{ review.rating }}/5 ★ — {{ review.comment|truncatechars:180 }}</p>
+<form method="post">{% csrf_token %}<button class="btn btn-danger">{% trans "Delete review" %}</button> <a class="btn btn-outline-secondary" href="{% url 'reviews' %}">{% trans "Cancel" %}</a></form>
+</div></div></div>{% endblock %}

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from core.throttle import hit, client_ip, throttle
 from .forms import ComplaintForm
-from .models import CONTENT_TYPES, Complaint, Evidence
+from .models import CONTENT_TYPES, Complaint, Evidence, Status, StatusHistory
 
 
 @login_required
@@ -29,6 +29,45 @@ def file_complaint(request):
         messages.success(request, f'Complaint submitted. Your Complaint ID is {c.complaint_id}. Keep it to track progress.')
         return redirect('complaint_detail', c.complaint_id)
     return render(request, 'complaints/form.html', {'form': form})
+
+
+@login_required
+def edit_complaint(request, cid):
+    """Citizens may correct a submitted complaint before a department acts on it."""
+    c = get_object_or_404(Complaint, complaint_id=cid, citizen=request.user)
+    if c.status != Status.SUBMITTED:
+        messages.error(request, 'This complaint can no longer be edited because a department has started processing it.')
+        return redirect('complaint_detail', cid)
+    form = ComplaintForm(request.POST or None, request.FILES or None, instance=c)
+    if request.method == 'POST' and form.is_valid():
+        with transaction.atomic():
+            c = form.save(commit=False)
+            c.save()
+            if form.cleaned_data.get('evidence'):
+                Evidence.objects.create(complaint=c, file=form.cleaned_data['evidence'])
+            StatusHistory.objects.create(complaint=c, status=c.status,
+                                         note='Complaint details edited by citizen', changed_by=request.user)
+            from audit.models import log
+            log(request.user, 'Complaint edited', c.complaint_id, new='Citizen updated submitted complaint')
+        messages.success(request, 'Your complaint details were updated.')
+        return redirect('complaint_detail', c.complaint_id)
+    return render(request, 'complaints/form.html', {'form': form, 'complaint': c, 'editing': True})
+
+
+@login_required
+def withdraw_complaint(request, cid):
+    """Withdraw instead of hard-deleting so the public-service audit trail remains intact."""
+    c = get_object_or_404(Complaint, complaint_id=cid, citizen=request.user)
+    if c.status != Status.SUBMITTED:
+        messages.error(request, 'Only complaints that have not yet been picked up by a department can be withdrawn.')
+        return redirect('complaint_detail', cid)
+    if request.method == 'POST':
+        c.set_status(Status.WITHDRAWN, request.user, 'Withdrawn by citizen')
+        from audit.models import log
+        log(request.user, 'Complaint withdrawn', c.complaint_id, old=Status.SUBMITTED, new=Status.WITHDRAWN)
+        messages.success(request, f'Complaint {c.complaint_id} was withdrawn. Its history is retained for accountability.')
+        return redirect('history')
+    return render(request, 'complaints/withdraw.html', {'c': c})
 
 
 @login_required
@@ -84,11 +123,11 @@ def map_data(request):
     # Public-safe: no titles, descriptions or citizen data; coordinates rounded to ~1 km.
     data = cache.get('map_data')
     if data is None:
-        qs = (Complaint.objects.exclude(latitude=None).exclude(longitude=None)
+        qs = (Complaint.objects.exclude(latitude=None).exclude(longitude=None).exclude(status=Status.WITHDRAWN)
               .select_related('category').order_by('-created')[:2000])
         pts = [{'lat': round(c.latitude, 2), 'lng': round(c.longitude, 2),
                 'status': c.get_status_display(), 'category': c.category.name} for c in qs]
-        districts = list(Complaint.objects.values('district__name', 'status').annotate(n=Count('id')))
+        districts = list(Complaint.objects.exclude(status=Status.WITHDRAWN).values('district__name', 'status').annotate(n=Count('id')))
         data = {'points': pts, 'districts': districts}
         cache.set('map_data', data, 60)
     return JsonResponse(data)

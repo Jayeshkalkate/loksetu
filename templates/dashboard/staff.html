@@ -4,10 +4,11 @@
 {% if scoped %}<p class="text-muted">{% trans "Showing complaints in your scope only." %}</p>{% endif %}
 
 <div class="row g-3 mb-4">
-<div class="col-6 col-md-3"><div class="tile"><b>{{ total }}</b>{% trans "Total complaints" %}</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ resolution_rate }}%</b>{% trans "Resolution rate" %}</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{% if avg_resolution_days %}{{ avg_resolution_days }}{% else %}—{% endif %}</b>{% trans "Avg. days to resolve" %}</div></div>
-<div class="col-6 col-md-3"><div class="tile"><b>{{ status_values|length }}</b>{% trans "Status stages" %}</div></div>
+<div class="col-6 col-md"><div class="tile"><b>{{ total }}</b>{% trans "Total complaints" %}</div></div>
+<div class="col-6 col-md"><div class="tile"><b>{{ resolution_rate }}%</b>{% trans "Resolution rate" %}</div></div>
+<div class="col-6 col-md"><div class="tile"><b>{% if avg_resolution_days %}{{ avg_resolution_days }}{% else %}—{% endif %}</b>{% trans "Avg. days to resolve" %}</div></div>
+<div class="col-6 col-md"><div class="tile"><b>{{ status_values|length }}</b>{% trans "Status stages" %}</div></div>
+<div class="col-6 col-md"><div class="tile"><b>{{ pending_appointments }}</b><a class="text-decoration-none" href="/admin/appointments/appointment/">{% trans "Pending appointments" %}</a></div></div>
 </div>
 
 {% if site_counts %}
@@ -42,7 +43,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
 function readJSON(id) { return JSON.parse(document.getElementById(id).textContent); }
-const palette = ['#e8871e', '#12355b', '#2e8540', '#a1332c', '#5b6b7c', '#c99a2e', '#6b4fa1', '#1f7a8c'];
+const palette = ['#e8871e', '#12355b', '#2e8540', '#a1332c', '#5b6b7c', '#c99a2e', '#6b4fa1', '#1f7a8c', '#8b8b8b'];
 
 new Chart(document.getElementById('statusChart'), {
   type: 'doughnut',

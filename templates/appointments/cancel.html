@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% load i18n %}{% block title %}{% trans "Cancel appointment" %}{% endblock %}{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7"><div class="tile">
+<h1 class="h3">{% trans "Cancel this appointment?" %}</h1>
+<p><strong>{{ appointment.appointment_id }}</strong> — {{ appointment.purpose }}</p>
+<p>Scheduled for {{ appointment.preferred_date|date:"d M Y" }} at {{ appointment.preferred_time|time:"H:i" }}.</p>
+<form method="post">{% csrf_token %}<button class="btn btn-danger">{% trans "Confirm cancellation" %}</button> <a class="btn btn-outline-secondary" href="{% url 'appointment_detail' appointment.appointment_id %}">{% trans "Keep appointment" %}</a></form>
+</div></div></div>{% endblock %}

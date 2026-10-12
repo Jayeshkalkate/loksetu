@@ -59,6 +59,13 @@ class ComplaintAdmin(admin.ModelAdmin):
             locked.append('assigned_to')
         return base + locked
 
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        # Withdrawal is a citizen action; department staff cannot impersonate one.
+        if db_field.name == 'status' and not _is_super(request.user):
+            kwargs['choices'] = [(value, label) for value, label in Status.choices
+                                 if value != Status.WITHDRAWN]
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'assigned_to':
             qs = User.objects.filter(role='OFFICER', is_active=True)

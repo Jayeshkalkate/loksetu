@@ -2,6 +2,7 @@ from django.db import connection
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 
 from complaints.models import Complaint
 from departments.models import District
@@ -25,13 +26,15 @@ MAHARASHTRA_FACTS = {
 
 
 def home(request):
-    stats = Complaint.objects.aggregate(
+    stats = Complaint.objects.exclude(status='WITHDRAWN').aggregate(
         total=Count('id'),
         pending=Count('id', filter=Q(status__in=['SUBMITTED', 'RECEIVED', 'ASSIGNED'])),
         progress=Count('id', filter=Q(status__in=['UNDER_REVIEW', 'IN_PROGRESS', 'NEEDS_INFO'])),
         resolved=Count('id', filter=Q(status__in=['RESOLVED', 'CLOSED'])))
     return render(request, 'home.html', {
-        'stats': stats, 'schemes': Scheme.objects.all()[:3], 'news': Announcement.objects.all()[:3],
+        'stats': stats,
+        'schemes': Scheme.objects.filter(published__lte=timezone.now()).order_by('-published')[:3],
+        'news': Announcement.objects.filter(published__lte=timezone.now()).order_by('-published')[:3],
         'emergency': EmergencyContact.objects.filter(number__in=['100', '108', '101', '112'])})
 
 
@@ -45,13 +48,24 @@ def about(request):
 
 
 def healthz(request):
-    """Liveness/readiness probe for the host: confirms the app can reach its database."""
+    """Cross-origin-safe liveness/readiness probe for Render and the static loader.
+
+    This endpoint exposes no user data and accepts only a read-only database probe, so
+    wildcard CORS is safe here. The loader needs to read the status/body from a separate
+    Render Static Site origin; without these headers the browser would block that check.
+    """
     try:
         with connection.cursor() as cur:
             cur.execute('SELECT 1')
     except Exception:
-        return HttpResponse('db error', status=503, content_type='text/plain')
-    return HttpResponse('ok', content_type='text/plain')
+        response = HttpResponse('db error', status=503, content_type='text/plain')
+    else:
+        response = HttpResponse('ok', content_type='text/plain')
+
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Cache-Control'] = 'no-store, max-age=0'
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 
 def robots(request):

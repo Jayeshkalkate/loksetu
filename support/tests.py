@@ -42,3 +42,34 @@ class SupportTicketTests(TestCase):
         self.client.login(username='supportuser', password=PW)
         resp = self.client.get(reverse('support_detail', args=[ticket.ticket_id]))
         self.assertEqual(resp.status_code, 404)
+
+
+class SupportTicketCrudTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('cruduser', 'crud@example.com', PW)
+        cls.other = User.objects.create_user('crudother', 'crudother@example.com', PW)
+
+    def test_open_ticket_can_be_edited_and_deleted(self):
+        ticket = SupportTicket.objects.create(user=self.user, subject='Old subject', message='Original message')
+        self.client.force_login(self.user)
+        r = self.client.post(reverse('support_edit', args=[ticket.ticket_id]), {
+            'subject': 'Updated subject', 'message': 'Updated support issue description.'})
+        self.assertRedirects(r, reverse('support_detail', args=[ticket.ticket_id]))
+        ticket.refresh_from_db()
+        self.assertEqual(ticket.subject, 'Updated subject')
+        r = self.client.post(reverse('support_delete', args=[ticket.ticket_id]))
+        self.assertRedirects(r, reverse('support_list'))
+        self.assertFalse(SupportTicket.objects.filter(pk=ticket.pk).exists())
+
+    def test_ticket_crud_is_owner_scoped_and_status_restricted(self):
+        ticket = SupportTicket.objects.create(user=self.other, subject='Private', message='Private ticket message')
+        self.client.force_login(self.user)
+        self.assertEqual(self.client.get(reverse('support_edit', args=[ticket.ticket_id])).status_code, 404)
+        ticket.user = self.user
+        ticket.status = SupportTicket.Status.IN_PROGRESS
+        ticket.save()
+        self.assertRedirects(self.client.get(reverse('support_edit', args=[ticket.ticket_id])),
+                             reverse('support_detail', args=[ticket.ticket_id]))
+        self.assertEqual(self.client.post(reverse('support_delete', args=[ticket.ticket_id])).status_code, 302)
+        self.assertTrue(SupportTicket.objects.filter(pk=ticket.pk).exists())

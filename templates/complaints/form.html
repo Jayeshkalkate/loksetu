@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% block content %}<h1>File a complaint</h1>
-<p>The complaint goes to the right department automatically based on the category.</p>
+{% extends 'base.html' %}{% block content %}<h1>{% if editing %}Edit complaint{% else %}File a complaint{% endif %}</h1>
+<p>{% if editing %}Correct the details before a department begins processing this complaint. Your existing evidence will be retained; any new file will be added to it.{% else %}The complaint goes to the right department automatically based on the category.{% endif %}</p>
 <form method="post" enctype="multipart/form-data" style="max-width:40rem">{% csrf_token %}{{ form.as_div }}
-<button class="btn btn-saffron btn-lg mt-3">Submit complaint</button></form>{% endblock %}
+<button class="btn btn-saffron btn-lg mt-3">{% if editing %}Save changes{% else %}Submit complaint{% endif %}</button> {% if editing %}<a class="btn btn-outline-secondary btn-lg mt-3" href="{% url 'complaint_detail' complaint.complaint_id %}">Cancel</a>{% endif %}</form>{% endblock %}

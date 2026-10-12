@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from unittest.mock import patch
 
 from django.core import mail
 from django.core.cache import cache
@@ -101,6 +102,27 @@ class AccountTests(BaseCase):
         self.assertRedirects(r, reverse('password_reset_done'))
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn('/reset/', mail.outbox[0].body)
+
+    def test_profile_edit_cannot_change_privileges(self):
+        self.client.force_login(self.citizen)
+        r = self.client.post(reverse('profile_edit'), {
+            'first_name': 'Asha Updated', 'last_name': 'User', 'email': 'asha@example.com',
+            'mobile': '9876543210', 'district': self.district.pk,
+            'role': 'SUPER', 'is_staff': 'on', 'is_superuser': 'on',
+        })
+        self.assertRedirects(r, reverse('profile'))
+        self.citizen.refresh_from_db()
+        self.assertEqual(self.citizen.first_name, 'Asha Updated')
+        self.assertEqual(self.citizen.role, 'CITIZEN')
+        self.assertFalse(self.citizen.is_staff or self.citizen.is_superuser)
+
+    def test_demoting_super_revokes_staff_and_superuser_flags(self):
+        root = User.objects.create_user('temporary-root', 'root@example.com', PW, role='SUPER')
+        self.assertTrue(root.is_superuser and root.is_staff)
+        root.role = 'CITIZEN'
+        root.save()
+        root.refresh_from_db()
+        self.assertFalse(root.is_superuser or root.is_staff)
 
     def test_profile_marks_notifications_read(self):
         c = self.make_complaint()
@@ -231,6 +253,46 @@ class ComplaintTests(BaseCase):
         self.assertEqual((d['points'][0]['lat'], d['points'][0]['lng']), (18.52, 73.86))
 
 
+class ComplaintLifecycleTests(BaseCase):
+    def test_owner_can_edit_submitted_complaint(self):
+        c = self.make_complaint()
+        self.client.force_login(self.citizen)
+        r = self.client.post(reverse('complaint_edit', args=[c.complaint_id]), {
+            'category': c.category_id, 'title': 'Updated pothole',
+            'description': 'A very deep pothole that needs immediate repair.',
+            'district': self.district.pk, 'incident_date': '2026-01-01',
+        })
+        self.assertRedirects(r, reverse('complaint_detail', args=[c.complaint_id]))
+        c.refresh_from_db()
+        self.assertEqual(c.title, 'Updated pothole')
+        self.assertTrue(c.history.filter(note='Complaint details edited by citizen').exists())
+
+    def test_another_citizen_cannot_edit_or_withdraw_complaint(self):
+        c = self.make_complaint()
+        self.client.force_login(self.other)
+        self.assertEqual(self.client.get(reverse('complaint_edit', args=[c.complaint_id])).status_code, 404)
+        self.assertEqual(self.client.post(reverse('complaint_withdraw', args=[c.complaint_id])).status_code, 404)
+        c.refresh_from_db()
+        self.assertEqual(c.status, Status.SUBMITTED)
+
+    def test_withdrawal_keeps_complaint_and_history(self):
+        c = self.make_complaint()
+        self.client.force_login(self.citizen)
+        r = self.client.post(reverse('complaint_withdraw', args=[c.complaint_id]))
+        self.assertRedirects(r, reverse('history'))
+        c.refresh_from_db()
+        self.assertEqual(c.status, Status.WITHDRAWN)
+        self.assertTrue(c.history.filter(note='Withdrawn by citizen').exists())
+
+    def test_processed_complaint_cannot_be_edited(self):
+        c = self.make_complaint(status=Status.IN_PROGRESS)
+        self.client.force_login(self.citizen)
+        r = self.client.post(reverse('complaint_edit', args=[c.complaint_id]), {'title': 'tamper'})
+        self.assertRedirects(r, reverse('complaint_detail', args=[c.complaint_id]))
+        c.refresh_from_db()
+        self.assertEqual(c.title, 'Pothole near school')
+
+
 class AdminScopeTests(BaseCase):
     def test_department_scoping(self):
         c = self.make_complaint(assigned_to=self.officer)
@@ -271,8 +333,20 @@ class PublicPageTests(BaseCase):
             self.assertEqual(self.client.get(reverse(name)).status_code, 200, name)
 
     def test_healthz_and_robots(self):
-        self.assertEqual(self.client.get('/healthz/').content, b'ok')
+        response = self.client.get('/healthz/')
+        self.assertEqual(response.content, b'ok')
+        self.assertEqual(response['Access-Control-Allow-Origin'], '*')
+        self.assertIn('no-store', response['Cache-Control'])
+        self.assertEqual(response['X-Content-Type-Options'], 'nosniff')
         self.assertContains(self.client.get('/robots.txt'), 'Disallow: /admin/')
+
+    def test_healthz_keeps_cors_headers_when_database_is_unavailable(self):
+        with patch('core.views.connection.cursor', side_effect=RuntimeError('database unavailable')):
+            response = self.client.get('/healthz/')
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.content, b'db error')
+        self.assertEqual(response['Access-Control-Allow-Origin'], '*')
+        self.assertIn('no-store', response['Cache-Control'])
 
     def test_seed_is_idempotent_and_has_no_placeholder_content(self):
         call_command('seed', verbosity=0)

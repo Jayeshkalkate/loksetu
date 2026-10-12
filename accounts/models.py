@@ -18,14 +18,30 @@ class User(AbstractUser):
                                    help_text='For officers and department administrators')
 
     def save(self, *a, **k):
+        # Revoke stale admin flags when a privileged role is demoted.
+        # Otherwise changing the role alone could leave admin access behind.
+        old_staff, old_superuser = self.is_staff, self.is_superuser
+        previous_role = None
+        if self.pk:
+            previous_role = type(self).objects.filter(pk=self.pk).values_list('role', flat=True).first()
+        if previous_role in STAFF_ROLES and self.role not in STAFF_ROLES:
+            self.is_staff = False
+        if previous_role == self.Role.SUPER and self.role != self.Role.SUPER:
+            self.is_superuser = False
         if self.role in STAFF_ROLES:
             self.is_staff = True  # officers/admins must be able to sign in to /admin/
         if self.role == self.Role.SUPER:
-            # SUPER is the site-wide super administrator role: keep it consistent
-            # with Django's own superuser flag so /admin/ permissions always match
-            # what the application treats as "super admin" (see security review).
+            # Keep the application role and Django's global admin flag consistent.
             self.is_superuser = True
             self.is_staff = True
+        # Honour partial saves while ensuring role-driven privilege changes reach the DB.
+        changed_flags = set()
+        if self.is_staff != old_staff:
+            changed_flags.add('is_staff')
+        if self.is_superuser != old_superuser:
+            changed_flags.add('is_superuser')
+        if changed_flags and k.get('update_fields') is not None:
+            k['update_fields'] = set(k['update_fields']) | changed_flags
         super().save(*a, **k)
         self.sync_groups()
 

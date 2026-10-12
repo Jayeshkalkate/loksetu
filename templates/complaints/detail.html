@@ -7,4 +7,8 @@
 {% if owner %}<dt class="col-sm-3">Description</dt><dd class="col-sm-9">{{ c.description|linebreaksbr }}</dd>
 <dt class="col-sm-3">Evidence</dt><dd class="col-sm-9">{% for e in evidence %}<a href="{% url 'evidence_file' e.pk %}" target="_blank" rel="noopener">File {{ forloop.counter }}</a> {% empty %}None{% endfor %}</dd>{% endif %}</dl>
 {% if not owner %}<p class="text-muted small">Personal details and the description are visible only to the person who filed this complaint and the responsible department.</p>{% endif %}
-<h2 class="h5">Timeline</h2><ol class="list-group list-group-numbered">{% for h in history %}<li class="list-group-item">{{ h.get_status_display }} <small class="text-muted">{{ h.at|date:"d M Y H:i" }}{% if owner %} {{ h.note }}{% endif %}</small></li>{% endfor %}</ol>{% endblock %}
+<h2 class="h5">Timeline</h2><ol class="list-group list-group-numbered">{% for h in history %}<li class="list-group-item">{{ h.get_status_display }} <small class="text-muted">{{ h.at|date:"d M Y H:i" }}{% if owner %} {{ h.note }}{% endif %}</small></li>{% endfor %}</ol>
+{% if owner and c.status == 'SUBMITTED' %}
+<div class="d-flex flex-wrap gap-2 mt-3"><a class="btn btn-outline-primary" href="{% url 'complaint_edit' c.complaint_id %}">Edit complaint</a><a class="btn btn-outline-danger" href="{% url 'complaint_withdraw' c.complaint_id %}">Withdraw complaint</a></div>
+{% endif %}
+{% endblock %}

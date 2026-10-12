@@ -22,3 +22,16 @@ class AppointmentForm(forms.ModelForm):
         if date < timezone.localdate():
             raise ValidationError('Preferred date cannot be in the past.')
         return date
+
+    def clean(self):
+        from datetime import datetime
+        from django.core.exceptions import ValidationError
+        from django.utils import timezone
+        data = super().clean()
+        date, time = data.get('preferred_date'), data.get('preferred_time')
+        if date and time and date == timezone.localdate():
+            selected = datetime.combine(date, time)
+            now = timezone.localtime().replace(tzinfo=None)
+            if selected <= now:
+                self.add_error('preferred_time', ValidationError('Choose a time later than now.'))
+        return data

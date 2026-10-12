@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class JobNotification(models.Model):
@@ -20,3 +21,8 @@ class JobNotification(models.Model):
     @property
     def blurb(self):
         return f'{self.organization}\n\n{self.description}'
+
+    @property
+    def is_expired(self):
+        """Whether applications are past the posted deadline, using the site timezone."""
+        return bool(self.last_date and self.last_date < timezone.localdate())

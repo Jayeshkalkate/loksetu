@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.shortcuts import redirect, render
 
 from core.throttle import throttle
-from .forms import RegisterForm
+from .forms import ProfileForm, RegisterForm
 
 login_view = throttle('login', 20, 15 * 60)(auth.LoginView.as_view(redirect_authenticated_user=True))
 password_reset_view = throttle('pwreset', 5, 60 * 60)(auth.PasswordResetView.as_view())
@@ -33,7 +33,7 @@ def profile(request):
         'pending': counts.get('SUBMITTED', 0) + counts.get('RECEIVED', 0) + counts.get('ASSIGNED', 0),
         'progress': counts.get('UNDER_REVIEW', 0) + counts.get('IN_PROGRESS', 0) + counts.get('NEEDS_INFO', 0),
         'resolved': counts.get('RESOLVED', 0),
-        'closed': counts.get('CLOSED', 0),
+        'closed': counts.get('CLOSED', 0) + counts.get('WITHDRAWN', 0),
     }
     status_labels = [label for _, label in Status.choices]
     status_values = [counts.get(code, 0) for code, _ in Status.choices]
@@ -47,3 +47,17 @@ def profile(request):
     })
     request.user.notification_set.filter(pk__in=[n.pk for n in notifications], is_read=False).update(is_read=True)
     return response
+
+
+@login_required
+@throttle('profile-edit', 20, 60 * 60, per_user=True)
+def profile_edit(request):
+    """Update the signed-in user's public contact details without exposing role fields."""
+    form = ProfileForm(request.POST or None, instance=request.user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        from audit.models import log
+        log(request.user, 'Profile updated', request.user.username, new='Citizen updated contact profile')
+        messages.success(request, 'Your profile has been updated.')
+        return redirect('profile')
+    return render(request, 'profile_edit.html', {'form': form})

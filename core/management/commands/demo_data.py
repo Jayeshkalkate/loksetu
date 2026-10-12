@@ -136,7 +136,7 @@ class Command(BaseCommand):
             'Broken footpath tiles', 'Water pipeline leakage', 'Transformer sparking',
             'Stray animal menace', 'Encroachment on public road', 'Damaged bus stop shelter',
         ]
-        statuses = list(Status.choices)
+        statuses = [(code, label) for code, label in Status.choices if code != Status.WITHDRAWN]
         now = timezone.now()
         created_count = 0
         for i in range(60):

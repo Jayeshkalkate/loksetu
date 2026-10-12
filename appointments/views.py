@@ -32,3 +32,39 @@ def appointment_list(request):
 def appointment_detail(request, appointment_id):
     appointment = get_object_or_404(Appointment, appointment_id=appointment_id, user=request.user)
     return render(request, 'appointments/detail.html', {'appointment': appointment})
+
+
+@login_required
+def appointment_edit(request, appointment_id):
+    appointment = get_object_or_404(Appointment, appointment_id=appointment_id, user=request.user)
+    if appointment.status != Appointment.Status.PENDING:
+        messages.error(request, 'Only pending appointments can be rescheduled.')
+        return redirect('appointment_detail', appointment_id)
+    form = AppointmentForm(request.POST or None, instance=appointment)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        from audit.models import log
+        log(request.user, 'Appointment rescheduled', appointment.appointment_id,
+            new=f'{appointment.preferred_date} {appointment.preferred_time}')
+        messages.success(request, f'Appointment {appointment.appointment_id} was updated.')
+        return redirect('appointment_detail', appointment.appointment_id)
+    return render(request, 'appointments/form.html', {
+        'form': form, 'appointments': [appointment], 'editing': True, 'appointment_obj': appointment,
+    })
+
+
+@login_required
+def appointment_cancel(request, appointment_id):
+    appointment = get_object_or_404(Appointment, appointment_id=appointment_id, user=request.user)
+    if appointment.status != Appointment.Status.PENDING:
+        messages.error(request, 'Only pending appointments can be cancelled. Please contact support if you need help.')
+        return redirect('appointment_detail', appointment_id)
+    if request.method == 'POST':
+        appointment.status = Appointment.Status.CANCELLED
+        appointment.save(update_fields=['status', 'updated'])
+        from audit.models import log
+        log(request.user, 'Appointment cancelled', appointment.appointment_id,
+            old=Appointment.Status.PENDING, new=Appointment.Status.CANCELLED)
+        messages.success(request, f'Appointment {appointment.appointment_id} was cancelled.')
+        return redirect('appointment_list')
+    return render(request, 'appointments/cancel.html', {'appointment': appointment})

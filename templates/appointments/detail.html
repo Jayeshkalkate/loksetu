@@ -10,6 +10,9 @@
 <p class="mb-1"><b>{% trans "Preferred date & time" %}:</b> {{ appointment.preferred_date|date:"d M Y" }} at {{ appointment.preferred_time|time:"H:i" }}</p>
 {% if appointment.notes %}<p class="mb-0"><b>{% trans "Notes" %}:</b> {{ appointment.notes|linebreaksbr }}</p>{% endif %}
 </div>
+{% if appointment.status == 'PENDING' %}
+<div class="d-flex flex-wrap gap-2 mb-3"><a class="btn btn-outline-primary" href="{% url 'appointment_edit' appointment.appointment_id %}">{% trans "Reschedule" %}</a><a class="btn btn-outline-danger" href="{% url 'appointment_cancel' appointment.appointment_id %}">{% trans "Cancel appointment" %}</a></div>
+{% endif %}
 {% if appointment.officer_remarks %}
 <h2 class="h6">{% trans "Officer remarks" %}</h2>
 <div class="tile"><p class="mb-0">{{ appointment.officer_remarks|linebreaksbr }}</p></div>

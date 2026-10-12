@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1930">
+  <meta name="description" content="LOKSETU connects citizens with public services. Preparing your secure workspace…">
+  <title>LOKSETU — Application loading</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+  <script src="loader.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="brand" aria-label="LOKSETU">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" role="img">
+          <path d="M24 4 42 14.5v19L24 44 6 33.5v-19Z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <path d="m14 24 6.5 6.5L34 17" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">LOKSETU</div>
+        <div class="brand-subtitle">CITIZEN SERVICES, CONNECTED</div>
+      </div>
+    </header>
+
+    <section class="loading-card" aria-labelledby="page-title">
+      <div class="orbit-wrap" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="core-symbol">
+          <svg viewBox="0 0 52 52">
+            <path d="M26 5 44 15.5v21L26 47 8 36.5v-21Z" fill="none" stroke="currentColor" stroke-width="2.4"/>
+            <path d="m16 26 7 7 14-15" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <p class="eyebrow"><span class="live-dot"></span> SECURE CONNECTION</p>
+      <h1 id="page-title">Getting things ready<span class="title-period">.</span></h1>
+      <p class="intro" id="status-message" role="status" aria-live="polite">Connecting to LOKSETU. The first launch may take a little longer.</p>
+
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+      <div class="status-row">
+        <span class="status-spinner" id="status-spinner" aria-hidden="true"></span>
+        <span id="status-label">Connecting to the application</span>
+        <span class="status-pulse" id="status-pulse" aria-hidden="true">•••</span>
+      </div>
+
+      <div class="divider"></div>
+      <div class="assurance-row">
+        <span class="assurance-icon" aria-hidden="true">✓</span>
+        <p><strong>Your destination is being checked.</strong><br>We’ll take you to LOKSETU when the application and database are ready.</p>
+      </div>
+
+      <div id="error-panel" class="error-panel" hidden>
+        <p class="error-title" id="error-title">We’re taking a little longer than expected.</p>
+        <p id="error-message">The service may still be starting. Try another check in a moment.</p>
+        <button id="retry-button" class="retry-button" type="button">Check again</button>
+      </div>
+      <noscript><p class="noscript">JavaScript is needed to check the application status. Enable JavaScript and reload this page.</p></noscript>
+    </section>
+
+    <footer class="footer">
+      <span>Made for simpler public services</span>
+      <span class="footer-separator" aria-hidden="true">·</span>
+      <span>LOKSETU</span>
+    </footer>
+  </main>
+</body>
+</html>

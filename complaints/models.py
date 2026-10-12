@@ -48,6 +48,7 @@ class Status(models.TextChoices):
     IN_PROGRESS = 'IN_PROGRESS', 'In progress'
     RESOLVED = 'RESOLVED', 'Resolved'
     CLOSED = 'CLOSED', 'Closed'
+    WITHDRAWN = 'WITHDRAWN', 'Withdrawn by citizen'
 
 
 class Category(models.Model):

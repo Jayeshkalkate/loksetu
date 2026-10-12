@@ -7,6 +7,7 @@ from django.db.models.functions import TruncDate
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from appointments.models import Appointment
 from complaints.models import Complaint, Status
 from documents.models import Document
 from faq.models import FAQ
@@ -31,14 +32,27 @@ def staff_dashboard(request):
     user = request.user
     qs = Complaint.objects.all()
     scoped = False
-    if not user.is_superuser and user.role == 'DEPT_ADMIN':
-        qs = qs.filter(department_id=user.department_id)
+    if user.is_superuser or user.role == 'SUPER':
+        pass  # Global administrators may review site-wide aggregate analytics.
+    elif user.role == 'DEPT_ADMIN':
+        qs = qs.filter(department_id=user.department_id) if user.department_id else qs.none()
         scoped = True
-    elif not user.is_superuser and user.role == 'OFFICER':
+    elif user.role == 'OFFICER':
         qs = qs.filter(assigned_to=user)
+        scoped = True
+    else:
+        # is_staff alone must never grant citizen data access if role flags drift.
+        qs = qs.none()
         scoped = True
 
     status_counts = {r['status']: r['n'] for r in qs.values('status').annotate(n=Count('id'))}
+    appointment_qs = Appointment.objects.all()
+    if not (user.is_superuser or user.role == 'SUPER'):
+        if user.role in ('DEPT_ADMIN', 'OFFICER') and user.department_id:
+            appointment_qs = appointment_qs.filter(department_id=user.department_id)
+        else:
+            appointment_qs = appointment_qs.none()
+    pending_appointments = appointment_qs.filter(status=Appointment.Status.PENDING).count()
     status_labels = [label for _, label in Status.choices]
     status_values = [status_counts.get(code, 0) for code, _ in Status.choices]
 
@@ -61,7 +75,7 @@ def staff_dashboard(request):
     avg_duration = resolved_qs.annotate(duration=duration).aggregate(avg=Avg('duration'))['avg']
     avg_resolution_days = round(avg_duration.total_seconds() / 86400, 1) if avg_duration else None
 
-    total = qs.count()
+    total = qs.exclude(status=Status.WITHDRAWN).count()
     resolved_count = resolved_qs.count()
     resolution_rate = round(resolved_count / total * 100, 1) if total else 0
 
@@ -77,6 +91,7 @@ def staff_dashboard(request):
             ('FAQs', FAQ.objects.count()),
             ('Open tickets', SupportTicket.objects.exclude(
                 status__in=[SupportTicket.Status.RESOLVED, SupportTicket.Status.CLOSED]).count()),
+            ('Appointments', Appointment.objects.count()),
         ]
 
     return render(request, 'dashboard/staff.html', {
@@ -84,6 +99,7 @@ def staff_dashboard(request):
         'scoped': scoped,
         'total': total,
         'resolution_rate': resolution_rate,
+        'pending_appointments': pending_appointments,
         'avg_resolution_days': avg_resolution_days,
         'status_labels': status_labels,
         'status_values': status_values,
